@@ -27,7 +27,7 @@ class Event(Base):
     start = models.DateTimeField()
     end = models.DateTimeField()
     creator = models.ForeignKey(User, related_name='events', on_delete=models.CASCADE)
-    participants = models.ManyToManyField(User)
+    participants = models.ManyToManyField(User, blank=True)
     
     class Meta:
         verbose_name = 'Event'
