@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from authentication.models import User
 
 class Base(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -9,18 +10,6 @@ class Base(models.Model):
 
     class Meta:
         abstract = True
-
-class User(Base):
-    name = models.CharField(max_length=255)
-    email = models.EmailField()
-    # password
-
-    class Meta:
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
-
-    def __str__(self):
-        return f"{self.name}"
 
 class Event(Base):
     description = models.TextField(blank=True)
