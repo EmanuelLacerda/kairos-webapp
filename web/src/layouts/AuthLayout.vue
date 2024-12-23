@@ -6,8 +6,8 @@
 </q-layout>
 </template>
 
-<style lang="scss" scoped>
-    .q-layout{
+<style lang="scss">
+    body{
         background-image: url('../assets/auth_background.svg');
         background-repeat: no-repeat;
         background-size: cover;
