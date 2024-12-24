@@ -10,7 +10,9 @@ from .managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255,verbose_name=_("Nome"))
-    email = models.EmailField(max_length=255, unique=True, verbose_name=_("Endereço de e-mail"))
+    email = models.EmailField(max_length=255, unique=True, verbose_name=_("Endereço de e-mail"), error_messages={
+        "unique": "Um usuário com este e-mail já existe."
+    })
     is_superuser= models.BooleanField(default=False)
     is_staff= models.BooleanField(default=False)
     have_email_verified= models.BooleanField(default=False)
