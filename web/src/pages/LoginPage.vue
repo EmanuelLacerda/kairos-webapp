@@ -1,21 +1,107 @@
 <script setup>
 import { ref } from 'vue';
+import { useQuasar } from 'quasar'
+import { useAuthStore } from 'src/stores/auth';
+import { useRoute, useRouter } from 'vue-router';
+
+const authStore = useAuthStore()
+
+const notifyWarningConfigObj = {
+  type: "warning",
+  timeout: "800",
+  closeBtn: true
+}
+
+
+const $q = useQuasar()
+const route = useRoute()
+const router = useRouter()
 
 defineOptions({
   name: 'IndexPage'
 })
 
-const emailEntered = ref('')
-const passwordEntered = ref('')
+const enteredEmail = ref('')
+const enteredPassword = ref('')
+
+const validatePassword = (password) => {
+    const lowerCaseLetters = /[a-z]/g;
+    if(!password.match(lowerCaseLetters)) {
+      return {
+        "isPasswordInvalid": true,
+        "error_message": "A senha deve conter ao menos uma letra minúscula!"
+      }
+    }
+
+    const upperCaseLetters = /[A-Z]/g;
+    if(!password.match(upperCaseLetters)) {
+      return {
+        "isPasswordInvalid": true,
+        "error_message": "A senha deve conter ao menos uma letra maiúscula!"
+      }
+    }
+
+    const numbers = /[0-9]/g;
+    if(!password.match(numbers)) {
+      return {
+        "isPasswordInvalid": true,
+        "error_message": "A senha deve conter ao menos um número!"
+      }
+    }
+
+    if(!(password.length >= 8)) {
+      return {
+        "isPasswordInvalid": true,
+        "error_message": "A senha deve conter ao menos 8 caracteres!"
+      }
+    }
+
+    return {
+      "isPasswordInvalid": false
+    }
+}
+
+const submitForm = async () => {
+  if(enteredEmail.value && enteredPassword.value){
+    const result = validatePassword(enteredPassword.value);
+
+    if(result.isPasswordInvalid){
+      notifyWarningConfigObj.message = result.error_message
+      $q.notify(notifyWarningConfigObj)
+    } else{
+      const resultLogin = await authStore.login({
+        "email": enteredEmail.value,
+        "password": enteredPassword.value
+      })
+
+      if(resultLogin.wasLoginSuccessfully){
+        $q.notify({
+          message: "Login efetuado com sucesso",
+          type: "positive",
+          timeout: "500",
+          closeBtn: true
+        })
+
+        const toPath = route.query.to || '/';
+        setTimeout(() => {
+          router.push(toPath);
+        }, 600)
+      }else{
+        notifyWarningConfigObj.message = resultLogin.error_message;
+        $q.notify(notifyWarningConfigObj);
+      }
+    }
+  }
+}
 </script>
 
 <template>
   <q-page padding class="flex items-center justify-center">
     <section class="flex justify-center items-center">
-      <q-form class="form-login" method="post">
+      <q-form class="form-login" method="post" @submit.prevent="submitForm">
         <q-input
           type="email"
-          v-model="emailEntered"
+          v-model="enteredEmail"
           name="email"
           :autofocus="true"
           placeholder="E-mail"
@@ -26,7 +112,7 @@ const passwordEntered = ref('')
         </q-input>
         <q-input
           type="password"
-          v-model="passwordEntered"
+          v-model="enteredPassword"
           name="email"
           placeholder="Senha"
           :outlined="true"
@@ -38,6 +124,7 @@ const passwordEntered = ref('')
           type="submit"
           class="bg-white"
           :outline="false"
+          :disable="!enteredEmail || !enteredPassword"
         >
 
         </q-btn>
