@@ -41,10 +41,10 @@ export const useAuthStore = defineStore('auth', () => {
         } catch (e){
             result.wasLoginSuccessfully = false;
 
-            console.log(e.response)
-
             if(e.response.statusText === "Unauthorized"){
                 result.error_message = e.response.data.detail
+            } else{
+                result.error_message = e.response.data
             }
 
             return result
@@ -53,6 +53,29 @@ export const useAuthStore = defineStore('auth', () => {
 
     function logout(){
         removeAccessToken();
+    }
+
+    async function register(userCredentials){
+        const result = {}
+
+        try{
+            const response = await api.post('auth/register/', userCredentials);
+
+            result.wasRegisterSuccessfully = true;
+
+            console.log(response);
+
+            return result;
+        } catch (e){
+            result.wasRegisterSuccessfully = false;
+
+            if(e.response.statusText === "Bad Request"){
+                result.error_message = e.response.data;
+            }
+
+            return result;
+        }
+        
     }
 
     async function init(){
@@ -66,5 +89,5 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
 
-    return {me, token, isAuthenticated, init, login, logout}
+    return {me, token, isAuthenticated, init, login, logout, register}
 })
