@@ -53,10 +53,10 @@ class VerifyUserEmailView(GenericAPIView):
                 }, status=status.HTTP_200_OK)
             
             return Response({
-                'message': 'O código é inválido, usuário já verificado'
+                'message': 'Código inválido, usuário já verificado'
             }, status=status.HTTP_204_NO_CONTENT)
         except OneTimePassword.DoesNotExist:
-            return Response({'message': 'Código não fornecido'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'message': 'Código não encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
 class LoginUserView(GenericAPIView):
     serializer_class=LoginSerializer
