@@ -27,7 +27,7 @@ export const useAuthStore = defineStore('auth', () => {
         const result = {}
 
         try{
-            const response = await api.post('auth/login/', userCredentials)
+            const response = await api.post('auth/login/', userCredentials);
 
             if(response.statusText === 'OK'){
                 const { access_token, refresh_token } = response.data;
@@ -78,6 +78,38 @@ export const useAuthStore = defineStore('auth', () => {
         
     }
 
+    async function verifyEmail(verificationCode) {
+        const result = {}
+
+        try {
+            const response = await api.post('auth/verify-email/', verificationCode);
+
+            if(response.statusText === "OK"){
+                result.wasEmailVerify = true;
+
+                return result;
+            } else if(response.statusText === "No Content"){
+                result.wasEmailVerify = false;
+
+                result.error_message = "Código inválido, usuário já verificado";
+
+                return result;
+            }
+
+            return result;
+        } catch (e) {
+            result.wasEmailVerify = false;
+
+            if(e.response.statusText === "Not Found"){
+                result.error_message = e.response.data.message;
+
+                return result;
+            }
+
+            return result;
+        }
+    }
+
     async function init(){
         const access_token = LocalStorage.getItem("token");
 
@@ -89,5 +121,5 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
 
-    return {me, token, isAuthenticated, init, login, logout, register}
+    return {me, token, isAuthenticated, init, login, logout, register, verifyEmail}
 })
