@@ -42,7 +42,7 @@ form.form-auth-base{
         }
 
         .q-field__control::before{
-            border-color: $custom-full-white !important;
+            border-color: $custom-full-white;
         }
 
         .q-field__native, .q-icon{
@@ -52,9 +52,6 @@ form.form-auth-base{
             font-size: 18px;
         }
     }
-}
-
-form.form-auth-base{
     .invalidInput{
         .q-field__control::before{
             border-color: $custom-border-color-error !important;
