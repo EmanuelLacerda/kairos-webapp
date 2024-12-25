@@ -11,6 +11,7 @@ import { useRoute, useRouter } from 'vue-router';
 import FormAuthBase from 'src/components/form-auth/FormAuthBase.vue';
 import InputAuthEmail from 'src/components/form-auth/InputAuthEmail.vue';
 import InputAuthPassword from 'src/components/form-auth/InputAuthPassword.vue';
+import ButtonAuth from './ButtonAuth.vue';
 
 import { useAuthStore } from 'src/stores/auth';
 
@@ -120,38 +121,42 @@ const submitForm = async () => {
 </script>
 
 <template>
-    <FormAuthBase @submit-form="submitForm" class="form-login">
-        <InputAuthEmail v-model="enteredEmail" :autofocus="true" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
-        <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
-        
-        <q-btn
-          label="login"
-          type="submit"
-          class="bg-white"
-          :outline="false"
-          :disable="!enteredEmail || !enteredPassword"
-        >
-
-        </q-btn>
-      </FormAuthBase>
+    <section class="section-parent-form-login flex justify-center items-center">
+        <FormAuthBase @submit-form="submitForm" class="form-login">
+            <InputAuthEmail v-model="enteredEmail" :autofocus="true" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
+            <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
+            <ButtonAuth button-label="Login" :is-disabled="!enteredEmail || !enteredPassword"></ButtonAuth>
+        </FormAuthBase>
+        <section class="container-create-account-redirect-link">
+            <q-btn flat label="Não tenho conta" to="/auth/criar-conta/" />
+        </section>
+    </section>
 </template>
 
 <style lang="scss">
-  section{
+  section.section-parent-form-login{
+    width: 30%;
+    
     form.form-login{
-      label.q-field:first-child{
-        margin-bottom: 20px;
-      }
+        label.q-field:first-child{
+            margin-bottom: 20px;
+        }
+    }
 
-      button.q-btn{
+    .container-create-account-redirect-link{
         width: 100%;
-        height: 45px;
-        color: $custom-blue-1;
-        margin-top: 43px;
-        font-family: "Montserrat", serif;
-        font-weight: 600;
-        font-size: 20px;
-      }
+        margin-top: 10px;
+
+        display: flex;
+        justify-items: start;
+
+        .q-btn{
+            color: $custom_full_white;
+        }
+
+        .q-btn:hover{
+            background-color: $custom-bg-redirect-button;
+        }
     }
   }
 </style>

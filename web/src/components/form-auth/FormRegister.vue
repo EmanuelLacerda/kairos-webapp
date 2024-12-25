@@ -12,6 +12,8 @@ import InputAuthEmail from 'src/components/form-auth/InputAuthEmail.vue';
 import InputAuthPassword from 'src/components/form-auth/InputAuthPassword.vue';
 import InputAuthName from './InputAuthName.vue';
 import InputAuthConfirmPassword from './InputAuthConfirmPassword.vue';
+import ButtonAuth from './ButtonAuth.vue';
+import RedirectButton from '../RedirectButton.vue';
 
 import { useAuthStore } from 'src/stores/auth';
 import authService from 'src/services/auth'
@@ -106,31 +108,27 @@ const submitForm = async () => {
 </script>
 
 <template>
-    <FormAuthBase @submit-form="submitForm" class="form-login" v-if="!accountCreateSuccessfully">
-      <InputAuthName v-model="enteredName" :error-message="errorMessageName" @remove-message-error="removeErrorMessageName"  :autofocus="true"></InputAuthName>
-      <InputAuthEmail v-model="enteredEmail" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
-      <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
-      <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
-      
-      <q-btn
-        label="login"
-        type="submit"
-        class="bg-white"
-        :outline="false"
-        :disable="!enteredEmail || !enteredPassword"
-      >
-
-      </q-btn>
-    </FormAuthBase>
-    <section class="box-verify-email-message" v-else>
-      <h1>Verifique sua caixa de mensagens</h1>
-      <p>Enviamos um código para <strong>{{enteredEmail}}</strong>. Clique no botão abaixo e insira esse código na página que será aberta para verificar seu e-mail.</p>
-      <q-btn label="Verificar e-mail" to="/auth/verificar-email/" size="20px" :rounded="true"></q-btn>
+    <section class="section-parent-form-register flex justify-center items-center">
+      <FormAuthBase @submit-form="submitForm" class="form-login" v-if="!accountCreateSuccessfully">
+        <InputAuthName v-model="enteredName" :error-message="errorMessageName" @remove-message-error="removeErrorMessageName"  :autofocus="true"></InputAuthName>
+        <InputAuthEmail v-model="enteredEmail" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
+        <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
+        <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
+        <ButtonAuth button-label="Criar conta" :is-disabled="!enteredName || !enteredEmail || !enteredPassword || enteredConfirmPassword"></ButtonAuth>
+      </FormAuthBase>
+      <section class="box-verify-email-message" v-else>
+        <h1>Verifique sua caixa de mensagens</h1>
+        <p>Enviamos um código para <strong>{{enteredEmail}}</strong>. Clique no botão abaixo e insira esse código na página que será aberta para verificar seu e-mail.</p>
+        <!-- <q-btn label="Verificar e-mail" to="/auth/verificar-email/" size="20px" :rounded="true"></q-btn> -->
+        <RedirectButton button-label="Verificar e-mail" redirect-link="/auth/verificar-email/"></RedirectButton>
+      </section>
     </section>
 </template>
 
 <style lang="scss">
-  section{
+  section.section-parent-form-register{
+    width: 50%;
+
     form.form-login{
       label.q-field{
         margin-bottom: 20px;
@@ -171,6 +169,9 @@ const submitForm = async () => {
       font-size: 32px;
       font-weight: 700;
       color: $custom-orange-1;
+      line-height: 38px;
+      text-align: center;
+      margin-bottom: 20px;
     }
 
     p{
@@ -178,13 +179,6 @@ const submitForm = async () => {
 
       text-align: center;
       font-size: 19px;
-    }
-
-    .q-btn{
-      margin-top: 100px;
-
-      background-color: $custom-bg-redirect-button;
-      color:$custom-text-color-redirect-button;
     }
   }
 </style>

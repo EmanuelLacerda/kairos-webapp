@@ -14,18 +14,18 @@ function submitForm(){
 </script>
 
 <template>
-    <q-form
-      class="form-auth-base"
-      method="post"
-      @submit.prevent="submitForm"
-    >
-        <slot></slot>
-    </q-form>
+  <q-form
+    class="form-auth-base"
+    method="post"
+    @submit.prevent="submitForm"
+  >
+      <slot></slot>
+  </q-form>
 </template>
 
 <style lang="scss">
 form.form-auth-base{
-  width: 24%;
+  width: 100%;
   min-width: 369px;
   height: 6%;
 }
