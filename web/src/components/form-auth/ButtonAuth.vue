@@ -11,6 +11,10 @@ defineProps({
     isDisabled: {
         type: Boolean,
         default: false
+    },
+    isProcessRunning: {
+        type: Boolean,
+        default: false
     }
 })
 </script>
@@ -22,6 +26,7 @@ defineProps({
         class="bg-white"
         :outline="false"
         :disable="isDisabled"
+        :loading="isProcessRunning"
     >
 
     </q-btn>
