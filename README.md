@@ -75,6 +75,7 @@ cd ..
 
 <h4>Passo 04: Adicione as variáveis de ambiente no diretório server</h4>
 Ao acessar server/.env.examples você verá o seguinte conteúdo:
+
 ```
 SECRET_KEY=
 DEBUG=
