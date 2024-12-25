@@ -41,6 +41,8 @@ const errorMessageEmail = ref('')
 const errorMessagePassword = ref('')
 const errorMessageConfirmPassword = ref('')
 
+const isRegisterProcessRunning = ref(false)
+
 const removeErrorMessageName = () => {
   errorMessageName.value = "";
 }
@@ -61,6 +63,8 @@ const accountCreateSuccessfully = ref(false);
 
 const submitForm = async () => {
   if(enteredName.value && enteredEmail.value && enteredPassword.value && enteredConfirmPassword.value){
+    isRegisterProcessRunning.value = true;
+
     const result = validatePassword(enteredPassword.value, enteredConfirmPassword.value);
 
     if(result.isPasswordInvalid){
@@ -103,6 +107,8 @@ const submitForm = async () => {
         }
       }
     }
+
+    isRegisterProcessRunning.value = false;
   }
 }
 </script>
@@ -114,7 +120,7 @@ const submitForm = async () => {
         <InputAuthEmail v-model="enteredEmail" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
         <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
         <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
-        <ButtonAuth button-label="Criar conta" :is-disabled="!enteredName || !enteredEmail || !enteredPassword || enteredConfirmPassword"></ButtonAuth>
+        <ButtonAuth button-label="Criar conta" :is-disabled="!enteredName || !enteredEmail || !enteredPassword || enteredConfirmPassword" :is-process-running="isRegisterProcessRunning"></ButtonAuth>
       </FormAuthBase>
       <section class="box-verify-email-message" v-else>
         <h1>Verifique sua caixa de mensagens</h1>
