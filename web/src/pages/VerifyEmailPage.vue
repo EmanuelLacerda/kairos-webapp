@@ -25,19 +25,24 @@ const wasEmailVerified = ref(false)
 
 const errorMessageCode = ref('')
 
+const isVerificationProcessRunning = ref(false)
+
 const removeErrorMessageCode = () => {
   errorMessageCode.value = "";
 }
 
-const submitFirstForm = () => {
+const submitEmailForm = () => {
   if(enteredEmail.value){
     wasEmailSubmit.value = true;
   }
 }
 
-const submitSecondForm = async () => {
+const submitCodeForm = async () => {
   if(enteredCode.value){
-    const resultEmailVerification = await authStore.verifyEmail({
+    isVerificationProcessRunning.value = true;
+
+    const resultEmailVerification = await 
+    authStore.verifyEmail({
       "code": enteredCode.value
     })
 
@@ -54,6 +59,8 @@ const submitSecondForm = async () => {
         errorMessageCode.value = resultEmailVerification.error_message;
       }
   }
+
+  isVerificationProcessRunning.value = false;
 }
 </script>
 
@@ -61,11 +68,11 @@ const submitSecondForm = async () => {
   <q-page padding class="flex items-center justify-center">
     <section class="section-parent-verify-email flex items-center justify-center">
       <p class="title" v-if="!wasEmailVerified">Digite abaixo {{ wasEmailSubmit ? "o código que você recebeu" : "o e-mail que você quer verificar" }}</p>
-      <FormAuthBase v-if="!wasEmailVerified && !wasEmailSubmit" class="form-verify-email flex items-center justify-center" @submit-form="submitFirstForm">
+      <FormAuthBase v-if="!wasEmailVerified && !wasEmailSubmit" class="form-verify-email flex items-center justify-center" @submit-form="submitEmailForm">
         <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
-        <ButtonAuth button-label="Continuar"></ButtonAuth>
+        <ButtonAuth button-label="Continuar" :is-disabled="!enteredEmail"></ButtonAuth>
       </FormAuthBase>
-      <FormAuthBase v-else-if="!wasEmailVerified && wasEmailSubmit" class="form-verify-email" @submit-form="submitSecondForm">
+      <FormAuthBase v-else-if="!wasEmailVerified && wasEmailSubmit" class="form-verify-email" @submit-form="submitCodeForm">
         <InputAuthBase
           type="text"
           name="code"
@@ -75,7 +82,7 @@ const submitSecondForm = async () => {
           @remove-message-error="removeErrorMessageCode"
         >
         </InputAuthBase>
-        <ButtonAuth button-label="Verificar"></ButtonAuth>
+        <ButtonAuth button-label="Verificar" :is-disabled="!enteredCode" :is-process-running="isVerificationProcessRunning"></ButtonAuth>
       </FormAuthBase>
       <section class="container-email-successfully-verification-message flex justify-center items-center" v-else>
         <h1>Parabéns, seu e-mail foi verificado com sucesso!</h1>
