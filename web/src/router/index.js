@@ -2,7 +2,9 @@ import { defineRouter } from '#q-app/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
 
-export default defineRouter(function ({store}) {
+import { useAuthStore } from 'src/stores/auth'
+
+export default defineRouter(function () {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory)
@@ -14,16 +16,26 @@ export default defineRouter(function ({store}) {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
-  Router.beforeEach((to, from, next) => {
-    const auth = store.state._rawValue.auth
+  Router.beforeEach(async (to, from, next) => {
 
-    console.log(auth)
+    if(to.matched.some(record => record.meta.requireLogin)){
+      const authStore = useAuthStore();
 
-    if(to.matched.some(record => record.meta.requireLogin) && !auth.isAuthenticated._value){
-      next({
-        name: 'LogIn',
-        query: {to: to.path}
-      });
+      const result = await authStore.checkIfUserAuthenticated();
+
+      if(result.isUserAuthenticated){
+        if(result.new_access_token){
+          authStore.updateAccessToken(result.new_access_token);
+        }
+
+        next();
+      } else{
+        authStore.removeAuthenticatedStatus();
+        next({
+          name: 'LogIn',
+          query: {to: to.path}
+        });
+      }
     } else{
       next();
     }
