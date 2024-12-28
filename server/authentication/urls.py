@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import LogoutUserView, PasswordResetConfirmView, PasswordResetRequestView, RegisterUserView, SetNewPasswordView, VerifyUserEmailView, LoginUserView, TestAuthenticationView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     # register user endpoint
@@ -10,8 +11,11 @@ urlpatterns = [
 
     # login and logout endpoints
     path('login/', LoginUserView.as_view(), name='login'),
-    path('profile/', TestAuthenticationView.as_view(), name='granted'),
     path('logout/', LogoutUserView.as_view(), name='logout'),
+
+    # check valid of access token endpoint and refresh token endpoint
+    path('profile/', TestAuthenticationView.as_view(), name='granted'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='refresh-token'),
 
     # change password endpoints
     path('password-reset/', PasswordResetRequestView.as_view(), name='password-reset'),
