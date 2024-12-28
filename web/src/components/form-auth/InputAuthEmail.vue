@@ -8,7 +8,7 @@ defineOptions({
 defineProps({
     autofocus: {
         type: Boolean,
-        required: true
+        default: false
     },
 })
 
