@@ -3,6 +3,8 @@ defineOptions({
   name: 'IndexPage'
 })
 
+import CalendarEvents from 'src/components/events/CalendarEvents.vue';
+
 import { useAuthStore } from 'src/stores/auth';
 
 const authStore = useAuthStore();
@@ -11,5 +13,6 @@ const authStore = useAuthStore();
 <template>
   <q-page padding>
     <h1>Hi, {{ authStore.user.name }}!</h1>
+    <CalendarEvents></CalendarEvents>
   </q-page>
 </template>
