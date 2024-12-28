@@ -120,7 +120,7 @@ const submitForm = async () => {
         <InputAuthEmail v-model="enteredEmail" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
         <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
         <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
-        <ButtonAuth button-label="Criar conta" :is-disabled="!enteredName || !enteredEmail || !enteredPassword || enteredConfirmPassword" :is-process-running="isRegisterProcessRunning"></ButtonAuth>
+        <ButtonAuth button-label="Criar conta" :is-disabled="!enteredName || !enteredEmail || !enteredPassword || !enteredConfirmPassword" :is-process-running="isRegisterProcessRunning"></ButtonAuth>
       </FormAuthBase>
       <section class="box-verify-email-message" v-else>
         <h1>Verifique sua caixa de mensagens</h1>
