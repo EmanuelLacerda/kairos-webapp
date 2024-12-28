@@ -15,7 +15,7 @@
           Quasar App
         </q-toolbar-title>
 
-        <q-btn @click="logout" v-if="authStore.isAuthenticated">Sair</q-btn>
+        <q-btn @click="logout" v-if="authStore.isAuthenticated" :loading="isLogoutRunning">Sair</q-btn>
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
@@ -49,9 +49,11 @@
 <script setup>
 import { ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth';
 import { useRouter } from 'vue-router';
 
+const $q = useQuasar()
 const router = useRouter()
 
 const authStore = useAuthStore()
@@ -101,14 +103,31 @@ const linksList = [
   }
 ]
 
+const isLogoutRunning = ref(false);
+
 const leftDrawerOpen = ref(false)
 
 function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-function logout(){
-  authStore.logout();
-  router.push("/auth/login/")
+async function logout(){
+  isLogoutRunning.value=true;
+
+  const resultLogout = await authStore.logout();
+
+  isLogoutRunning.value = false;
+
+  if(resultLogout.wasLogoutSuccessfully){
+    $q.notify({
+      message: "Saída com sucesso!",
+      type: "positive",
+      timeout: "500",
+      closeBtn: true
+    })
+    router.push("/auth/login/");
+  } else{
+    console.log(resultLogout.error_message);
+  }
 }
 </script>
