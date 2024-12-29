@@ -5,11 +5,15 @@ import FullCalendarComponent from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
+import Swal from 'sweetalert2'
+
 import dayjs from 'dayjs'
+
+import EventModal from './EventModal.vue';
+
 
 const loadingFullCalendar = ref(false)
 const viewType = ref("")
-
 const calendarOptions = reactive({
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: viewType.value === '' ? "dayGridDay" : viewType.value ? viewType.value : "dayGridMonth",
@@ -68,15 +72,38 @@ const calendarOptions = reactive({
             })
         }
     },
-    dateClick:handleDateClick
+    dateClick(info){
+        const infoData = info.date;
+
+        if(dayjs().isAfter(infoData,"day")){
+            notificationError.fire({
+                text: "Você não pode agendar eventos para uma data anterior à hoje."
+            })
+        } else{
+            startData.value = dayjs(infoData.toDateString()).format('DD/MM/YYYY');
+            currentEventModalAction.value = 'add';
+            showModal.value = true;
+        }
+    }
 
 })
 
-function handleDateClick(info){
-    const infoData = info.date;
+const showModal = ref(false);
+const startData = ref("")
+const currentEventModalAction = ref("edit")
 
-    console.log(infoData);
-    console.log(dayjs());
+
+const notificationError = Swal.mixin({
+    icon: "error",
+    showCancelButton: false,
+    confirmButtonColor: "#2148C0",
+    confirmButtonText: "OK",
+    animation: true
+});
+
+
+const closeEventModal = ()=>{
+    showModal.value = false
 }
 </script>
 
@@ -86,5 +113,6 @@ function handleDateClick(info){
           <span>Carregando...</span>
         </section>
         <FullCalendarComponent :options="calendarOptions" />
+        <EventModal :show-modal="showModal" :start-date="startData" :action="currentEventModalAction" @close-event-modal="closeEventModal"></EventModal>
       </section>
 </template>
