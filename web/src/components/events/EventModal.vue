@@ -28,6 +28,15 @@ const emit = defineEmits([
 
 import { ref, watch } from 'vue';
 
+import { useAuthStore } from 'src/stores/auth';
+import eventsService from 'src/services/events';
+
+const { post: postEvent } = eventsService()
+
+import Swal from 'sweetalert2'
+
+const authStore = useAuthStore();
+
 
 const enteredDescription = ref("");
 
@@ -36,6 +45,8 @@ const enteredStartTime = ref("");
 const endDateConverted = ref("");
 const enteredEndDate = ref("");
 const enteredEndTime = ref("");
+
+const isCreateEventLoading = ref(false);
 
 
 watch(() => prop.startDate, (newStartDate) => {
@@ -52,12 +63,70 @@ watch(() => prop.showModal, (newShowModal) => {
 })
 
 
+const ToastBaseMixin = Swal.mixin({
+  toast: true,
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+});
+
+const ToastSuccess = ToastBaseMixin.mixin({
+    icon: "success"
+})
+const ToastError = ToastBaseMixin.mixin({
+    icon: "error"
+})
+
+
 function closeEventModal(){
     emit("closeEventModal");
 }
 
+async function createEvent(){
+    if(enteredDescription.value && definedStartDate.value && enteredStartTime.value && enteredEndDate.value && enteredEndTime.value){
+        isCreateEventLoading.value = true;
+
+        const userID = await authStore.getUserId();
+
+        if(userID === null){
+            ToastError.fire({
+                title: "Você precisar estar logado para agendar um evento!",
+                width: 600,
+                position: "center-right"
+            })
+        } else{
+            const formattedStartDate = definedStartDate.value.split('/').reverse().join('-');
+
+            const eventData = {
+                'creator': userID,
+                'description': enteredDescription.value,
+                'start': `${formattedStartDate}T${enteredStartTime.value}:00Z`,
+                'end': `${enteredEndDate.value.replaceAll("/","-")}T${enteredEndTime.value}:00Z`
+            }
+
+            const response = await postEvent(eventData)
+
+            if(response.statusText === 'Created'){
+                closeEventModal();
+                ToastSuccess.fire({
+                    title: "Evento criado com sucesso!",
+                    position: "bottom-center"
+                });
+            }
+
+            isCreateEventLoading.value = false;
+        }
+    }
+}
+
 function handleSubmit(){
-    console.log("submit");
+    if(prop.action === 'add'){
+        createEvent();
+    }
 }
 </script>
 
@@ -77,7 +146,7 @@ function handleSubmit(){
                 <q-form
                     class="form-event"
                     method="post"
-                    @submit.prevent="console.log('submit')"
+                    @submit.prevent="handleSubmit"
                 >
                     <q-card-section class="form-body">
                         <q-input
@@ -166,7 +235,7 @@ function handleSubmit(){
                             label="Agendar"
                             type="submit"
                             :disable="!enteredDescription || !enteredStartTime || !enteredEndDate || !enteredEndTime"
-                            @submit.prevent="handleSubmit"
+                            :loading="isCreateEventLoading"
                             v-if="action === 'add'"
                         >
 
@@ -175,7 +244,6 @@ function handleSubmit(){
                             label="Editar"
                             type="submit"
                             :disable="!enteredDescription || !enteredStartTime || !enteredEndDate || !enteredEndTime"
-                            @submit.prevent="handleSubmit"
                             v-if="action === 'edit'"
                         >
 
