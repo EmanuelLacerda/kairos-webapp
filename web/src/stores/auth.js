@@ -210,6 +210,16 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    async function getUserId(){
+        const access_token = LocalStorage.getItem('access_token')
+
+        if(access_token){
+            return jwtDecode(access_token).user_id;
+        }
+
+        return null;
+    }
+
     
-    return {user, access_token, isAuthenticated, init, login, logout, register, verifyEmail, checkIfUserAuthenticated, updateAccessToken, removeAuthenticatedStatus, setAuthenticatedStatus}
+    return {user, access_token, isAuthenticated, init, login, logout, register, verifyEmail, checkIfUserAuthenticated, getUserId, updateAccessToken, removeAuthenticatedStatus, setAuthenticatedStatus}
 })
