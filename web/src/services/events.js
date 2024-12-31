@@ -1,9 +1,10 @@
 import useApi from 'src/composables/UseApi'
 
 export default function eventsService () {
-  const { postEvent } = useApi('/events/')
+  const { postEvent, getUserEvents } = useApi('/events/')
 
   return {
-    "post": postEvent
+    "post": postEvent,
+    "getUserEvents": getUserEvents
   }
 }
