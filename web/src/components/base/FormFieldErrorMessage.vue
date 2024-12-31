@@ -1,0 +1,33 @@
+<script setup>
+defineOptions({
+  name: "ErrorMessage",
+});
+
+defineProps({
+    errorMessage: String
+})
+</script>
+<template>
+    <p class="error-text-message">{{errorMessage}}</p>
+</template>
+
+<style lang="scss">
+form{
+    .invalidInput{
+        .q-field__control::before{
+            border-color: $custom-border-color-error !important;
+        }
+
+        .q-icon, input{
+            color: $custom-text-color-error !important;
+        }
+    }
+
+    .error-text-message{
+        color: $custom-text-color-error;
+        margin-top: 12px;
+        font-weight: 600;
+        text-align: justify;
+    }
+}
+</style>
