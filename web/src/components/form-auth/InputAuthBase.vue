@@ -15,6 +15,10 @@ const emit = defineEmits([
   'removeMessageError'
 ])
 
+
+import FormFieldErrorMessage from '../base/FormFieldErrorMessage.vue';
+
+
 const removeMessageError = () => {
     emit('removeMessageError');
 }
@@ -24,7 +28,7 @@ const removeMessageError = () => {
     <q-input :outlined="true" :autofocus="autofocus" :class="{invalidInput: errorMessage}" @focus="removeMessageError" v-bind="$attrs">
         <slot></slot>
     </q-input>
-    <p class="error-text-message" v-if="errorMessage">{{errorMessage}}</p>
+    <FormFieldErrorMessage :error-message="errorMessage"></FormFieldErrorMessage>
 </template>
 
 <style lang="scss">
@@ -51,22 +55,6 @@ form.form-auth-base{
             font-weight: 300;
             font-size: 18px;
         }
-    }
-    .invalidInput{
-        .q-field__control::before{
-            border-color: $custom-border-color-error !important;
-        }
-
-        .q-icon, input{
-            color: $custom-text-color-error !important;
-        }
-    }
-
-    .error-text-message{
-        color: $custom-text-color-error;
-        margin-top: 12px;
-        font-weight: 600;
-        text-align: justify;
     }
 }
 </style>
