@@ -37,6 +37,8 @@ import Swal from 'sweetalert2'
 
 const authStore = useAuthStore();
 
+import ErrorMessage from '../base/FormFieldErrorMessage.vue';
+
 
 const enteredDescription = ref("");
 
@@ -46,7 +48,18 @@ const endDateConverted = ref("");
 const enteredEndDate = ref("");
 const enteredEndTime = ref("");
 
-const isCreateEventLoading = ref(false);
+const isCreateEventRunning = ref(false);
+
+const errorMessageStartPeriod = ref('');
+const errorMessageEndPeriod = ref('');
+
+const removeErrorMessageStartPeriod = () => {
+    errorMessageStartPeriod.value = "";
+}
+
+const removeErrorMessageEndPeriod = () => {
+    errorMessageEndPeriod.value = "";
+}
 
 
 watch(() => prop.startDate, (newStartDate) => {
@@ -88,7 +101,7 @@ function closeEventModal(){
 
 async function createEvent(){
     if(enteredDescription.value && definedStartDate.value && enteredStartTime.value && enteredEndDate.value && enteredEndTime.value){
-        isCreateEventLoading.value = true;
+        isCreateEventRunning.value = true;
 
         const userID = await authStore.getUserId();
 
@@ -116,9 +129,15 @@ async function createEvent(){
                     title: "Evento criado com sucesso!",
                     position: "bottom-center"
                 });
+            } else if(response.statusText === 'Bad Request'){
+                if(response.data.start_period){
+                    errorMessageStartPeriod.value = response.data.start_period[0]
+                } else if(response.data.end_period){
+                    errorMessageEndPeriod.value = response.data.end_period[0]
+                }
             }
 
-            isCreateEventLoading.value = false;
+            isCreateEventRunning.value = false;
         }
     }
 }
@@ -168,6 +187,8 @@ function handleSubmit(){
                             v-model="definedStartDate"
                             :disable="true"
                             :readonly="true"
+                            :class="{invalidInput: errorMessageStartPeriod}"
+                            @focus="removeErrorMessageStartPeriod"
                         >
                         </q-input>
                         <q-input
@@ -176,6 +197,8 @@ function handleSubmit(){
                             mask="time"
                             :rules="['time']"
                             label="Hora inicial:"
+                            :class="{invalidInput: errorMessageStartPeriod}"
+                            @focus="removeErrorMessageStartPeriod"
                         >
                             <template v-slot:append>
                             <q-icon name="access_time" class="cursor-pointer">
@@ -189,6 +212,7 @@ function handleSubmit(){
                             </q-icon>
                             </template>
                         </q-input>
+                        <ErrorMessage :error-message="errorMessageStartPeriod"></ErrorMessage>
                         <q-input
                             name="start-date"
                             id="start-date"
@@ -197,6 +221,8 @@ function handleSubmit(){
                             mask="##/##/####"
                             :rules="[v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)]"
                             label="Data Final:"
+                            :class="{invalidInput: errorMessageEndPeriod}"
+                            @focus="removeErrorMessageEndPeriod"
                         >
                             <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
@@ -216,6 +242,8 @@ function handleSubmit(){
                             mask="time"
                             :rules="['time']"
                             label="Hora Final:"
+                            :class="{invalidInput: errorMessageEndPeriod}"
+                            @focus="removeErrorMessageEndPeriod"
                         >
                             <template v-slot:append>
                             <q-icon name="access_time" class="cursor-pointer">
@@ -229,13 +257,14 @@ function handleSubmit(){
                             </q-icon>
                             </template>
                         </q-input>
+                        <ErrorMessage :error-message="errorMessageEndPeriod"></ErrorMessage>
                     </q-card-section>
                     <q-card-section class="form-footer">
                         <q-btn
                             label="Agendar"
                             type="submit"
                             :disable="!enteredDescription || !enteredStartTime || !enteredEndDate || !enteredEndTime"
-                            :loading="isCreateEventLoading"
+                            :loading="isCreateEventRunning"
                             v-if="action === 'add'"
                         >
 
