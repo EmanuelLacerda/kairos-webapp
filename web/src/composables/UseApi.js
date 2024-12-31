@@ -7,7 +7,7 @@ export default function useApi (url) {
       const response = await api.post(url, form)
       return response
     } catch (error) {
-      throw new Error(error)
+      return error.response
     }       
   }
 
