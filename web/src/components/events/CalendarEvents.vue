@@ -11,6 +11,12 @@ import dayjs from 'dayjs'
 
 import EventModal from './EventModal.vue';
 
+import eventsService from 'src/services/events';
+import {useAuthStore} from 'src/stores/auth';
+
+const { getUserEvents } = eventsService();
+const authStore = useAuthStore();
+
 
 const loadingFullCalendar = ref(false)
 const viewType = ref("")
@@ -30,14 +36,39 @@ const calendarOptions = reactive({
         week: 'Semana',
         day: 'Dia',
     },
-    events: [
-        {
-            id: 1,
-            title: "Evento teste",
-            start: '2024-12-26',
-            end: '2024-12-28'
+    events: async function(info, successCallback, failureCallback) {
+        loadingFullCalendar.value = true;
+
+        const start = info.startStr;
+        const end = info.endStr;
+
+        const userId = await authStore.getUserId();
+
+        if(userId === null){
+            failureCallback("Você precisa estar logado para os seus eventos serem carregados!"); //esta mensagem deve ser mostrada como um toast
+        } else{
+            const response = await getUserEvents(userId, start, end)
+
+            let events = [];
+
+            if(response.statusText === "OK"){
+                events = response.data.map(event => {
+                    return {
+                        id: event.id,
+                        title: event.description,
+                        start: event.start,
+                        end: event.end
+                    }
+                });
+            } else if(response.statusText != 'Not Found'){
+                console.log(response);
+            }
+
+            loadingFullCalendar.value = false;
+
+            successCallback(events);
         }
-    ],
+    },
     dayMaxEvents: true,
     eventStartEditable: false,
     datesSet: function(dateInfo) {
@@ -109,10 +140,23 @@ const closeEventModal = ()=>{
 
 <template>
     <section>
-        <section v-if="loadingFullCalendar">
-          <span>Carregando...</span>
+        <section v-if="loadingFullCalendar" class="flex column items-center justify-center loading-events-indication">
+            <p>Carregando seus eventos</p>
+            <q-spinner
+                color="primary"
+                size="6em"
+                :thickness="10"
+            />
         </section>
         <FullCalendarComponent :options="calendarOptions" />
         <EventModal :show-modal="showModal" :start-date="startData" :action="currentEventModalAction" @close-event-modal="closeEventModal"></EventModal>
       </section>
 </template>
+
+<style lang="scss">
+    .loading-events-indication{
+        p{
+            font-size: 2rem;
+        }
+    }
+</style>
