@@ -139,8 +139,6 @@ class ListUserEvents(GenericAPIView):
             if start_date and end_date:
                 start = parser.parse(start_date)
                 end = parser.parse(end_date)
-
-                print(start, end)
                 
                 events = events.filter(Q(start__range=(start, end)) | Q(end__range=(start,end)))
 

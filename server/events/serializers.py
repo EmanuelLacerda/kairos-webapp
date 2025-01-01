@@ -25,7 +25,7 @@ class EventSerializer(serializers.ModelSerializer):
                 return data
         
         if start_date.timestamp() < current_date.timestamp():
-            raise serializers.ValidationError({"star_period": "O período inicial deve ser posterior ou igual ao período atual."})
+            raise serializers.ValidationError({"start_period": "O período inicial deve ser posterior ou igual ao período atual."})
         elif start_date >= end_date:
             raise serializers.ValidationError({"end_period": "O período final deve ser posterior ao período inicial."})
             
