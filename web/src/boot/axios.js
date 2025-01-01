@@ -19,9 +19,11 @@ api.interceptors.request.use(async req => {
   if(result.isUserAuthenticated){
     if(result.new_access_token){
       authStore.updateAccessToken(result.new_access_token)
+      req.headers.Authorization = `Bearer ${result.new_access_token}`
     }
   } else{
     authStore.removeAuthenticatedStatus()
+    req.headers.Authorization = "";
   }
 
   return req;
