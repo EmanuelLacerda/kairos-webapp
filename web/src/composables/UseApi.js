@@ -2,6 +2,20 @@ import { api } from 'boot/axios'
 
 export default function useApi (url) {
 
+  const getEvent = async (id=null) => {
+    try {
+      if(id){
+        const response = await api.get(`${url}${id}/`);
+        return response;
+      }
+      
+      const response = await api.get(url);
+      return response
+    } catch (error) {
+      return error.response
+    }       
+  }
+
   const postEvent = async (form) => {
     try {
       const response = await api.post(url, form)
@@ -10,6 +24,25 @@ export default function useApi (url) {
       return error.response
     }       
   }
+
+  const putEvent = async (id, form) => {
+    try {
+      const response = await api.put(`${url}${id}/`, form)
+      return response
+    } catch (error) {
+      return error.response
+    }       
+  }
+
+  const patchEvent = async (id, form) => {
+    try {
+      const response = await api.put(`${url}${id}/`, form)
+      return response
+    } catch (error) {
+      return error.response
+    }       
+  }
+
 
   const getUserEvents = async (userId, startDate=null, endDate=null) => {
     try {
@@ -25,6 +58,9 @@ export default function useApi (url) {
 
   return {
     postEvent,
+    putEvent,
+    patchEvent,
+    getEvent,
     getUserEvents
   }
 }
