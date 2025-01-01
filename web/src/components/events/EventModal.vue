@@ -19,10 +19,19 @@ const prop = defineProps({
             return ["add", "edit"].includes(value);
         }
 
+    },
+    eventId: {
+        type: String,
+        required: true
+    },
+    eventData: {
+        type: Object,
+        required: true
     }
 })
 const emit = defineEmits([
-    'closeEventModal'
+    'closeEventModal',
+    'forceCalendarRerender'
 ])
 
 
@@ -31,7 +40,7 @@ import { ref, watch } from 'vue';
 import { useAuthStore } from 'src/stores/auth';
 import eventsService from 'src/services/events';
 
-const { post: postEvent } = eventsService()
+const { post: postEvent, patch: patchEvent } = eventsService()
 
 import Swal from 'sweetalert2'
 
@@ -43,32 +52,54 @@ import ErrorMessage from '../base/FormFieldErrorMessage.vue';
 const enteredDescription = ref("");
 
 const definedStartDate = ref("");
+const startDateConverted = ref("");
+const enteredStartDate = ref("");
 const enteredStartTime = ref("");
 const endDateConverted = ref("");
 const enteredEndDate = ref("");
 const enteredEndTime = ref("");
 
+const eventID = ref("");
+
 const isCreateEventRunning = ref(false);
+const isEditEventRunning = ref(false);
 
 const errorMessageStartPeriod = ref('');
 const errorMessageEndPeriod = ref('');
-
-const removeErrorMessageStartPeriod = () => {
-    errorMessageStartPeriod.value = "";
-}
-
-const removeErrorMessageEndPeriod = () => {
-    errorMessageEndPeriod.value = "";
-}
 
 
 watch(() => prop.startDate, (newStartDate) => {
     definedStartDate.value = newStartDate;
 })
-watch(() => prop.showModal, (newShowModal) => {
-    if(!newShowModal){
+watch(() => prop.eventId, (newEventId) => {
+    eventID.value = newEventId;
+})
+watch(() => prop.eventData.id, (newEventData) => {
+    if(newEventData){
+        let [ start_date, start_time ] = prop.eventData.start.split("T");
+        start_date = start_date.replaceAll("-","/")
+        start_time = start_time.slice(0,5);
+
+        let [ end_date, end_time ] = prop.eventData.end.split("T");
+        end_date = end_date.replaceAll("-","/")
+        end_time = end_time.slice(0,5).replaceAll("-","/");
+
+        definedStartDate.value = "";
+
+        enteredDescription.value = prop.eventData.description;
+
+        startDateConverted.value = start_date.split('/').reverse().join('/');
+        enteredStartDate.value = start_date;
+        enteredStartTime.value = start_time;
+
+        endDateConverted.value = end_date.split('/').reverse().join('/');
+        enteredEndDate.value = end_date;
+        enteredEndTime.value = end_time;
+    } else{
         enteredDescription.value = "";
+
         enteredStartTime.value = "";
+
         endDateConverted.value = "";
         enteredEndDate.value = "";
         enteredEndTime.value = "";
@@ -98,6 +129,16 @@ const ToastError = ToastBaseMixin.mixin({
 function closeEventModal(){
     emit("closeEventModal");
 }
+function forceCalendarRerender(){
+    emit("forceCalendarRerender");
+}
+
+const removeErrorMessageStartPeriod = () => {
+    errorMessageStartPeriod.value = "";
+}
+const removeErrorMessageEndPeriod = () => {
+    errorMessageEndPeriod.value = "";
+}
 
 async function createEvent(){
     if(enteredDescription.value && definedStartDate.value && enteredStartTime.value && enteredEndDate.value && enteredEndTime.value){
@@ -107,7 +148,8 @@ async function createEvent(){
 
         if(userID === null){
             ToastError.fire({
-                title: "Você precisar estar logado para agendar um evento!",
+                title: "Usuário não autenticado",
+                text: "Você precisar estar logado para agendar um evento!",
                 width: 600,
                 position: "center-right"
             })
@@ -126,9 +168,11 @@ async function createEvent(){
             if(response.statusText === 'Created'){
                 closeEventModal();
                 ToastSuccess.fire({
-                    title: "Evento criado com sucesso!",
+                    title: "Criação de evento",
+                    text: "Evento criado com sucesso!",
                     position: "bottom-center"
                 });
+                forceCalendarRerender();
             } else if(response.statusText === 'Bad Request'){
                 if(response.data.start_period){
                     errorMessageStartPeriod.value = response.data.start_period[0]
@@ -136,15 +180,84 @@ async function createEvent(){
                     errorMessageEndPeriod.value = response.data.end_period[0]
                 }
             }
-
-            isCreateEventRunning.value = false;
         }
+
+        isCreateEventRunning.value = false;
+    }
+}
+async function editEvent(){
+    if(enteredDescription.value && enteredStartTime.value && enteredEndDate.value && enteredEndTime.value){
+        isEditEventRunning.value = true;
+
+        const userID = await authStore.getUserId();
+
+        if(userID === null){
+            ToastError.fire({
+                title: "Usuário não autenticado",
+                text: "Você precisar estar logado para editar um evento!",
+                width: 600,
+                position: "center-right"
+            })
+        } else{
+            if(!eventID.value){
+                ToastError.fire({
+                    title: "Edição do evento",
+                    text: "As alterações deste evento não podem ser salvas porque não foi possível obter o id deste evento! Entre em contato como o suporte.",
+                    width: 600,
+                    position: "center-right"
+                })
+            } else{
+                const result = await Swal.fire({
+                    title: "Edição do evento",
+                    text: `Deseja realmente que seu evento fique de ${enteredStartTime.value} do dia ${startDateConverted.value} até ${enteredEndTime.value} do dia ${endDateConverted.value}?`,
+                    icon: "info",
+                    showCancelButton: true,
+                    confirmButtonColor: "#2148C0",
+                    cancelButtonColor: "rgb(221, 92, 92)",
+                    cancelButtonText: 'Não',
+                    confirmButtonText: "Sim",
+                    customClass: {confirmButton: 'swal2-confirm-custom', cancelButton: 'swal2-cancel-custom'},
+                })
+
+                if (result.isConfirmed) {
+                    const eventData = {
+                        'creator': userID,
+                        'description': enteredDescription.value,
+                        'start': `${enteredStartDate.value.replaceAll("/","-")}T${enteredStartTime.value}:00Z`,
+                        'end': `${enteredEndDate.value.replaceAll("/","-")}T${enteredEndTime.value}:00Z`
+                    }
+
+                    const response = await patchEvent(eventID.value, eventData);
+
+                    if(response.statusText === "OK"){
+                        closeEventModal();
+                        ToastSuccess.fire({
+                            title: "Edição de evento",
+                            text: "Evento editado com sucesso!",
+                            position: "bottom-center"
+                        });
+                        forceCalendarRerender();
+                    } else if(response.statusText === 'Bad Request'){
+                        console.log(response.data);
+                        if(response.data.start_period){
+                            errorMessageStartPeriod.value = response.data.start_period[0]
+                        } else if(response.data.end_period){
+                            errorMessageEndPeriod.value = response.data.end_period[0]
+                        }
+                    }
+                }
+            }
+        }
+
+        isEditEventRunning.value = false;
     }
 }
 
 function handleSubmit(){
     if(prop.action === 'add'){
         createEvent();
+    } else if(prop.action === 'edit'){
+        editEvent();
     }
 }
 </script>
@@ -182,14 +295,36 @@ function handleSubmit(){
                             name="start-date"
                             id="start-date"
                             filled
-                            type="text"
                             label="Data inicial:"
                             v-model="definedStartDate"
                             :disable="true"
                             :readonly="true"
+                            v-if="action === 'add'"
+                        >
+                        </q-input>
+                        <q-input
+                            name="start-date"
+                            id="start-date"
+                            filled
+                            label="Data Inicial:"
+                            v-model="startDateConverted"
+                            mask="##/##/####"
+                            :rules="[v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)]"
                             :class="{invalidInput: errorMessageStartPeriod}"
                             @focus="removeErrorMessageStartPeriod"
+                            v-if="action === 'edit'"
                         >
+                            <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                    <q-date v-model="enteredStartDate" @update:model-value="startDateConverted = enteredStartDate.split('/').reverse().join('/')">
+                                    <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Fechar" color="primary" flat />
+                                    </div>
+                                    </q-date>
+                                </q-popup-proxy>
+                                </q-icon>
+                            </template>
                         </q-input>
                         <q-input
                             filled
@@ -273,6 +408,7 @@ function handleSubmit(){
                             label="Editar"
                             type="submit"
                             :disable="!enteredDescription || !enteredStartTime || !enteredEndDate || !enteredEndTime"
+                            :loading="isEditEventRunning"
                             v-if="action === 'edit'"
                         >
 
