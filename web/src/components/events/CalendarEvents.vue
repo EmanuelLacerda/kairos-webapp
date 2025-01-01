@@ -14,12 +14,15 @@ import EventModal from './EventModal.vue';
 import eventsService from 'src/services/events';
 import {useAuthStore} from 'src/stores/auth';
 
-const { getUserEvents } = eventsService();
+const { get: getEvent, getUserEvents } = eventsService();
 const authStore = useAuthStore();
 
 
+const eventId = ref("");
+const eventData = reactive({});
 const loadingFullCalendar = ref(false)
 const viewType = ref("")
+const calendarKey = ref(0);
 const calendarOptions = reactive({
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: viewType.value === '' ? "dayGridDay" : viewType.value ? viewType.value : "dayGridMonth",
@@ -105,6 +108,7 @@ const calendarOptions = reactive({
     },
     dateClick(info){
         const infoData = info.date;
+        eventId.value = "";
 
         if(dayjs().isAfter(infoData,"day")){
             notificationError.fire({
@@ -113,8 +117,40 @@ const calendarOptions = reactive({
         } else{
             startData.value = dayjs(infoData.toDateString()).format('DD/MM/YYYY');
             currentEventModalAction.value = 'add';
+            
+            eventData.id = "";
+            eventData.description = "";
+            eventData.start = "";
+            eventData.end = "";
+
             showModal.value = true;
         }
+    },
+    eventClick: async function(info){
+        document.body.style.cursor = 'wait';
+        document.querySelector(".fc .fc-daygrid-body-balanced .fc-daygrid-day-events:hover").style.cursor = 'wait';
+
+        eventId.value = info.event.id;
+        currentEventModalAction.value = 'edit';
+
+        const response = await getEvent(eventId.value);
+
+        if(response.statusText === "OK"){
+            eventData.id = response.data.id;
+            eventData.description = response.data.description;
+            eventData.start = response.data.start;
+            eventData.end = response.data.end;
+        } else{
+            eventData.id = "";
+            eventData.description = "";
+            eventData.start = "";
+            eventData.end = "";
+        }
+
+        showModal.value = true;
+
+        document.body.style.cursor = 'default';
+        document.querySelector(".fc .fc-daygrid-body-balanced .fc-daygrid-day-events:hover").style.cursor = 'pointer';
     }
 
 })
@@ -136,6 +172,10 @@ const notificationError = Swal.mixin({
 const closeEventModal = ()=>{
     showModal.value = false
 }
+
+const forceCalendarRerender = () => {
+    calendarKey.value += 1;
+}
 </script>
 
 <template>
@@ -148,12 +188,15 @@ const closeEventModal = ()=>{
                 :thickness="10"
             />
         </section>
-        <FullCalendarComponent :options="calendarOptions" />
-        <EventModal :show-modal="showModal" :start-date="startData" :action="currentEventModalAction" @close-event-modal="closeEventModal"></EventModal>
+        <FullCalendarComponent :options="calendarOptions" :key="calendarKey" />
+        <EventModal :show-modal="showModal" :start-date="startData" :action="currentEventModalAction" :event-id="eventId" :event-data="eventData" @close-event-modal="closeEventModal" @force-calendar-rerender="forceCalendarRerender"></EventModal>
       </section>
 </template>
 
 <style lang="scss">
+    .fc .fc-daygrid-body-balanced .fc-daygrid-day-events:hover{
+        cursor: pointer;
+    }
     .loading-events-indication{
         p{
             font-size: 2rem;
