@@ -129,7 +129,17 @@ const calendarOptions = reactive({
     },
     eventClick: async function(info){
         document.body.style.cursor = 'wait';
-        document.querySelector(".fc .fc-daygrid-body-balanced .fc-daygrid-day-events:hover").style.cursor = 'wait';
+
+        let clickedEventSelector = ""
+
+        if(document.querySelector(".fc .fc-daygrid-body-balanced .fc-daygrid-day-events:hover")){
+            clickedEventSelector = document.querySelector(".fc .fc-daygrid-body-balanced .fc-daygrid-day-events:hover");
+        } else{
+            clickedEventSelector = document.querySelector(".fc .fc-daygrid-event-harness:hover");
+        }
+
+        clickedEventSelector.style.cursor = 'wait';
+
 
         eventId.value = info.event.id;
         startData.value = "";
@@ -152,7 +162,7 @@ const calendarOptions = reactive({
         showModal.value = true;
 
         document.body.style.cursor = 'default';
-        document.querySelector(".fc .fc-daygrid-body-balanced .fc-daygrid-day-events:hover").style.cursor = 'pointer';
+        clickedEventSelector.style.cursor = 'pointer';
     }
 
 })
