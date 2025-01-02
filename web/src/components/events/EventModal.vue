@@ -40,7 +40,7 @@ import { ref, watch } from 'vue';
 import { useAuthStore } from 'src/stores/auth';
 import eventsService from 'src/services/events';
 
-const { post: postEvent, patch: patchEvent } = eventsService()
+const { post: postEvent, patch: patchEvent, delete: deleteEvent } = eventsService()
 
 import Swal from 'sweetalert2'
 
@@ -255,6 +255,35 @@ async function editEvent(){
         isEditEventRunning.value = false;
     }
 }
+async function removeEvent(){
+    const result = await Swal.fire({
+        title: "Remoção de eventos",
+        text: "Deseja realmente remover esse evento?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2148C0",
+        cancelButtonColor: "rgb(221, 92, 92)",
+        cancelButtonText: 'Não',
+        confirmButtonText: "Sim",
+        customClass: {confirmButton: 'swal2-confirm-custom', cancelButton: 'swal2-cancel-custom'},
+    })
+    
+    if (result.isConfirmed) {
+        const response = await deleteEvent(eventID.value);
+
+        if(response.statusText === "No Content"){
+            closeEventModal();
+            ToastSuccess.fire({
+                title: "Remoção de evento",
+                text: "Evento removido com sucesso!",
+                position: "bottom-center"
+            });
+            forceCalendarRerender();
+        } else{
+            console.log(response);
+        }
+    }
+}
 
 function handleSubmit(){
     if(prop.action === 'add'){
@@ -277,7 +306,7 @@ function handleSubmit(){
                 <button class="close-modal" type="button" @click="closeEventModal"><span aria-hidden="true">&times;</span></button>
             </q-card-section>
             <q-card-section>
-                <q-icon v-if="action === 'edit'" class="bi bi-trash3-fill"></q-icon>
+                <q-icon v-if="action === 'edit'" class="bi bi-trash3-fill" @click="removeEvent"></q-icon>
                 <q-form
                     class="form-event"
                     method="post"
