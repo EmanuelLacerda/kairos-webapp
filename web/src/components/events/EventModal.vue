@@ -51,13 +51,15 @@ import ErrorMessage from '../base/FormFieldErrorMessage.vue';
 
 const enteredDescription = ref("");
 
-const definedStartDate = ref("");
 const startDateConverted = ref("");
 const enteredStartDate = ref("");
 const enteredStartTime = ref("");
+const initialPeriod = ref(new Date(prop.eventData.start))
+
 const endDateConverted = ref("");
 const enteredEndDate = ref("");
 const enteredEndTime = ref("");
+const finalPeriod = ref(new Date(prop.eventData.end))
 
 const eventID = ref("");
 
@@ -69,13 +71,15 @@ const errorMessageEndPeriod = ref('');
 
 
 watch(() => prop.startDate, (newStartDate) => {
-    definedStartDate.value = newStartDate;
+    if(newStartDate){
+        startDateConverted.value = newStartDate;
+        enteredStartDate.value = newStartDate.split('/').reverse().join('/');
+    }
 })
-watch(() => prop.eventId, (newEventId) => {
-    eventID.value = newEventId;
-})
-watch(() => prop.eventData.id, (newEventData) => {
-    if(newEventData){
+watch(() => prop.eventData.id, (newEventID) => {
+    eventID.value = newEventID;
+
+    if(newEventID){
         let [ start_date, start_time ] = prop.eventData.start.split("T");
         start_date = start_date.replaceAll("-","/")
         start_time = start_time.slice(0,5);
@@ -84,25 +88,26 @@ watch(() => prop.eventData.id, (newEventData) => {
         end_date = end_date.replaceAll("-","/")
         end_time = end_time.slice(0,5).replaceAll("-","/");
 
-        definedStartDate.value = "";
-
         enteredDescription.value = prop.eventData.description;
 
         startDateConverted.value = start_date.split('/').reverse().join('/');
         enteredStartDate.value = start_date;
         enteredStartTime.value = start_time;
+        initialPeriod.value = new Date(prop.eventData.start);
 
         endDateConverted.value = end_date.split('/').reverse().join('/');
         enteredEndDate.value = end_date;
         enteredEndTime.value = end_time;
+        finalPeriod.value = new Date(prop.eventData.end);
     } else{
         enteredDescription.value = "";
-
-        enteredStartTime.value = "";
 
         endDateConverted.value = "";
         enteredEndDate.value = "";
         enteredEndTime.value = "";
+
+        initialPeriod.value = new Date("");
+        finalPeriod.value = new Date("");
     }
 })
 
@@ -141,7 +146,7 @@ const removeErrorMessageEndPeriod = () => {
 }
 
 async function createEvent(){
-    if(enteredDescription.value && definedStartDate.value && enteredStartTime.value && enteredEndDate.value && enteredEndTime.value){
+    if(enteredDescription.value && enteredStartDate.value && enteredStartTime.value && enteredEndDate.value && enteredEndTime.value){
         isCreateEventRunning.value = true;
 
         const userID = await authStore.getUserId();
@@ -154,12 +159,10 @@ async function createEvent(){
                 position: "center-right"
             })
         } else{
-            const formattedStartDate = definedStartDate.value.split('/').reverse().join('-');
-
             const eventData = {
                 'creator': userID,
                 'description': enteredDescription.value,
-                'start': `${formattedStartDate}T${enteredStartTime.value}:00Z`,
+                'start': `${enteredStartDate.value.replaceAll("/","-")}T${enteredStartTime.value}:00Z`,
                 'end': `${enteredEndDate.value.replaceAll("/","-")}T${enteredEndTime.value}:00Z`
             }
 
@@ -193,7 +196,7 @@ async function editEvent(){
 
         if(userID === null){
             ToastError.fire({
-                title: "Usuário não autenticado",
+                title: "Edição do evento",
                 text: "Você precisar estar logado para editar um evento!",
                 width: 600,
                 position: "center-right"
@@ -288,19 +291,10 @@ function handleSubmit(){
                             label="Descrição:"
                             v-model="enteredDescription"
                             :outlined="true"
+                            :disable="new Date() > finalPeriod"
+                            :readonly="new Date() > finalPeriod"
                         >
             
-                        </q-input>
-                        <q-input
-                            name="start-date"
-                            id="start-date"
-                            filled
-                            label="Data inicial:"
-                            v-model="definedStartDate"
-                            :disable="true"
-                            :readonly="true"
-                            v-if="action === 'add'"
-                        >
                         </q-input>
                         <q-input
                             name="start-date"
@@ -310,11 +304,12 @@ function handleSubmit(){
                             v-model="startDateConverted"
                             mask="##/##/####"
                             :rules="[v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)]"
-                            :class="{invalidInput: errorMessageStartPeriod}"
+                            :class="{invalidInput: errorMessageStartPeriod && action === 'edit'}"
                             @focus="removeErrorMessageStartPeriod"
-                            v-if="action === 'edit'"
+                            :disable="action === 'add' || new Date() > initialPeriod"
+                            :readonly="action === 'add' || new Date() > initialPeriod"
                         >
-                            <template v-slot:append>
+                            <template v-slot:append v-if="action === 'edit' && new Date() < initialPeriod">
                                 <q-icon name="event" class="cursor-pointer">
                                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                     <q-date v-model="enteredStartDate" @update:model-value="startDateConverted = enteredStartDate.split('/').reverse().join('/')">
@@ -334,8 +329,10 @@ function handleSubmit(){
                             label="Hora inicial:"
                             :class="{invalidInput: errorMessageStartPeriod}"
                             @focus="removeErrorMessageStartPeriod"
+                            :disable="new Date() > initialPeriod"
+                            :readonly="new Date() > initialPeriod"
                         >
-                            <template v-slot:append>
+                            <template v-slot:append v-if="action === 'add' || new Date() < initialPeriod">
                             <q-icon name="access_time" class="cursor-pointer">
                                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                 <q-time v-model="enteredStartTime">
@@ -358,8 +355,10 @@ function handleSubmit(){
                             label="Data Final:"
                             :class="{invalidInput: errorMessageEndPeriod}"
                             @focus="removeErrorMessageEndPeriod"
+                            :disable="new Date() > finalPeriod"
+                            :readonly="new Date() > finalPeriod"
                         >
-                            <template v-slot:append>
+                            <template v-slot:append v-if="action === 'add' || new Date() < finalPeriod">
                                 <q-icon name="event" class="cursor-pointer">
                                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                     <q-date v-model="enteredEndDate" @update:model-value="endDateConverted = enteredEndDate.split('/').reverse().join('/')">
@@ -379,8 +378,10 @@ function handleSubmit(){
                             label="Hora Final:"
                             :class="{invalidInput: errorMessageEndPeriod}"
                             @focus="removeErrorMessageEndPeriod"
+                            :disable="new Date() > finalPeriod"
+                            :readonly="new Date() > finalPeriod"
                         >
-                            <template v-slot:append>
+                            <template v-slot:append v-if="action === 'add' || new Date() < finalPeriod">
                             <q-icon name="access_time" class="cursor-pointer">
                                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                 <q-time v-model="enteredEndTime">
@@ -409,7 +410,7 @@ function handleSubmit(){
                             type="submit"
                             :disable="!enteredDescription || !enteredStartTime || !enteredEndDate || !enteredEndTime"
                             :loading="isEditEventRunning"
-                            v-if="action === 'edit'"
+                            v-if="action === 'edit' && new Date() < finalPeriod"
                         >
 
                         </q-btn>
