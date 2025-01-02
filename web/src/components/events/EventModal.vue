@@ -274,12 +274,26 @@ async function removeEvent(){
         if(response.statusText === "No Content"){
             closeEventModal();
             ToastSuccess.fire({
-                title: "Remoção de evento",
+                title: "Remoção do evento",
                 text: "Evento removido com sucesso!",
                 position: "bottom-center"
             });
             forceCalendarRerender();
-        } else{
+        } else if(response.statusText === "Not Found") {
+            ToastError.fire({
+                title: "Remoção do evento",
+                text: "Não foi possível encontrar este evento! Entre em contato com o suporte.",
+                width: 600,
+                position: "center-right"
+            })
+        } else if(response.statusText === "Bad Request" && response.data.message){
+            ToastError.fire({
+                title: "Remoção do evento",
+                text: response.data.message,
+                width: 600,
+                position: "center-right"
+            })
+        }else{
             console.log(response);
         }
     }
@@ -306,7 +320,7 @@ function handleSubmit(){
                 <button class="close-modal" type="button" @click="closeEventModal"><span aria-hidden="true">&times;</span></button>
             </q-card-section>
             <q-card-section>
-                <q-icon v-if="action === 'edit'" class="bi bi-trash3-fill" @click="removeEvent"></q-icon>
+                <q-icon v-if="action === 'edit' && new Date() < finalPeriod" class="bi bi-trash3-fill" @click="removeEvent"></q-icon>
                 <q-form
                     class="form-event"
                     method="post"
