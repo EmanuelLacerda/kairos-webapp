@@ -59,8 +59,8 @@ const calendarOptions = reactive({
                     return {
                         id: event.id,
                         title: event.description,
-                        start: event.start,
-                        end: event.end
+                        start: event.start.replace("Z",""),
+                        end: event.end.replace("Z","")
                     }
                 });
             } else if(response.statusText != 'Not Found'){
@@ -115,6 +115,7 @@ const calendarOptions = reactive({
                 text: "Você não pode agendar eventos para uma data anterior à hoje."
             })
         } else{
+            eventId.value = "";
             startData.value = dayjs(infoData.toDateString()).format('DD/MM/YYYY');
             currentEventModalAction.value = 'add';
             
@@ -131,6 +132,7 @@ const calendarOptions = reactive({
         document.querySelector(".fc .fc-daygrid-body-balanced .fc-daygrid-day-events:hover").style.cursor = 'wait';
 
         eventId.value = info.event.id;
+        startData.value = "";
         currentEventModalAction.value = 'edit';
 
         const response = await getEvent(eventId.value);
@@ -138,8 +140,8 @@ const calendarOptions = reactive({
         if(response.statusText === "OK"){
             eventData.id = response.data.id;
             eventData.description = response.data.description;
-            eventData.start = response.data.start;
-            eventData.end = response.data.end;
+            eventData.start = response.data.start.replace("Z","");
+            eventData.end = response.data.end.replace("Z","");
         } else{
             eventData.id = "";
             eventData.description = "";
