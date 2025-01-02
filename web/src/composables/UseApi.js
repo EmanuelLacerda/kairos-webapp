@@ -13,7 +13,7 @@ export default function useApi (url) {
       return response
     } catch (error) {
       return error.response
-    }       
+    }
   }
 
   const postEvent = async (form) => {
@@ -31,7 +31,7 @@ export default function useApi (url) {
       return response
     } catch (error) {
       return error.response
-    }       
+    }
   }
 
   const patchEvent = async (id, form) => {
@@ -39,10 +39,18 @@ export default function useApi (url) {
       const response = await api.put(`${url}${id}/`, form)
       return response
     } catch (error) {
-      return error.response
-    }       
+      return error.response;
+    }
   }
 
+  const deleteEvent = async (id) => {
+    try {
+      const response = await api.delete(`${url}${id}/`)
+      return response
+    } catch (error) {
+      return error.response;
+    }
+  }
 
   const getUserEvents = async (userId, startDate=null, endDate=null) => {
     try {
@@ -52,8 +60,8 @@ export default function useApi (url) {
 
       return await api.get(`auth/user/${userId}/events/`);      
     } catch (error) {
-      throw new Error(error)
-    }       
+      return error.response;
+    }
   }
 
   return {
@@ -61,6 +69,7 @@ export default function useApi (url) {
     putEvent,
     patchEvent,
     getEvent,
+    deleteEvent,
     getUserEvents
   }
 }
