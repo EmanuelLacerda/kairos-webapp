@@ -65,6 +65,7 @@ const eventID = ref("");
 
 const isCreateEventRunning = ref(false);
 const isEditEventRunning = ref(false);
+const isDeleteEventRunning = ref(false);
 
 const errorMessageStartPeriod = ref('');
 const errorMessageEndPeriod = ref('');
@@ -256,6 +257,8 @@ async function editEvent(){
     }
 }
 async function removeEvent(){
+    isDeleteEventRunning.value = true;
+
     const result = await Swal.fire({
         title: "Remoção de eventos",
         text: "Deseja realmente remover esse evento?",
@@ -297,6 +300,8 @@ async function removeEvent(){
             console.log(response);
         }
     }
+
+    isDeleteEventRunning.value = false;
 }
 
 function handleSubmit(){
@@ -313,6 +318,7 @@ function handleSubmit(){
         :model-value="showModal"
         @update:model-value="closeEventModal"
         :no-shake="true"
+        class="event-modal"
     >
         <q-card>
             <q-card-section class="flex justify-center items-center">
@@ -320,7 +326,9 @@ function handleSubmit(){
                 <button class="close-modal" type="button" @click="closeEventModal"><span aria-hidden="true">&times;</span></button>
             </q-card-section>
             <q-card-section>
-                <q-icon v-if="action === 'edit' && new Date() < finalPeriod" class="bi bi-trash3-fill" @click="removeEvent"></q-icon>
+                <q-btn v-if="action === 'edit' && new Date() < finalPeriod" :loading="isDeleteEventRunning">
+                    <q-icon class="bi bi-trash3-fill" @click="removeEvent"></q-icon>
+                </q-btn>
                 <q-form
                     class="form-event"
                     method="post"
@@ -472,7 +480,7 @@ function handleSubmit(){
 </template>
 
 <style lang="scss">
-    .q-dialog{
+    .event-modal.q-dialog{
         .q-card{
             width: 100%;
 
@@ -483,6 +491,10 @@ function handleSubmit(){
                     font-size: 3rem;
                 }
             }
+        }
+
+        .q-icon.bi.bi-trash3-fill {
+            cursor: pointer;
         }
     }
 </style>
