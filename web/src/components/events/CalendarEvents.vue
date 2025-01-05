@@ -212,6 +212,82 @@ const forceCalendarRerender = () => {
 </template>
 
 <style lang="scss">
+    .fc{
+        font-family: "Montserrat", serif !important;
+
+        .fc-toolbar.fc-header-toolbar{
+            height: 97px;
+            background-color: $custom-bg-orange-1;
+            color: $custom-full-white;
+            padding: 0 27px;
+            margin-bottom: 0;
+
+            .fc-toolbar-chunk{
+                .fc-button-group{
+                    .fc-button-primary{
+                        background-color: transparent;
+                        border: 0px solid transparent;
+
+                        height: 45px;
+
+                        font-weight: 500;
+                    }
+                    .fc-button-active{
+                        background-color: #865b1b !important;
+                    }
+                }
+
+                .fc-toolbar-title{
+                    font-weight: 600;
+                    
+                }
+                
+                .fc-toolbar-title::first-letter{
+                    text-transform: capitalize;
+                }
+            }
+        }
+
+        .fc-view-harness{
+            border: 1px solid #ddd;
+            border-top-width: 0px;
+
+            .fc-view{
+                padding: 40px 61px;
+            }
+
+            .fc-daygrid-day-bg .fc-non-business{
+                background-color: $custom-full-white;
+            }
+            .fc-daygrid-day.fc-day-today{
+                .fc-daygrid-day-top{
+                    color: $custom-full-white;
+                }
+
+                .fc-non-business{
+                    background: #d3a662 !important;
+                }
+            }
+
+            .fc-daygrid-day-number{
+                font-weight: 500 !important;
+            }
+
+            .fc-daygrid-event-harness .fc-h-event{
+                background-color: #40658b;
+                border: #40658b;
+            }
+
+            .fc-daygrid-event-dot{
+                border-color: #40658b;
+            }
+
+            .fc-day-today .fc-daygrid-day-frame{
+                background-color: #d3a662;
+            }
+        }
+    }
+
     .fc .fc-daygrid-body-balanced .fc-daygrid-day-events:hover{
         cursor: pointer;
     }
