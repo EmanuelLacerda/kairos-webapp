@@ -39,6 +39,12 @@ const calendarOptions = reactive({
         week: 'Semana',
         day: 'Dia',
     },
+    businessHours: {
+        daysOfWeek: [ 0,1, 2, 3, 4,5,6 ],
+
+        startTime: '00:00',
+        endTime: '23:59',
+    },
     events: async function(info, successCallback, failureCallback) {
         loadingFullCalendar.value = true;
 
