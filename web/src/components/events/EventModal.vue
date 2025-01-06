@@ -321,20 +321,121 @@ function handleSubmit(){
         class="event-modal"
     >
         <q-card>
-            <q-card-section class="flex justify-center items-center">
-                <h1 class="title">AGENDAMENTO</h1>
+            <q-card-section class="flex justify-between items-center modal-header">
+                <h1 class="title">{{ action === 'add' ? 'Agendar' : 'Editar' }} Evento</h1>
                 <button class="close-modal" type="button" @click="closeEventModal"><span aria-hidden="true">&times;</span></button>
             </q-card-section>
-            <q-card-section>
-                <q-btn v-if="action === 'edit' && new Date() < finalPeriod" :loading="isDeleteEventRunning">
-                    <q-icon class="bi bi-trash3-fill" @click="removeEvent"></q-icon>
-                </q-btn>
+            <q-card-section class="modal-body">
                 <q-form
                     class="form-event"
                     method="post"
                     @submit.prevent="handleSubmit"
                 >
                     <q-card-section class="form-body">
+                        <q-card-section class="datetime-field flex flex-row flex-nowrap">
+                            <q-input
+                                name="start-date"
+                                id="start-date"
+                                filled
+                                label="Data Inicial:"
+                                v-model="startDateConverted"
+                                mask="##/##/####"
+                                :rules="[v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)]"
+                                :class="{invalidInput: errorMessageStartPeriod && action === 'edit'}"
+                                @focus="removeErrorMessageStartPeriod"
+                                :disable="action === 'add' || new Date() > initialPeriod"
+                                :readonly="action === 'add' || new Date() > initialPeriod"
+                            >
+                                <template v-slot:append v-if="action === 'edit' && new Date() < initialPeriod">
+                                    <q-icon name="event" class="cursor-pointer">
+                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                        <q-date v-model="enteredStartDate" @update:model-value="startDateConverted = enteredStartDate.split('/').reverse().join('/')">
+                                        <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Fechar" color="primary" flat />
+                                        </div>
+                                        </q-date>
+                                    </q-popup-proxy>
+                                    </q-icon>
+                                </template>
+                            </q-input>
+                            <q-input
+                                filled
+                                v-model="enteredStartTime"
+                                mask="time"
+                                :rules="['time']"
+                                label="Hora inicial:"
+                                :class="{invalidInput: errorMessageStartPeriod}"
+                                @focus="removeErrorMessageStartPeriod"
+                                :disable="new Date() > initialPeriod"
+                                :readonly="new Date() > initialPeriod"
+                            >
+                                <template v-slot:append v-if="action === 'add' || new Date() < initialPeriod">
+                                <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                    <q-time v-model="enteredStartTime">
+                                        <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Fechar" color="primary" flat />
+                                        </div>
+                                    </q-time>
+                                    </q-popup-proxy>
+                                </q-icon>
+                                </template>
+                            </q-input>
+                            <ErrorMessage :error-message="errorMessageStartPeriod"></ErrorMessage>
+                        </q-card-section>
+
+                        <q-card-section class="datetime-field flex flex-row flex-nowrap">
+                            <q-input
+                                name="start-date"
+                                id="start-date"
+                                filled
+                                v-model="endDateConverted"
+                                mask="##/##/####"
+                                :rules="[v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)]"
+                                label="Data Final:"
+                                :class="{invalidInput: errorMessageEndPeriod}"
+                                @focus="removeErrorMessageEndPeriod"
+                                :disable="new Date() > finalPeriod"
+                                :readonly="new Date() > finalPeriod"
+                            >
+                                <template v-slot:append v-if="action === 'add' || new Date() < finalPeriod">
+                                    <q-icon name="event" class="cursor-pointer">
+                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                        <q-date v-model="enteredEndDate" @update:model-value="endDateConverted = enteredEndDate.split('/').reverse().join('/')">
+                                        <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Fechar" color="primary" flat />
+                                        </div>
+                                        </q-date>
+                                    </q-popup-proxy>
+                                    </q-icon>
+                                </template>
+                            </q-input>
+                            <q-input
+                                filled
+                                v-model="enteredEndTime"
+                                mask="time"
+                                :rules="['time']"
+                                label="Hora Final:"
+                                :class="{invalidInput: errorMessageEndPeriod}"
+                                @focus="removeErrorMessageEndPeriod"
+                                :disable="new Date() > finalPeriod"
+                                :readonly="new Date() > finalPeriod"
+                            >
+                                <template v-slot:append v-if="action === 'add' || new Date() < finalPeriod">
+                                <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                    <q-time v-model="enteredEndTime">
+                                        <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Fechar" color="primary" flat />
+                                        </div>
+                                    </q-time>
+                                    </q-popup-proxy>
+                                </q-icon>
+                                </template>
+                            </q-input>
+                            <ErrorMessage :error-message="errorMessageEndPeriod"></ErrorMessage>
+                        </q-card-section>
+
                         <q-input
                             type="textarea"
                             name="description"
@@ -347,104 +448,6 @@ function handleSubmit(){
                         >
             
                         </q-input>
-                        <q-input
-                            name="start-date"
-                            id="start-date"
-                            filled
-                            label="Data Inicial:"
-                            v-model="startDateConverted"
-                            mask="##/##/####"
-                            :rules="[v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)]"
-                            :class="{invalidInput: errorMessageStartPeriod && action === 'edit'}"
-                            @focus="removeErrorMessageStartPeriod"
-                            :disable="action === 'add' || new Date() > initialPeriod"
-                            :readonly="action === 'add' || new Date() > initialPeriod"
-                        >
-                            <template v-slot:append v-if="action === 'edit' && new Date() < initialPeriod">
-                                <q-icon name="event" class="cursor-pointer">
-                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="enteredStartDate" @update:model-value="startDateConverted = enteredStartDate.split('/').reverse().join('/')">
-                                    <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Fechar" color="primary" flat />
-                                    </div>
-                                    </q-date>
-                                </q-popup-proxy>
-                                </q-icon>
-                            </template>
-                        </q-input>
-                        <q-input
-                            filled
-                            v-model="enteredStartTime"
-                            mask="time"
-                            :rules="['time']"
-                            label="Hora inicial:"
-                            :class="{invalidInput: errorMessageStartPeriod}"
-                            @focus="removeErrorMessageStartPeriod"
-                            :disable="new Date() > initialPeriod"
-                            :readonly="new Date() > initialPeriod"
-                        >
-                            <template v-slot:append v-if="action === 'add' || new Date() < initialPeriod">
-                            <q-icon name="access_time" class="cursor-pointer">
-                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                <q-time v-model="enteredStartTime">
-                                    <div class="row items-center justify-end">
-                                    <q-btn v-close-popup label="Fechar" color="primary" flat />
-                                    </div>
-                                </q-time>
-                                </q-popup-proxy>
-                            </q-icon>
-                            </template>
-                        </q-input>
-                        <ErrorMessage :error-message="errorMessageStartPeriod"></ErrorMessage>
-                        <q-input
-                            name="start-date"
-                            id="start-date"
-                            filled
-                            v-model="endDateConverted"
-                            mask="##/##/####"
-                            :rules="[v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)]"
-                            label="Data Final:"
-                            :class="{invalidInput: errorMessageEndPeriod}"
-                            @focus="removeErrorMessageEndPeriod"
-                            :disable="new Date() > finalPeriod"
-                            :readonly="new Date() > finalPeriod"
-                        >
-                            <template v-slot:append v-if="action === 'add' || new Date() < finalPeriod">
-                                <q-icon name="event" class="cursor-pointer">
-                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="enteredEndDate" @update:model-value="endDateConverted = enteredEndDate.split('/').reverse().join('/')">
-                                    <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Fechar" color="primary" flat />
-                                    </div>
-                                    </q-date>
-                                </q-popup-proxy>
-                                </q-icon>
-                            </template>
-                        </q-input>
-                        <q-input
-                            filled
-                            v-model="enteredEndTime"
-                            mask="time"
-                            :rules="['time']"
-                            label="Hora Final:"
-                            :class="{invalidInput: errorMessageEndPeriod}"
-                            @focus="removeErrorMessageEndPeriod"
-                            :disable="new Date() > finalPeriod"
-                            :readonly="new Date() > finalPeriod"
-                        >
-                            <template v-slot:append v-if="action === 'add' || new Date() < finalPeriod">
-                            <q-icon name="access_time" class="cursor-pointer">
-                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                <q-time v-model="enteredEndTime">
-                                    <div class="row items-center justify-end">
-                                    <q-btn v-close-popup label="Fechar" color="primary" flat />
-                                    </div>
-                                </q-time>
-                                </q-popup-proxy>
-                            </q-icon>
-                            </template>
-                        </q-input>
-                        <ErrorMessage :error-message="errorMessageEndPeriod"></ErrorMessage>
                     </q-card-section>
                     <q-card-section class="form-footer">
                         <q-btn
@@ -463,7 +466,14 @@ function handleSubmit(){
                             :loading="isEditEventRunning"
                             v-if="action === 'edit' && new Date() < finalPeriod"
                         >
-
+                        </q-btn>
+                        <q-btn
+                            label="Remover"
+                            type="button"
+                            @click="removeEvent"
+                            v-if="action === 'edit' && new Date() < finalPeriod" :loading="isDeleteEventRunning" 
+                            class="remove-event"
+                        >
                         </q-btn>
                         <q-btn
                             label="Cancelar"
@@ -483,18 +493,90 @@ function handleSubmit(){
     .event-modal.q-dialog{
         .q-card{
             width: 100%;
+            background-color: rgba(44,62,80,0.7);
 
             .q-card__section{
-                gap: 16px;
+                gap: 16px;                
+            }
+
+            .modal-header{
+                margin: 0 32px;
+                padding: 0;
 
                 h1{
-                    font-size: 3rem;
+                    font-size: 1.8rem;
+                    color: $custom-full-white;
+                    font-weight: 400;
+                }
+
+                .close-modal{
+                    background: transparent;
+                    color: $custom-full-white;
+                    font-size: 2.8rem;
+                    border: none;
+                    margin: 0;
                 }
             }
-        }
 
-        .q-icon.bi.bi-trash3-fill {
-            cursor: pointer;
+            .modal-body{
+                padding: 0 16px;
+
+                .form-event{
+                    .q-card__section{
+                        padding: 0 16px;
+                    }
+
+                    .form-body{
+                        .q-field__inner{
+                            .q-field__control-container{
+                                background-color: $custom-full-white;
+    
+                                input,textarea{
+                                    background-color: $custom-full-white;
+                                } 
+                            }
+                            .q-field__append{
+                                background-color: $custom-full-white;
+                            }
+                            .q-field__control{
+                                background-color: $custom-full-white;
+                            }
+                        }
+    
+                        .datetime-field{
+                            flex-wrap: nowrap;
+                            padding: 0 0 16px;
+                            gap: 0;
+    
+                            label{
+                                width: 50%;
+                            }
+                            label:first-child{
+                                margin-right: 16px;
+                            }
+                        }
+                    }
+
+                    .form-footer{
+                        display: flex;
+                        padding: 40px 16px 0;
+                        margin-bottom: 40px;
+
+                        .q-btn{
+                            width: 50%;
+                            background-color: $custom-full-white;
+                            color: $custom-blue-1;
+                            font-weight: 600;
+                            font-size: 16px;
+                        }
+
+                        .remove-event{
+                            background-color: $custom-red-1;
+                            color: $custom-full-white;
+                        }
+                    }
+                }
+            }
         }
     }
 </style>
