@@ -25,22 +25,33 @@ $info      : #31CCEC;
 $warning   : #F2C037;
 
 
-$custom-blue-1: #2148C0;
-$custom-blue-2: #264ECA;
+$custom-blue-1: #264ECA;
 $custom-full-white: #fff;
-$custom-red-1: rgb(221, 92, 92);
+$custom-red-1: #E74C3C;
 $custom-red-2: rgb(182 53 53);
 $custom-orange-1: #CC7A00;
+$custom-gray-1: #F5F5F5;
+$custom-green-1: #2ECC71;
+$custom-green-2:#27AE60;
 
-$custom-text-color-error: $custom-red-1;
-$custom-text-color-error-2: $custom-red-2;
-$custom-text-color-redirect-button: $custom-full-white;
+$custom-text-primary: $custom-blue-1;
+$custom-text-secondary: $custom-gray-1;
+$custom-text-success: $custom-green-1;
+$custom-text-danger: $custom-red-1;
+$custom-text-danger-2: $custom-red-2;
+$custom-text-color-redirect-button: $custom-text-primary;
 
+$custom-bg-primary: $custom-blue-1;
+$custom-bg-secondary: $custom-gray-1;
+$custom-bg-success: $custom-green-1;
+$custom-bg-danger: $custom-red-1;
+$custom-bg-danger-2: $custom-red-2;
+$custom-bg-redirect-button: $custom-bg-primary;
 $custom-bg-white: $custom-full-white;
 $custom-bg-orange-1: $custom-orange-1;
-$custom-bg-redirect-button: $custom-blue-2;
-$custom-bg-error: $custom-red-1;
 
 $custom-border-color-error: $custom-red-1;
 $custom-border-color-error-2: $custom-red-2;
 
+$custom-bg-owm-events: $custom-bg-primary;
+$custom-bg-invited-events: $custom-green-2;
