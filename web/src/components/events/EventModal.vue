@@ -456,29 +456,32 @@ function handleSubmit(){
                             :disable="!enteredDescription || !enteredStartTime || !enteredEndDate || !enteredEndTime"
                             :loading="isCreateEventRunning"
                             v-if="action === 'add'"
+                            class="btn-primary"
                         >
 
                         </q-btn>
                         <q-btn
-                            label="Editar"
                             type="submit"
                             :disable="!enteredDescription || !enteredStartTime || !enteredEndDate || !enteredEndTime"
                             :loading="isEditEventRunning"
                             v-if="action === 'edit' && new Date() < finalPeriod"
+                            class="btn-primary"
                         >
+                            <i class="bi bi-pencil"></i> <span>Editar</span>
                         </q-btn>
                         <q-btn
-                            label="Remover"
                             type="button"
                             @click="removeEvent"
                             v-if="action === 'edit' && new Date() < finalPeriod" :loading="isDeleteEventRunning" 
-                            class="remove-event"
+                            class="btn-danger"
                         >
+                            <i class="bi bi-trash3"></i> <span>Remover</span>
                         </q-btn>
                         <q-btn
                             label="Cancelar"
                             type="button"
                             @click="closeEventModal"
+                            class="btn-secondary"
                         >
 
                         </q-btn>
@@ -537,6 +540,7 @@ function handleSubmit(){
                             }
                             .q-field__append{
                                 background-color: $custom-full-white;
+                                color: $custom-full-black;
                             }
                             .q-field__control{
                                 background-color: $custom-full-white;
@@ -559,20 +563,21 @@ function handleSubmit(){
 
                     .form-footer{
                         display: flex;
+                        justify-content: center;
                         padding: 40px 16px 0;
                         margin-bottom: 40px;
 
                         .q-btn{
-                            width: 50%;
-                            background-color: $custom-full-white;
-                            color: $custom-blue-1;
-                            font-weight: 600;
-                            font-size: 16px;
-                        }
+                            .q-btn__content{
+                                font-weight: 600;
+                                font-size: 16px;
 
-                        .remove-event{
-                            background-color: $custom-red-1;
-                            color: $custom-full-white;
+                                display: flex;
+                                flex-direction: row;
+                                gap: 8px;
+                                justify-content: center;
+                                align-items: center;
+                        }
                         }
                     }
                 }
