@@ -40,15 +40,16 @@ const props = defineProps({
     </q-item-section>
   </q-item>
 </template>
-<style>
+<style lang="scss">
 .q-router-link--exact-active,
 .q-router-link--active {
-  background-color: rgb(157 23 77);
+  background-color: $custom-bg-primary;
+  color: $custom-full-white !important;
   border-radius: 12px;
 }
 
 .q-router-link--exact-active .q-item__section--avatar > i,
 .q-router-link--active .q-item__section--avatar > i {
-  color: #fff !important;
+  color: $custom-full-white !important;
 }
 </style>
