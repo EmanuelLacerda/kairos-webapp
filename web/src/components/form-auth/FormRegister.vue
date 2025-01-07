@@ -143,7 +143,7 @@ const submitForm = async () => {
       button.q-btn{
         width: 100%;
         height: 45px;
-        color: $custom-blue-1;
+        color: $custom-text-primary;
         margin-top: 23px;
         font-family: "Montserrat", serif;
         font-weight: 600;
