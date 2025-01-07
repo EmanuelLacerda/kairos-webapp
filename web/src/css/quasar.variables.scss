@@ -25,14 +25,23 @@ $info      : #31CCEC;
 $warning   : #F2C037;
 
 
+
+$custom-full-black: #000;
+$custom-gray-1: #F5F5F5;
+$custom-gray-2: #555555;
+$custom-gray-3:#ddd;
+$custom-gray-4: #FAFAFA;
 $custom-blue-1: #264ECA;
-$custom-full-white: #fff;
+$custom-blue-2: #346CB7;
+$custom-blue-3: #2c3e50;
 $custom-red-1: #E74C3C;
 $custom-red-2: rgb(182 53 53);
 $custom-orange-1: #CC7A00;
-$custom-gray-1: #F5F5F5;
+$custom-orange-2: #F8C471;
 $custom-green-1: #2ECC71;
 $custom-green-2:#27AE60;
+$custom-green-3: #388E3C;
+$custom-full-white: #fff;
 
 $custom-text-primary: $custom-blue-1;
 $custom-text-secondary: $custom-gray-1;
@@ -49,9 +58,10 @@ $custom-bg-danger-2: $custom-red-2;
 $custom-bg-redirect-button: $custom-bg-primary;
 $custom-bg-white: $custom-full-white;
 $custom-bg-orange-1: $custom-orange-1;
+$custom-bg-page: $custom-gray-4;
 
 $custom-border-color-error: $custom-red-1;
 $custom-border-color-error-2: $custom-red-2;
 
 $custom-bg-owm-events: $custom-bg-primary;
-$custom-bg-invited-events: $custom-green-2;
+$custom-bg-invited-events: #8E44AD;
