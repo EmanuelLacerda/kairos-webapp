@@ -217,7 +217,7 @@ const forceCalendarRerender = () => {
 
         .fc-toolbar.fc-header-toolbar{
             height: 97px;
-            background-color: $custom-bg-orange-1;
+            background-color: $custom-gray-2;
             color: $custom-full-white;
             padding: 0 27px;
             margin-bottom: 0;
@@ -231,9 +231,11 @@ const forceCalendarRerender = () => {
                         height: 45px;
 
                         font-weight: 500;
+                        color: $custom-full-white;
                     }
                     .fc-button-active{
-                        background-color: #865b1b !important;
+                        background-color: $custom-full-white !important;
+                        color: $custom-gray-2;
                     }
                 }
 
@@ -249,7 +251,7 @@ const forceCalendarRerender = () => {
         }
 
         .fc-view-harness{
-            border: 1px solid #ddd;
+            border: 1px solid $custom-gray-3;
             border-top-width: 0px;
 
             .fc-view{
@@ -265,7 +267,7 @@ const forceCalendarRerender = () => {
                 }
 
                 .fc-non-business{
-                    background: #d3a662 !important;
+                    background: $custom-orange-2 !important;
                 }
             }
 
@@ -274,16 +276,16 @@ const forceCalendarRerender = () => {
             }
 
             .fc-daygrid-event-harness .fc-h-event{
-                background-color: #40658b;
-                border: #40658b;
+                background-color: $custom-bg-owm-events;
+                border: $custom-bg-owm-events;
             }
 
             .fc-daygrid-event-dot{
-                border-color: #40658b;
+                border-color: $custom-bg-owm-events;
             }
 
             .fc-day-today .fc-daygrid-day-frame{
-                background-color: #d3a662;
+                background-color: $custom-orange-2;
             }
         }
     }
