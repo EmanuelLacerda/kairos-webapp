@@ -16,3 +16,18 @@
 .swal2-container{
     z-index: 99999;
 }
+
+.btn-primary{
+    background-color: $custom-bg-primary;
+    color: $custom-full-white;
+}
+
+.btn-secondary{
+    background-color: $custom-bg-secondary;
+    color: #333333;
+}
+
+.btn-danger{
+    background-color: $custom-bg-danger;
+    color: $custom-full-white;
+}
