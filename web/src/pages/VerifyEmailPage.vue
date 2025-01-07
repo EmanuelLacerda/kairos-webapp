@@ -6,10 +6,10 @@ defineOptions({
 import { ref } from 'vue';
 import { useQuasar } from 'quasar'
 
-import FormAuthBase from 'src/components/form-auth/FormAuthBase.vue';
-import InputAuthEmail from 'src/components/form-auth/InputAuthEmail.vue';
-import InputAuthBase from 'src/components/form-auth/InputAuthBase.vue';
-import ButtonAuth from 'src/components/form-auth/ButtonAuth.vue';
+import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
+import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
+import InputAuthBase from 'src/components/auth/InputAuthBase.vue';
+import ButtonAuth from 'src/components/auth/ButtonAuth.vue';
 import RedirectButton from 'src/components/RedirectButton.vue';
 
 import { useAuthStore } from 'src/stores/auth';

@@ -7,9 +7,9 @@ defineModel()
 import { ref } from 'vue';
 import { useQuasar } from 'quasar'
 
-import FormAuthBase from 'src/components/form-auth/FormAuthBase.vue';
-import InputAuthEmail from 'src/components/form-auth/InputAuthEmail.vue';
-import InputAuthPassword from 'src/components/form-auth/InputAuthPassword.vue';
+import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
+import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
+import InputAuthPassword from 'src/components/auth/InputAuthPassword.vue';
 import InputAuthName from './InputAuthName.vue';
 import InputAuthConfirmPassword from './InputAuthConfirmPassword.vue';
 import ButtonAuth from './ButtonAuth.vue';

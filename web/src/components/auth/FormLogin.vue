@@ -8,9 +8,9 @@ import { ref } from 'vue';
 import { useQuasar } from 'quasar'
 import { useRoute, useRouter } from 'vue-router';
 
-import FormAuthBase from 'src/components/form-auth/FormAuthBase.vue';
-import InputAuthEmail from 'src/components/form-auth/InputAuthEmail.vue';
-import InputAuthPassword from 'src/components/form-auth/InputAuthPassword.vue';
+import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
+import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
+import InputAuthPassword from 'src/components/auth/InputAuthPassword.vue';
 import ButtonAuth from './ButtonAuth.vue';
 
 import { useAuthStore } from 'src/stores/auth';

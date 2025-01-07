@@ -3,7 +3,7 @@ defineOptions({
   name: 'RegisterUserPage'
 })
 
-import FormRegister from 'src/components/form-auth/FormRegister.vue';
+import FormRegister from 'src/components/auth/FormRegister.vue';
 
 </script>
 
