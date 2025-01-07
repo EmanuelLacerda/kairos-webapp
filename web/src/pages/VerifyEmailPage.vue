@@ -115,7 +115,7 @@ section.section-parent-verify-email{
     }
 
     .error-text-message{
-      color: $custom-text-color-error-2;
+      color: $custom-text-danger-2;
     }
 
     .invalidInput{
@@ -124,7 +124,7 @@ section.section-parent-verify-email{
       }
 
       .q-icon, input{
-          color: $custom-text-color-error-2 !important;
+          color: $custom-text-danger-2 !important;
       }
   }
   }
@@ -138,7 +138,7 @@ section.section-parent-verify-email{
 
   .container-email-successfully-verification-message{
     h1{
-      color: #388E3C;
+      color: $custom-green-3;
       font-size: 30px;
       font-weight: 600;
       text-align: center;
