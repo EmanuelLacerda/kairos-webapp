@@ -19,12 +19,12 @@ form{
         }
 
         .q-icon, input{
-            color: $custom-text-color-error !important;
+            color: $custom-text-danger !important;
         }
     }
 
     .error-text-message{
-        color: $custom-text-color-error;
+        color: $custom-text-danger;
         margin-top: 12px;
         font-weight: 600;
         text-align: justify;
