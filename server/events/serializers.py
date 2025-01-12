@@ -31,11 +31,9 @@ class EventSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError({"end_period": "Você não pode mais alterar o período final, pois a data atual é posterior a ele!"})
                 elif instance.description != data['description']:
                     raise serializers.ValidationError({"description": "Você não pode mais alterar a descrição, pois o período do evento acabou!"})
-            
-            return data
         
-        if start_date.timestamp() < current_date:
-            raise serializers.ValidationError({"start_period": "O período inicial deve ser posterior ou igual ao período atual."})
+        if start_date.timestamp() <= current_date:
+            raise serializers.ValidationError({"start_period": "O período inicial deve ser posterior ao período atual."})
         elif start_date >= end_date:
             raise serializers.ValidationError({"end_period": "O período final deve ser posterior ao período inicial."})
             
