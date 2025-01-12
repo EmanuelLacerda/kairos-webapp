@@ -4,7 +4,6 @@ defineOptions({
 })
 
 import { ref } from 'vue';
-import { useQuasar } from 'quasar'
 
 import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
 import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
@@ -13,10 +12,10 @@ import ButtonAuth from 'src/components/auth/ButtonAuth.vue';
 import RedirectButton from 'src/components/RedirectButton.vue';
 
 import { useAuthStore } from 'src/stores/auth';
+import { useToast } from 'src/composables/UseToast';
 
 const authStore = useAuthStore()
-
-const $q = useQuasar()
+const { ToastSuccess, noStandardToastMixinInfo, positionToastSuccessAuth } = useToast()
 
 const enteredEmail = ref('');
 const enteredCode = ref('');
@@ -41,17 +40,19 @@ const submitCodeForm = async () => {
   if(enteredCode.value){
     isVerificationProcessRunning.value = true;
 
+    noStandardToastMixinInfo.title = "Verificação de e-mail";
+
     const resultEmailVerification = await 
     authStore.verifyEmail({
       "code": enteredCode.value
     })
 
     if(resultEmailVerification.wasEmailVerify){
-        $q.notify({
-          message: "O e-mail foi verificado com sucesso",
-          type: "positive",
-          timeout: "500",
-          closeBtn: true
+        noStandardToastMixinInfo.text = "E-mail verificado com sucesso!"
+
+        ToastSuccess.fire({
+          ...noStandardToastMixinInfo,
+          position: positionToastSuccessAuth.value
         })
 
         wasEmailVerified.value = true;
