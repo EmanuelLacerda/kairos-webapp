@@ -82,6 +82,11 @@ watch(() => prop.startDate, (newStartDate) => {
     }
 })
 watch(() => prop.showModal, () => {
+    eventID.value = prop.eventData.id;
+
+    errorMessageEndPeriod.value = "";
+    errorMessageStartPeriod.value = "";
+
     if(prop.eventData.id){
         let [ start_date, start_time ] = prop.eventData.start.split("T");
         start_date = start_date.replaceAll("-","/")
