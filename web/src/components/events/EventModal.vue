@@ -42,9 +42,13 @@ import eventsService from 'src/services/events';
 
 const { post: postEvent, patch: patchEvent, delete: deleteEvent } = eventsService()
 
-import Swal from 'sweetalert2'
+import { useToast } from 'src/composables/UseToast';
+import { useDialog } from 'src/composables/UseDialog';
 
 const authStore = useAuthStore();
+
+const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccess, positionToastError } = useToast();
+const { confirmEditDialog, confirmDeleteEventDialog } = useDialog();
 
 import ErrorMessage from '../base/FormFieldErrorMessage.vue';
 
@@ -113,25 +117,6 @@ watch(() => prop.eventData.id, (newEventID) => {
 })
 
 
-const ToastBaseMixin = Swal.mixin({
-  toast: true,
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.onmouseenter = Swal.stopTimer;
-    toast.onmouseleave = Swal.resumeTimer;
-  }
-});
-
-const ToastSuccess = ToastBaseMixin.mixin({
-    icon: "success"
-})
-const ToastError = ToastBaseMixin.mixin({
-    icon: "error"
-})
-
-
 function closeEventModal(){
     emit("closeEventModal");
 }
@@ -152,12 +137,14 @@ async function createEvent(){
 
         const userID = await authStore.getUserId();
 
+        noStandardToastMixinInfo.title = "Criação de evento";
+
         if(userID === null){
-            ToastError.fire({
-                title: "Usuário não autenticado",
-                text: "Você precisar estar logado para agendar um evento!",
-                width: 600,
-                position: "center-right"
+            noStandardToastMixinInfo.text = "Você precisar estar logado para agendar um evento!";
+
+            ToastError.fire({    
+                ...noStandardToastMixinInfo,
+                position: positionToastError.value
             })
         } else{
             const eventData = {
@@ -171,11 +158,14 @@ async function createEvent(){
 
             if(response.statusText === 'Created'){
                 closeEventModal();
+
+                noStandardToastMixinInfo.text = "Evento criado com sucesso!"
+
                 ToastSuccess.fire({
-                    title: "Criação de evento",
-                    text: "Evento criado com sucesso!",
-                    position: "bottom-center"
+                    ...noStandardToastMixinInfo,
+                    position: positionToastSuccess.value
                 });
+
                 forceCalendarRerender();
             } else if(response.statusText === 'Bad Request'){
                 if(response.data.start_period){
@@ -195,32 +185,26 @@ async function editEvent(){
 
         const userID = await authStore.getUserId();
 
+        noStandardToastMixinInfo.title = "Edição de evento";
+
         if(userID === null){
+            noStandardToastMixinInfo.text = "Você precisar estar logado para editar um evento!";
+
             ToastError.fire({
-                title: "Edição do evento",
-                text: "Você precisar estar logado para editar um evento!",
-                width: 600,
-                position: "center-right"
+                ...noStandardToastMixinInfo,
+                position: positionToastError.value
             })
         } else{
             if(!eventID.value){
+                noStandardToastMixinInfo.text = "As alterações deste evento não podem ser salvas porque não foi possível obter o id deste evento! Entre em contato como o suporte."
+
                 ToastError.fire({
-                    title: "Edição do evento",
-                    text: "As alterações deste evento não podem ser salvas porque não foi possível obter o id deste evento! Entre em contato como o suporte.",
-                    width: 600,
-                    position: "center-right"
+                    ...noStandardToastMixinInfo,
+                    position: positionToastError.value
                 })
             } else{
-                const result = await Swal.fire({
-                    title: "Edição do evento",
-                    text: `Deseja realmente que seu evento fique de ${enteredStartTime.value} do dia ${startDateConverted.value} até ${enteredEndTime.value} do dia ${endDateConverted.value}?`,
-                    icon: "info",
-                    showCancelButton: true,
-                    confirmButtonColor: "#2148C0",
-                    cancelButtonColor: "rgb(221, 92, 92)",
-                    cancelButtonText: 'Não',
-                    confirmButtonText: "Sim",
-                    customClass: {confirmButton: 'swal2-confirm-custom', cancelButton: 'swal2-cancel-custom'},
+                const result = await confirmEditDialog.fire({
+                    text: `Seu evento ficará de ${enteredStartTime.value} do dia ${startDateConverted.value} até ${enteredEndTime.value} do dia ${endDateConverted.value}`
                 })
 
                 if (result.isConfirmed) {
@@ -235,10 +219,12 @@ async function editEvent(){
 
                     if(response.statusText === "OK"){
                         closeEventModal();
+
+                        noStandardToastMixinInfo.text = "Evento editado com sucesso!";
+
                         ToastSuccess.fire({
-                            title: "Edição de evento",
-                            text: "Evento editado com sucesso!",
-                            position: "bottom-center"
+                            ...noStandardToastMixinInfo,
+                            position: positionToastSuccess.value
                         });
                         forceCalendarRerender();
                     } else if(response.statusText === 'Bad Request'){
@@ -259,42 +245,37 @@ async function editEvent(){
 async function removeEvent(){
     isDeleteEventRunning.value = true;
 
-    const result = await Swal.fire({
-        title: "Remoção de eventos",
-        text: "Deseja realmente remover esse evento?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#2148C0",
-        cancelButtonColor: "rgb(221, 92, 92)",
-        cancelButtonText: 'Não',
-        confirmButtonText: "Sim",
-        customClass: {confirmButton: 'swal2-confirm-custom', cancelButton: 'swal2-cancel-custom'},
-    })
+    noStandardToastMixinInfo.title = "Remoção de evento";
+
+    const result = await confirmDeleteEventDialog.fire({})
     
     if (result.isConfirmed) {
         const response = await deleteEvent(eventID.value);
 
         if(response.statusText === "No Content"){
             closeEventModal();
+
+            noStandardToastMixinInfo.text = "Evento removido com sucesso!";
+
             ToastSuccess.fire({
-                title: "Remoção do evento",
-                text: "Evento removido com sucesso!",
-                position: "bottom-center"
+                ...noStandardToastMixinInfo,
+                position: positionToastSuccess.value
             });
+            
             forceCalendarRerender();
         } else if(response.statusText === "Not Found") {
+            noStandardToastMixinInfo.text = "Não foi possível encontrar este evento! Entre em contato com o suporte..."
+
             ToastError.fire({
-                title: "Remoção do evento",
-                text: "Não foi possível encontrar este evento! Entre em contato com o suporte.",
-                width: 600,
-                position: "center-right"
+                ...noStandardToastMixinInfo,
+                position: positionToastError.value
             })
         } else if(response.statusText === "Bad Request" && response.data.message){
+            noStandardToastMixinInfo.text = response.data.message;
+
             ToastError.fire({
-                title: "Remoção do evento",
-                text: response.data.message,
-                width: 600,
-                position: "center-right"
+                ...noStandardToastMixinInfo,
+                position: positionToastError.value
             })
         }else{
             console.log(response);

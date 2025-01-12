@@ -5,17 +5,17 @@ import FullCalendarComponent from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
-import Swal from 'sweetalert2'
-
 import dayjs from 'dayjs'
 
 import EventModal from './EventModal.vue';
 
 import eventsService from 'src/services/events';
 import {useAuthStore} from 'src/stores/auth';
+import { useDialog } from 'src/composables/UseDialog';
 
 const { get: getEvent, getUserEvents } = eventsService();
 const authStore = useAuthStore();
+const {notificationErrorDialog} = useDialog();
 
 
 const eventId = ref("");
@@ -117,8 +117,8 @@ const calendarOptions = reactive({
         eventId.value = "";
 
         if(dayjs().isAfter(infoData,"day")){
-            notificationError.fire({
-                text: "Você não pode agendar eventos para uma data anterior à hoje."
+            notificationErrorDialog.fire({
+                text: "Você não pode agendar eventos para uma data anterior à hoje!"
             })
         } else{
             eventId.value = "";
@@ -176,15 +176,6 @@ const calendarOptions = reactive({
 const showModal = ref(false);
 const startData = ref("")
 const currentEventModalAction = ref("edit")
-
-
-const notificationError = Swal.mixin({
-    icon: "error",
-    showCancelButton: false,
-    confirmButtonColor: "#2148C0",
-    confirmButtonText: "OK",
-    animation: true
-});
 
 
 const closeEventModal = ()=>{

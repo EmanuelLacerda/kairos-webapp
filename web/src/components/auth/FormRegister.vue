@@ -5,7 +5,6 @@ defineOptions({
 defineModel()
 
 import { ref } from 'vue';
-import { useQuasar } from 'quasar'
 
 import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
 import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
@@ -17,19 +16,12 @@ import RedirectButton from '../RedirectButton.vue';
 
 import { useAuthStore } from 'src/stores/auth';
 import authService from 'src/services/auth'
+import { useToast } from 'src/composables/UseToast';
 
 const { validatePassword } = authService();
-
+const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccessAuth, positionToastError } = useToast()
 
 const authStore = useAuthStore()
-
-const notifyWarningConfigObj = {
-  type: "warning",
-  timeout: "800",
-  closeBtn: true
-}
-
-const $q = useQuasar()
 
 const enteredName = ref('')
 const enteredEmail = ref('teste@gmail.com')
@@ -65,6 +57,8 @@ const submitForm = async () => {
   if(enteredName.value && enteredEmail.value && enteredPassword.value && enteredConfirmPassword.value){
     isRegisterProcessRunning.value = true;
 
+    noStandardToastMixinInfo.title = "Criação de conta"
+
     const result = validatePassword(enteredPassword.value, enteredConfirmPassword.value);
 
     if(result.isPasswordInvalid){
@@ -81,19 +75,25 @@ const submitForm = async () => {
         "confirm_password": enteredConfirmPassword.value
       })
 
+
       if(resultRegister.wasRegisterSuccessfully){
-        $q.notify({
-          message: "Conta criada com sucesso",
-          type: "positive",
-          timeout: "500",
-          closeBtn: true
+        noStandardToastMixinInfo.text = "Conta criada com sucesso!"
+
+        ToastSuccess.fire({
+          ...noStandardToastMixinInfo,
+          position: positionToastSuccessAuth.value
         })
 
         accountCreateSuccessfully.value = true;
       }else{
         if(typeof resultRegister.error_message === "string"){
-            notifyWarningConfigObj.message = resultRegister.error_message;
-            $q.notify(notifyWarningConfigObj);
+            noStandardToastMixinInfo.text = resultRegister.error_message;
+
+            ToastError.fire({
+              ...noStandardToastMixinInfo,
+              position: positionToastError.value
+
+            });
         } else if(typeof resultRegister.error_message === "object"){
           if (resultRegister.error_message.name){
                 errorMessageName.value = resultRegister.error_message.name[0];

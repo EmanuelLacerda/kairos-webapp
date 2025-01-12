@@ -6,33 +6,45 @@ defineOptions({
 import { ref } from 'vue'
 
 import { useAuthStore } from 'src/stores/auth';
-import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router';
+import { useDialog } from 'src/composables/UseDialog';
+import { useToast } from 'src/composables/UseToast';
 
 const authStore = useAuthStore()
 
-const $q = useQuasar()
+const { confirmLogoutDialog } = useDialog()
+const { ToastSuccess, noStandardToastMixinInfo, positionToastSuccessAuth } = useToast()
+
 const router = useRouter()
 
 const isLogoutRunning = ref(false);
 
 async function logout(){
-  isLogoutRunning.value=true;
+  isLogoutRunning.value = true;
 
-  const resultLogout = await authStore.logout();
+  const result = await confirmLogoutDialog.fire();
 
-  isLogoutRunning.value = false;
+  noStandardToastMixinInfo.title = "Logout"
 
-  if(resultLogout.wasLogoutSuccessfully){
-    $q.notify({
-      message: "Saída com sucesso!",
-      type: "positive",
-      timeout: "500",
-      closeBtn: true
-    })
+  if(result.isConfirmed){
+    const resultLogout = await authStore.logout();
+
+    isLogoutRunning.value = false;
+
+    if(resultLogout.wasLogoutSuccessfully){
+      noStandardToastMixinInfo.text = "Saída com sucesso!"
+
+      ToastSuccess.fire({
+        ...noStandardToastMixinInfo,
+        position: positionToastSuccessAuth.value
+      })
+      
     router.push("/auth/login/");
+    } else{
+      console.log(resultLogout.error_message);
+    }
   } else{
-    console.log(resultLogout.error_message);
+    isLogoutRunning.value = false;
   }
 }
 </script>

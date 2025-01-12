@@ -5,7 +5,6 @@ defineOptions({
 defineModel()
 
 import { ref } from 'vue';
-import { useQuasar } from 'quasar'
 import { useRoute, useRouter } from 'vue-router';
 
 import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
@@ -14,17 +13,12 @@ import InputAuthPassword from 'src/components/auth/InputAuthPassword.vue';
 import ButtonAuth from './ButtonAuth.vue';
 
 import { useAuthStore } from 'src/stores/auth';
+import { useToast } from 'src/composables/UseToast';
 
 
 const authStore = useAuthStore()
+const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccessAuth, positionToastError } = useToast()
 
-const notifyWarningConfigObj = {
-  type: "warning",
-  timeout: "800",
-  closeBtn: true
-}
-
-const $q = useQuasar()
 const route = useRoute()
 const router = useRouter()
 
@@ -48,17 +42,19 @@ const submitForm = async () => {
   if(enteredEmail.value && enteredPassword.value){
     isLoginRequestRunning.value = true;
 
+    noStandardToastMixinInfo.title = "Login"
+
     const resultLogin = await authStore.login({
       "email": enteredEmail.value,
       "password": enteredPassword.value
     })
-
+    
     if(resultLogin.wasLoginSuccessfully){
-      $q.notify({
-        message: "Login efetuado com sucesso",
-        type: "positive",
-        timeout: "500",
-        closeBtn: true
+      noStandardToastMixinInfo.text = "Login efetuado com sucesso!"
+
+      ToastSuccess.fire({
+        ...noStandardToastMixinInfo,
+        position: positionToastSuccessAuth.value
       })
 
       const toPath = route.query.to || '/';
@@ -67,8 +63,13 @@ const submitForm = async () => {
       }, 600)
     }else{
       if(typeof resultLogin.error_message === "string"){
-          notifyWarningConfigObj.message = resultLogin.error_message;
-          $q.notify(notifyWarningConfigObj);
+          noStandardToastMixinInfo.text = resultLogin.error_message;
+
+          ToastError.fire({
+            ...noStandardToastMixinInfo,
+            position: positionToastError.value
+
+          })
       } else if(typeof resultLogin.error_message === "object"){
           if(resultLogin.error_message.password){
               errorMessagePassword.value = resultLogin.error_message.password[0];
