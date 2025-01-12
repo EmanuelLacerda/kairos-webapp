@@ -31,3 +31,15 @@
     background-color: $custom-bg-danger;
     color: $custom-full-white;
 }
+
+.toast-title{
+    display: flex !important;
+    align-items: center;
+    height: 20px;
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+.toast-container{
+    margin: 0 1rem !important;
+}
