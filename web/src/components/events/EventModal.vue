@@ -239,7 +239,6 @@ async function editEvent(){
                         });
                         forceCalendarRerender();
                     } else if(response.statusText === 'Bad Request'){
-                        console.log(response.data);
                         if(response.data.start_period){
                             errorMessageStartPeriod.value = response.data.start_period[0]
                         } else if(response.data.end_period){
