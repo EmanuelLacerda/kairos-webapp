@@ -176,6 +176,13 @@ async function createEvent(){
                     errorMessageStartPeriod.value = response.data.start_period[0]
                 } else if(response.data.end_period){
                     errorMessageEndPeriod.value = response.data.end_period[0]
+                } else if(response.data.complete_period){
+                    noStandardToastMixinInfo.text = response.data.complete_period[0];
+
+                    ToastError.fire({    
+                        ...noStandardToastMixinInfo,
+                        position: positionToastError.value
+                    })
                 }
             }
         }
@@ -237,6 +244,13 @@ async function editEvent(){
                             errorMessageStartPeriod.value = response.data.start_period[0]
                         } else if(response.data.end_period){
                             errorMessageEndPeriod.value = response.data.end_period[0]
+                        }  else if(response.data.complete_period){
+                            noStandardToastMixinInfo.text = response.data.complete_period[0];
+
+                            ToastError.fire({    
+                                ...noStandardToastMixinInfo,
+                                position: positionToastError.value
+                            })
                         }
                     }
                 }
