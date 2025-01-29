@@ -1,3 +1,31 @@
+<script setup>
+import { ref } from 'vue'
+
+import EssentialLink from 'components/EssentialLink.vue'
+import ButtonLogout from 'src/components/auth/ButtonLogout.vue';
+
+import { useAuthStore } from 'src/stores/auth';
+
+
+const authStore = useAuthStore()
+
+
+const linksList = [
+  {
+    title: 'Minha Agenda',
+    icon: 'bi bi-calendar-date',
+    route: { name: "home" },
+  }
+]
+
+const leftDrawerOpen = ref(false)
+
+
+function toggleLeftDrawer () {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+</script>
+
 <template>
   <q-layout view="hHh Lpr lFf" class="main-layout">
     <q-header elevated>
@@ -40,35 +68,11 @@
   </q-layout>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-import ButtonLogout from 'src/components/auth/ButtonLogout.vue';
-
-import { useAuthStore } from 'src/stores/auth';
-
-const authStore = useAuthStore()
-
-const linksList = [
-  {
-    title: 'Minha Agenda',
-    icon: 'bi bi-calendar-date',
-    route: { name: "home" },
-  }
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
-</script>
-
 <style lang="scss">
   .main-layout{
     .q-header{
       background-color: $custom-blue-3;
-  
+
       .welcome-message{
         margin-right: 10px;
       }
