@@ -6,7 +6,7 @@
       </div>
 
       <div class="text-h2" style="opacity:.4">
-        Oops. Nothing here...
+        Desculpe, não temos esta página.
       </div>
 
       <q-btn
@@ -15,13 +15,9 @@
         text-color="blue"
         unelevated
         to="/"
-        label="Go Home"
+        label="Voltar para home"
         no-caps
       />
     </div>
   </div>
 </template>
-
-<script setup>
-//
-</script>
