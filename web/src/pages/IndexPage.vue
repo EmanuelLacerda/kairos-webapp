@@ -3,6 +3,7 @@ defineOptions({
   name: 'IndexPage'
 })
 
+
 import CalendarEvents from 'src/components/events/CalendarEvents.vue';
 </script>
 

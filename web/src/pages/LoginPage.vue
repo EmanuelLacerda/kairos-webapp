@@ -3,6 +3,7 @@ defineOptions({
   name: 'LoginPage'
 })
 
+
 import FormLogin from 'src/components/auth/FormLogin.vue';
 </script>
 

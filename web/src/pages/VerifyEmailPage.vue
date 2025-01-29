@@ -3,6 +3,7 @@ defineOptions({
   name: 'VerifyEmailPage'
 })
 
+
 import { ref } from 'vue';
 
 import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
@@ -14,8 +15,10 @@ import RedirectButton from 'src/components/RedirectButton.vue';
 import { useAuthStore } from 'src/stores/auth';
 import { useToast } from 'src/composables/UseToast';
 
+
 const authStore = useAuthStore()
 const { ToastSuccess, noStandardToastMixinInfo, positionToastSuccessAuth } = useToast()
+
 
 const enteredEmail = ref('');
 const enteredCode = ref('');
@@ -26,6 +29,7 @@ const errorMessageCode = ref('')
 
 const isVerificationProcessRunning = ref(false)
 
+
 const removeErrorMessageCode = () => {
   errorMessageCode.value = "";
 }
@@ -35,30 +39,29 @@ const submitEmailForm = () => {
     wasEmailSubmit.value = true;
   }
 }
-
 const submitCodeForm = async () => {
   if(enteredCode.value){
     isVerificationProcessRunning.value = true;
 
     noStandardToastMixinInfo.title = "Verificação de e-mail";
 
-    const resultEmailVerification = await 
+    const resultEmailVerification = await
     authStore.verifyEmail({
       "code": enteredCode.value
     })
 
     if(resultEmailVerification.wasEmailVerify){
-        noStandardToastMixinInfo.text = "E-mail verificado com sucesso!"
+      noStandardToastMixinInfo.text = "E-mail verificado com sucesso!"
 
-        ToastSuccess.fire({
-          ...noStandardToastMixinInfo,
-          position: positionToastSuccessAuth.value
-        })
+      ToastSuccess.fire({
+        ...noStandardToastMixinInfo,
+        position: positionToastSuccessAuth.value
+      })
 
-        wasEmailVerified.value = true;
-      }else{
-        errorMessageCode.value = resultEmailVerification.error_message;
-      }
+      wasEmailVerified.value = true;
+    }else{
+      errorMessageCode.value = resultEmailVerification.error_message;
+    }
   }
 
   isVerificationProcessRunning.value = false;
