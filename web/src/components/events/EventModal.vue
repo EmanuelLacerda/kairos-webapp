@@ -37,20 +37,18 @@ const emit = defineEmits([
 
 import { ref, watch } from 'vue';
 
-import { useAuthStore } from 'src/stores/auth';
-import eventsService from 'src/services/events';
-
-const { post: postEvent, patch: patchEvent, delete: deleteEvent } = eventsService()
+import ErrorMessage from '../base/FormFieldErrorMessage.vue';
 
 import { useToast } from 'src/composables/UseToast';
 import { useDialog } from 'src/composables/UseDialog';
+import { useAuthStore } from 'src/stores/auth';
+import eventsService from 'src/services/events';
 
+
+const { post: postEvent, patch: patchEvent, delete: deleteEvent } = eventsService()
 const authStore = useAuthStore();
-
 const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccess, positionToastError } = useToast();
 const { confirmEditDialog, confirmDeleteEventDialog } = useDialog();
-
-import ErrorMessage from '../base/FormFieldErrorMessage.vue';
 
 
 const enteredDescription = ref("");
@@ -121,13 +119,6 @@ watch(() => prop.showModal, () => {
 })
 
 
-function closeEventModal(){
-    emit("closeEventModal");
-}
-function forceCalendarRerender(){
-    emit("forceCalendarRerender");
-}
-
 const removeErrorMessageStartPeriod = () => {
     errorMessageStartPeriod.value = "";
 }
@@ -146,7 +137,7 @@ async function createEvent(){
         if(userID === null){
             noStandardToastMixinInfo.text = "Você precisar estar logado para agendar um evento!";
 
-            ToastError.fire({    
+            ToastError.fire({
                 ...noStandardToastMixinInfo,
                 position: positionToastError.value
             })
@@ -179,11 +170,27 @@ async function createEvent(){
                 } else if(response.data.complete_period){
                     noStandardToastMixinInfo.text = response.data.complete_period[0];
 
-                    ToastError.fire({    
+                    ToastError.fire({
                         ...noStandardToastMixinInfo,
                         position: positionToastError.value
                     })
+                } else{
+                  console.log(response);
+                  noStandardToastMixinInfo.text = "Não foi possível criar o evento! Entre em contato com o suporte ou tente novamente."
+
+                  ToastError.fire({
+                    ...noStandardToastMixinInfo,
+                    position: positionToastError.value
+                  })
                 }
+            }  else{
+              console.log(response);
+              noStandardToastMixinInfo.text = "Não foi possível criar o evento! Entre em contato com o suporte ou tente novamente."
+
+              ToastError.fire({
+                ...noStandardToastMixinInfo,
+                position: positionToastError.value
+              })
             }
         }
 
@@ -191,6 +198,7 @@ async function createEvent(){
     }
 }
 async function editEvent(){
+    // faltou adicionar "enteredStartDate.value" na condicional abaixo conforme a função acima. Antes de adicionar, é importante analisar e testar se é uma boa opção adicionar isto.
     if(enteredDescription.value && enteredStartTime.value && enteredEndDate.value && enteredEndTime.value){
         isEditEventRunning.value = true;
 
@@ -246,11 +254,27 @@ async function editEvent(){
                         }  else if(response.data.complete_period){
                             noStandardToastMixinInfo.text = response.data.complete_period[0];
 
-                            ToastError.fire({    
+                            ToastError.fire({
                                 ...noStandardToastMixinInfo,
                                 position: positionToastError.value
                             })
+                        } else{
+                          console.log(response);
+                          noStandardToastMixinInfo.text = "Não foi possível criar o evento! Entre em contato com o suporte ou tente novamente."
+
+                          ToastError.fire({
+                            ...noStandardToastMixinInfo,
+                            position: positionToastError.value
+                          })
                         }
+                    } else{
+                      console.log(response);
+                      noStandardToastMixinInfo.text = "Não foi possível criar o evento! Entre em contato com o suporte ou tente novamente."
+
+                      ToastError.fire({
+                        ...noStandardToastMixinInfo,
+                        position: positionToastError.value
+                      })
                     }
                 }
             }
@@ -265,7 +289,7 @@ async function removeEvent(){
     noStandardToastMixinInfo.title = "Remoção de evento";
 
     const result = await confirmDeleteEventDialog.fire({})
-    
+
     if (result.isConfirmed) {
         const response = await deleteEvent(eventID.value);
 
@@ -278,7 +302,7 @@ async function removeEvent(){
                 ...noStandardToastMixinInfo,
                 position: positionToastSuccess.value
             });
-            
+
             forceCalendarRerender();
         } else if(response.statusText === "Not Found") {
             noStandardToastMixinInfo.text = "Não foi possível encontrar este evento! Entre em contato com o suporte..."
@@ -296,13 +320,26 @@ async function removeEvent(){
             })
         }else{
             console.log(response);
+            noStandardToastMixinInfo.text = "Não foi possível remover este evento! Entre em contato com o suporte ou tente novamente."
+
+            ToastError.fire({
+              ...noStandardToastMixinInfo,
+              position: positionToastError.value
+            })
         }
     }
 
     isDeleteEventRunning.value = false;
 }
 
-function handleSubmit(){
+function closeEventModal(){
+    emit("closeEventModal");
+}
+function forceCalendarRerender(){
+    emit("forceCalendarRerender");
+}
+
+function submitForm(){
     if(prop.action === 'add'){
         createEvent();
     } else if(prop.action === 'edit'){
@@ -327,7 +364,7 @@ function handleSubmit(){
                 <q-form
                     class="form-event"
                     method="post"
-                    @submit.prevent="handleSubmit"
+                    @submit.prevent="submitForm"
                 >
                     <q-card-section class="form-body">
                         <q-card-section class="datetime-field flex column">
@@ -448,7 +485,7 @@ function handleSubmit(){
                             :disable="new Date() > finalPeriod"
                             :readonly="new Date() > finalPeriod"
                         >
-            
+
                         </q-input>
                     </q-card-section>
                     <q-card-section class="form-footer">
@@ -474,7 +511,7 @@ function handleSubmit(){
                         <q-btn
                             type="button"
                             @click="removeEvent"
-                            v-if="action === 'edit' && new Date() < finalPeriod" :loading="isDeleteEventRunning" 
+                            v-if="action === 'edit' && new Date() < finalPeriod" :loading="isDeleteEventRunning"
                             class="btn-danger"
                         >
                             <i class="bi bi-trash3"></i> <span>Remover</span>
@@ -501,7 +538,7 @@ function handleSubmit(){
             background-color: rgba(44,62,80,0.7);
 
             .q-card__section{
-                gap: 16px;                
+                gap: 16px;
             }
 
             .modal-header{
@@ -535,10 +572,10 @@ function handleSubmit(){
                         .q-field__inner{
                             .q-field__control-container{
                                 background-color: $custom-full-white;
-    
+
                                 input,textarea{
                                     background-color: $custom-full-white;
-                                } 
+                                }
                             }
                             .q-field__append{
                                 background-color: $custom-full-white;
@@ -548,11 +585,11 @@ function handleSubmit(){
                                 background-color: $custom-full-white;
                             }
                         }
-    
+
                         .datetime-field{
                             padding: 0;
                             gap: 0;
-    
+
                             label{
                                 width: 50%;
                                 padding-bottom: 0;

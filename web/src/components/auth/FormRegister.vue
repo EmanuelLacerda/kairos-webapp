@@ -18,10 +18,11 @@ import { useAuthStore } from 'src/stores/auth';
 import authService from 'src/services/auth'
 import { useToast } from 'src/composables/UseToast';
 
+
+const authStore = useAuthStore()
 const { validatePassword } = authService();
 const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccessAuth, positionToastError } = useToast()
 
-const authStore = useAuthStore()
 
 const enteredName = ref('')
 const enteredEmail = ref('teste@gmail.com')
@@ -34,26 +35,26 @@ const errorMessagePassword = ref('')
 const errorMessageConfirmPassword = ref('')
 
 const isRegisterProcessRunning = ref(false)
+const accountCreateSuccessfully = ref(false);
 
-const removeErrorMessageName = () => {
+
+function removeErrorMessageName(){
   errorMessageName.value = "";
 }
 
-const removeErrorMessageEmail = () => {
+function removeErrorMessageEmail(){
     errorMessageEmail.value = "";
 }
 
-const removeErrorMessagePassword = () => {
+function removeErrorMessagePassword(){
     errorMessagePassword.value = "";
 }
 
-const removeErrorMessageConfirmPassword = () => {
+function removeErrorMessageConfirmPassword(){
   errorMessageConfirmPassword.value = "";
 }
 
-const accountCreateSuccessfully = ref(false);
-
-const submitForm = async () => {
+async function submitForm(){
   if(enteredName.value && enteredEmail.value && enteredPassword.value && enteredConfirmPassword.value){
     isRegisterProcessRunning.value = true;
 
@@ -125,7 +126,6 @@ const submitForm = async () => {
       <section class="box-verify-email-message" v-else>
         <h1>Verifique sua caixa de mensagens</h1>
         <p>Enviamos um código para <strong>{{enteredEmail}}</strong>. Clique no botão abaixo e insira esse código na página que será aberta para verificar seu e-mail.</p>
-        <!-- <q-btn label="Verificar e-mail" to="/auth/verificar-email/" size="20px" :rounded="true"></q-btn> -->
         <RedirectButton button-label="Verificar e-mail" redirect-link="/auth/verificar-email/"></RedirectButton>
       </section>
     </section>

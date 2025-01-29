@@ -19,7 +19,7 @@ const emit = defineEmits([
 import FormFieldErrorMessage from '../base/FormFieldErrorMessage.vue';
 
 
-const removeMessageError = () => {
+function removeMessageError(){
     emit('removeMessageError');
 }
 </script>

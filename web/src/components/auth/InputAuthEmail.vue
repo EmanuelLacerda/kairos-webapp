@@ -1,6 +1,4 @@
 <script setup>
-import InputAuthBase from './InputAuthBase.vue';
-
 defineOptions({
   name: "InputAuthEmail",
 });
@@ -16,7 +14,11 @@ const emit = defineEmits([
   'removeMessageError'
 ])
 
-const removeMessageError = () => {
+
+import InputAuthBase from './InputAuthBase.vue';
+
+
+function removeMessageError(){
     emit('removeMessageError');
 }
 </script>

@@ -16,11 +16,12 @@ import { useAuthStore } from 'src/stores/auth';
 import { useToast } from 'src/composables/UseToast';
 
 
+const route = useRoute()
+const router = useRouter()
+
 const authStore = useAuthStore()
 const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccessAuth, positionToastError } = useToast()
 
-const route = useRoute()
-const router = useRouter()
 
 const enteredEmail = ref('')
 const enteredPassword = ref('')
@@ -30,25 +31,26 @@ const errorMessagePassword = ref('')
 
 const isLoginRequestRunning = ref(false)
 
-const removeErrorMessageEmail = () => {
+
+function removeErrorMessageEmail(){
     errorMessageEmail.value = "";
 }
 
-const removeErrorMessagePassword = () => {
+function removeErrorMessagePassword(){
     errorMessagePassword.value = "";
 }
 
-const submitForm = async () => {
+async function submitForm(){
   if(enteredEmail.value && enteredPassword.value){
-    isLoginRequestRunning.value = true;
-
     noStandardToastMixinInfo.title = "Login"
+
+    isLoginRequestRunning.value = true;
 
     const resultLogin = await authStore.login({
       "email": enteredEmail.value,
       "password": enteredPassword.value
     })
-    
+
     if(resultLogin.wasLoginSuccessfully){
       noStandardToastMixinInfo.text = "Login efetuado com sucesso!"
 
@@ -68,13 +70,20 @@ const submitForm = async () => {
           ToastError.fire({
             ...noStandardToastMixinInfo,
             position: positionToastError.value
-
           })
       } else if(typeof resultLogin.error_message === "object"){
           if(resultLogin.error_message.password){
-              errorMessagePassword.value = resultLogin.error_message.password[0];
+            errorMessagePassword.value = resultLogin.error_message.password[0];
           } else if (resultLogin.error_message.email){
-              errorMessageEmail.value = resultLogin.error_message.email[0];
+            errorMessageEmail.value = resultLogin.error_message.email[0];
+          } else{
+            console.log(resultLogin.error_message);
+            noStandardToastMixinInfo.text = "Não foi possível fazer login! Entre em contato com o suporte ou tente novamente."
+
+            ToastError.fire({
+              ...noStandardToastMixinInfo,
+              position: positionToastError.value
+            })
           }
       }
     }
@@ -100,7 +109,7 @@ const submitForm = async () => {
 <style lang="scss">
   section.section-parent-form-login{
     width: 30%;
-    
+
     form.form-login{
         label.q-field:first-child{
             margin-bottom: 20px;

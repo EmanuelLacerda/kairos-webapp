@@ -4,20 +4,22 @@ defineOptions({
 })
 
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
 
 import { useAuthStore } from 'src/stores/auth';
-import { useRouter } from 'vue-router';
 import { useDialog } from 'src/composables/UseDialog';
 import { useToast } from 'src/composables/UseToast';
 
-const authStore = useAuthStore()
-
-const { confirmLogoutDialog } = useDialog()
-const { ToastSuccess, noStandardToastMixinInfo, positionToastSuccessAuth } = useToast()
 
 const router = useRouter()
 
+const authStore = useAuthStore()
+const { confirmLogoutDialog } = useDialog()
+const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccessAuth, positionToastError } = useToast()
+
+
 const isLogoutRunning = ref(false);
+
 
 async function logout(){
   isLogoutRunning.value = true;
@@ -27,9 +29,9 @@ async function logout(){
   noStandardToastMixinInfo.title = "Logout"
 
   if(result.isConfirmed){
-    const resultLogout = await authStore.logout();
-
     isLogoutRunning.value = false;
+
+    const resultLogout = await authStore.logout();
 
     if(resultLogout.wasLogoutSuccessfully){
       noStandardToastMixinInfo.text = "Saída com sucesso!"
@@ -38,10 +40,16 @@ async function logout(){
         ...noStandardToastMixinInfo,
         position: positionToastSuccessAuth.value
       })
-      
-    router.push("/auth/login/");
+
+      router.push("/auth/login/");
     } else{
       console.log(resultLogout.error_message);
+      noStandardToastMixinInfo.text = "Não foi possível sair! Entre em contato com o suporte ou tente novamente."
+
+      ToastError.fire({
+        ...noStandardToastMixinInfo,
+        position: positionToastError.value
+      })
     }
   } else{
     isLogoutRunning.value = false;

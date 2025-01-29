@@ -1,20 +1,22 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import dayjs from 'dayjs'
 
 import FullCalendarComponent from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
-import dayjs from 'dayjs'
+import { reactive, ref } from 'vue';
 
 import EventModal from './EventModal.vue';
 
 import eventsService from 'src/services/events';
 import {useAuthStore} from 'src/stores/auth';
 import { useDialog } from 'src/composables/UseDialog';
+import { ToastError, noStandardToastMixinInfo, positionToastError } from 'src/composables/UseToast';
 
-const { get: getEvent, getUserEvents } = eventsService();
+
 const authStore = useAuthStore();
+const { get: getEvent, getUserEvents } = eventsService();
 const {notificationErrorDialog} = useDialog();
 
 
@@ -26,13 +28,15 @@ const calendarKey = ref(0);
 const calendarOptions = reactive({
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: viewType.value === '' ? "dayGridDay" : viewType.value ? viewType.value : "dayGridMonth",
+    locale: "pt-br",
+    weekNumberCalculation: 'ISO',
+    dayMaxEvents: true,
+    eventStartEditable: false,
     headerToolbar: {
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,dayGridWeek,dayGridDay'
     },
-    locale: "pt-br",
-    weekNumberCalculation: 'ISO',
     buttonText: {
         today: 'Hoje',
         month: 'Mês',
@@ -53,8 +57,17 @@ const calendarOptions = reactive({
 
         const userId = await authStore.getUserId();
 
+        noStandardToastMixinInfo.title = "Calendário"
+
         if(userId === null){
             failureCallback("Você precisa estar logado para os seus eventos serem carregados!"); //esta mensagem deve ser mostrada como um toast
+
+            noStandardToastMixinInfo.text = "Você precisa estar logado para os seus eventos serem carregados!"
+
+            ToastError.fire({
+              ...noStandardToastMixinInfo,
+              position: positionToastError.value
+            })
         } else{
             const response = await getUserEvents(userId, start, end)
 
@@ -78,12 +91,10 @@ const calendarOptions = reactive({
             successCallback(events);
         }
     },
-    dayMaxEvents: true,
-    eventStartEditable: false,
     datesSet: function(dateInfo) {
         const view = dateInfo.view;
         viewType.value = view.type
-        
+
         if(view.type === 'dayGridMonth'){
             Array.from(document.querySelectorAll('.fc-daygrid-day-bg')).map(element => {
                 const div1 = document.createElement('div')
@@ -124,7 +135,7 @@ const calendarOptions = reactive({
             eventId.value = "";
             startData.value = dayjs(infoData.toDateString()).format('DD/MM/YYYY');
             currentEventModalAction.value = 'add';
-            
+
             eventData.id = "";
             eventData.description = "";
             eventData.start = "";
@@ -178,11 +189,11 @@ const startData = ref("")
 const currentEventModalAction = ref("edit")
 
 
-const closeEventModal = ()=>{
+function closeEventModal(){
     showModal.value = false
 }
 
-const forceCalendarRerender = () => {
+function forceCalendarRerender() {
     calendarKey.value += 1;
 }
 </script>
@@ -232,9 +243,9 @@ const forceCalendarRerender = () => {
 
                 .fc-toolbar-title{
                     font-weight: 600;
-                    
+
                 }
-                
+
                 .fc-toolbar-title::first-letter{
                     text-transform: capitalize;
                 }

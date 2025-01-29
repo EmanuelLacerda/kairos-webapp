@@ -7,6 +7,7 @@ defineProps({
     errorMessage: String
 })
 </script>
+
 <template>
     <p class="error-text-message">{{errorMessage}}</p>
 </template>
