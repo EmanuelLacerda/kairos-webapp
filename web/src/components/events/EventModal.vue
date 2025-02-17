@@ -35,7 +35,7 @@ const emit = defineEmits([
 ])
 
 
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import ErrorMessage from '../base/FormFieldErrorMessage.vue';
 
@@ -50,6 +50,13 @@ const authStore = useAuthStore();
 const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccess, positionToastError } = useToast();
 const { confirmEditDialog, confirmDeleteEventDialog } = useDialog();
 
+
+const nowDate = new Date();
+
+const dateFormat = "##/##/####";
+const timeFormat = "time";
+const dateFormatRules = [v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)];
+const timeFormatRules = ['time'];
 
 const enteredDescription = ref("");
 
@@ -80,6 +87,8 @@ watch(() => prop.startDate, (newStartDate) => {
     }
 })
 watch(() => prop.showModal, () => {
+    updateNowDate();
+
     eventID.value = prop.eventData.id;
 
     errorMessageEndPeriod.value = "";
@@ -346,6 +355,47 @@ function submitForm(){
         editEvent();
     }
 }
+
+function updateNowDate(){
+  nowDate.value = new Date()
+}
+
+function updateStartDateConverted(){
+  startDateConverted.value = enteredStartDate.value.split('/').reverse().join('/')
+}
+function updateEndDateConverted(){
+  endDateConverted.value = enteredEndDate.value.split('/').reverse().join('/')
+}
+
+
+const modalTitle = computed(() =>  `${prop.action === 'add' ? 'Agendar' : 'Editar'}  Evento`)
+
+const startPeriodClass = computed(() => ({
+  invalidInput: errorMessageStartPeriod.value
+}))
+const endPeriodClass = computed(() => ({
+  invalidInput: errorMessageEndPeriod.value
+}))
+
+const canChangeTheStartDate = computed(() => {
+  return prop.action === 'edit' && nowDate.value < initialPeriod.value;
+})
+const isNowDateAfterTheInitialPeriod = computed(() => {
+  return nowDate.value > initialPeriod.value;
+})
+const isNowDateAfterTheFinalPeriod = computed(() => {
+  return nowDate.value > finalPeriod.value;
+})
+
+const isAddAction = computed(() => {
+  return prop.action === 'add';
+})
+const areAllFieldsFilledIn = computed(() => {
+  return enteredStartTime.value && enteredEndDate.value && enteredEndTime.value && enteredDescription.value;
+})
+const canItChangeAndRemoveTheEvent = computed(() => {
+  return prop.action === 'edit' && nowDate.value < finalPeriod.value;
+})
 </script>
 
 <template>
@@ -357,7 +407,7 @@ function submitForm(){
     >
         <q-card>
             <q-card-section class="flex justify-between items-center modal-header">
-                <h1 class="title">{{ action === 'add' ? 'Agendar' : 'Editar' }} Evento</h1>
+                <h1 class="title">{{ modalTitle }}</h1>
                 <button class="close-modal" type="button" @click="closeEventModal"><span aria-hidden="true">&times;</span></button>
             </q-card-section>
             <q-card-section class="modal-body">
@@ -370,22 +420,22 @@ function submitForm(){
                         <q-card-section class="datetime-field flex column">
                             <section class="flex no-wrap">
                                 <q-input
+                                    label="Data Inicial:"
                                     name="start-date"
                                     id="start-date"
-                                    filled
-                                    label="Data Inicial:"
-                                    v-model="startDateConverted"
-                                    mask="##/##/####"
-                                    :rules="[v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)]"
-                                    :class="{invalidInput: errorMessageStartPeriod && action === 'edit'}"
+                                    :class="startPeriodClass"
+                                    :disable="!canChangeTheStartDate"
+                                    :readonly="!canChangeTheStartDate"
+                                    :mask="dateFormat"
+                                    :rules="dateFormatRules"
                                     @focus="removeErrorMessageStartPeriod"
-                                    :disable="action === 'add' || new Date() > initialPeriod"
-                                    :readonly="action === 'add' || new Date() > initialPeriod"
+                                    filled
+                                    v-model="startDateConverted"
                                 >
-                                    <template v-slot:append v-if="action === 'edit' && new Date() < initialPeriod">
+                                    <template v-slot:append v-if="canChangeTheStartDate">
                                         <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="enteredStartDate" @update:model-value="startDateConverted = enteredStartDate.split('/').reverse().join('/')">
+                                            <q-date v-model="enteredStartDate" @update:model-value="updateStartDateConverted">
                                             <div class="row items-center justify-end">
                                                 <q-btn v-close-popup label="Fechar" color="primary" flat />
                                             </div>
@@ -395,17 +445,19 @@ function submitForm(){
                                     </template>
                                 </q-input>
                                 <q-input
+                                    label="Hora inicial:"
+                                    name="start-time"
+                                    id="start-time"
+                                    :class="startPeriodClass"
+                                    :disable="isNowDateAfterTheInitialPeriod"
+                                    :readonly="isNowDateAfterTheInitialPeriod"
+                                    :mask="timeFormat"
+                                    :rules="timeFormatRules"
+                                    @focus="removeErrorMessageStartPeriod"
                                     filled
                                     v-model="enteredStartTime"
-                                    mask="time"
-                                    :rules="['time']"
-                                    label="Hora inicial:"
-                                    :class="{invalidInput: errorMessageStartPeriod}"
-                                    @focus="removeErrorMessageStartPeriod"
-                                    :disable="new Date() > initialPeriod"
-                                    :readonly="new Date() > initialPeriod"
                                 >
-                                    <template v-slot:append v-if="action === 'add' || new Date() < initialPeriod">
+                                    <template v-slot:append v-if="!isNowDateAfterTheInitialPeriod">
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                         <q-time v-model="enteredStartTime">
@@ -424,22 +476,22 @@ function submitForm(){
                         <q-card-section class="datetime-field flex column">
                             <section class="flex no-wrap">
                                 <q-input
-                                    name="start-date"
-                                    id="start-date"
+                                    label="Data Final:"
+                                    name="end-date"
+                                    id="end-date"
+                                    :class="endPeriodClass"
+                                    :disable="isNowDateAfterTheFinalPeriod"
+                                    :readonly="isNowDateAfterTheFinalPeriod"
+                                    :mask="dateFormat"
+                                    :rules="dateFormatRules"
+                                    @focus="removeErrorMessageEndPeriod"
                                     filled
                                     v-model="endDateConverted"
-                                    mask="##/##/####"
-                                    :rules="[v => /^-?[0-3]\d\/[0-1]\d\/[\d]+$/.test(v)]"
-                                    label="Data Final:"
-                                    :class="{invalidInput: errorMessageEndPeriod}"
-                                    @focus="removeErrorMessageEndPeriod"
-                                    :disable="new Date() > finalPeriod"
-                                    :readonly="new Date() > finalPeriod"
                                 >
-                                    <template v-slot:append v-if="action === 'add' || new Date() < finalPeriod">
+                                    <template v-slot:append v-if="!isNowDateAfterTheFinalPeriod">
                                         <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="enteredEndDate" @update:model-value="endDateConverted = enteredEndDate.split('/').reverse().join('/')">
+                                            <q-date v-model="enteredEndDate" @update:model-value="updateEndDateConverted">
                                             <div class="row items-center justify-end">
                                                 <q-btn v-close-popup label="Fechar" color="primary" flat />
                                             </div>
@@ -449,17 +501,19 @@ function submitForm(){
                                     </template>
                                 </q-input>
                                 <q-input
+                                    label="Hora Final:"
+                                    name="end-time"
+                                    id="end-time"
+                                    :class="endPeriodClass"
+                                    :disable="isNowDateAfterTheFinalPeriod"
+                                    :readonly="isNowDateAfterTheFinalPeriod"
+                                    :mask="timeFormat"
+                                    :rules="timeFormatRules"
+                                    @focus="removeErrorMessageEndPeriod"
                                     filled
                                     v-model="enteredEndTime"
-                                    mask="time"
-                                    :rules="['time']"
-                                    label="Hora Final:"
-                                    :class="{invalidInput: errorMessageEndPeriod}"
-                                    @focus="removeErrorMessageEndPeriod"
-                                    :disable="new Date() > finalPeriod"
-                                    :readonly="new Date() > finalPeriod"
                                 >
-                                    <template v-slot:append v-if="action === 'add' || new Date() < finalPeriod">
+                                    <template v-slot:append v-if="!isNowDateAfterTheFinalPeriod">
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                         <q-time v-model="enteredEndTime">
@@ -482,8 +536,8 @@ function submitForm(){
                             label="Descrição:"
                             v-model="enteredDescription"
                             :outlined="true"
-                            :disable="new Date() > finalPeriod"
-                            :readonly="new Date() > finalPeriod"
+                            :disable="isNowDateAfterTheFinalPeriod"
+                            :readonly="isNowDateAfterTheFinalPeriod"
                         >
 
                         </q-input>
@@ -491,36 +545,37 @@ function submitForm(){
                     <q-card-section class="form-footer">
                         <q-btn
                             label="Agendar"
-                            type="submit"
-                            :disable="!enteredDescription || !enteredStartTime || !enteredEndDate || !enteredEndTime"
-                            :loading="isCreateEventRunning"
-                            v-if="action === 'add'"
                             class="btn-primary"
+                            type="submit"
+                            :disable="areAllFieldsFilledIn"
+                            :loading="isCreateEventRunning"
+                            v-if="isAddAction"
                         >
 
                         </q-btn>
                         <q-btn
-                            type="submit"
-                            :disable="!enteredDescription || !enteredStartTime || !enteredEndDate || !enteredEndTime"
-                            :loading="isEditEventRunning"
-                            v-if="action === 'edit' && new Date() < finalPeriod"
                             class="btn-primary"
+                            type="submit"
+                            :disable="areAllFieldsFilledIn"
+                            :loading="isEditEventRunning"
+                            v-if="canItChangeAndRemoveTheEvent"
                         >
                             <i class="bi bi-pencil"></i> <span>Editar</span>
                         </q-btn>
                         <q-btn
-                            type="button"
-                            @click="removeEvent"
-                            v-if="action === 'edit' && new Date() < finalPeriod" :loading="isDeleteEventRunning"
                             class="btn-danger"
+                            type="button"
+                            :loading="isDeleteEventRunning"
+                            @click="removeEvent"
+                            v-if="canItChangeAndRemoveTheEvent"
                         >
                             <i class="bi bi-trash3"></i> <span>Remover</span>
                         </q-btn>
                         <q-btn
                             label="Cancelar"
+                            class="btn-secondary"
                             type="button"
                             @click="closeEventModal"
-                            class="btn-secondary"
                         >
 
                         </q-btn>
