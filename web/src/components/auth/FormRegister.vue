@@ -4,7 +4,7 @@ defineOptions({
 })
 defineModel()
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
 import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
@@ -112,6 +112,9 @@ async function submitForm(){
     isRegisterProcessRunning.value = false;
   }
 }
+
+
+const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.value, enteredPassword.value, enteredConfirmPassword.value ])
 </script>
 
 <template>
@@ -124,7 +127,7 @@ async function submitForm(){
           <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
         </template>
         <template #formfooter>
-          <ButtonAuth button-label="Criar conta" :is-disabled="!enteredName || !enteredEmail || !enteredPassword || !enteredConfirmPassword" :is-process-running="isRegisterProcessRunning"></ButtonAuth>
+          <ButtonAuth label="Criar conta" :loading="isRegisterProcessRunning" :allFieldsValue="arrayOfFieldsValue"></ButtonAuth>
         </template>
       </FormAuthBase>
       <section class="box-verify-email-message" v-else>
