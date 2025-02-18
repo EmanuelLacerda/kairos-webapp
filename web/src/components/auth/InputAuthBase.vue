@@ -34,6 +34,8 @@ function removeMessageError(){
 <style lang="scss">
 form.form-auth-base{
     label.q-field{
+        margin-bottom: 20px;
+
         .q-field__control{
             height: 45px !important;
 
