@@ -4,7 +4,7 @@ defineOptions({
 })
 defineModel()
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
@@ -91,6 +91,8 @@ async function submitForm(){
     isLoginRequestRunning.value = false;
   }
 }
+
+const arrayOfFieldsValue = computed(() => [ enteredEmail.value, enteredPassword.value ])
 </script>
 
 <template>
@@ -101,7 +103,7 @@ async function submitForm(){
             <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
           </template>
           <template #formfooter>
-            <ButtonAuth button-label="Login" :is-disabled="!enteredEmail || !enteredPassword" :is-process-running="isLoginRequestRunning"></ButtonAuth>
+            <ButtonAuth label="Login" :allFieldsValue="arrayOfFieldsValue" :loading="isLoginRequestRunning"></ButtonAuth>
           </template>
         </FormAuthBase>
         <section class="container-create-account-redirect-link">
