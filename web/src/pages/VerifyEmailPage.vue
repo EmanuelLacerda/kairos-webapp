@@ -72,22 +72,30 @@ const submitCodeForm = async () => {
   <q-page padding class="flex items-center justify-center">
     <section class="section-parent-verify-email flex items-center justify-center">
       <p class="title" v-if="!wasEmailVerified">Digite abaixo {{ wasEmailSubmit ? "o código que você recebeu" : "o e-mail que você quer verificar" }}</p>
-      <FormAuthBase v-if="!wasEmailVerified && !wasEmailSubmit" class="form-verify-email flex items-center justify-center" @submit-form="submitEmailForm">
-        <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
-        <ButtonAuth button-label="Continuar" :is-disabled="!enteredEmail"></ButtonAuth>
+      <FormAuthBase v-if="!wasEmailVerified && !wasEmailSubmit" class="form-verify-email  flex column no-wrap" @submit-form="submitEmailForm">
+        <template #formbody>
+          <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
+        </template>
+        <template #formfooter>
+          <ButtonAuth button-label="Continuar" :is-disabled="!enteredEmail"></ButtonAuth>
+        </template>
       </FormAuthBase>
 
       <FormAuthBase v-else-if="!wasEmailVerified && wasEmailSubmit" class="form-verify-email" @submit-form="submitCodeForm">
-        <InputAuthBase
-          type="text"
-          name="code"
-          placeholder="Código de verificação"
-          v-model="enteredCode"
-          :error-message="errorMessageCode"
-          @remove-message-error="removeErrorMessageCode"
-        >
-        </InputAuthBase>
-        <ButtonAuth button-label="Verificar" :is-disabled="!enteredCode" :is-process-running="isVerificationProcessRunning"></ButtonAuth>
+        <template #formbody>
+          <InputAuthBase
+            type="text"
+            name="code"
+            placeholder="Código de verificação"
+            v-model="enteredCode"
+            :error-message="errorMessageCode"
+            @remove-message-error="removeErrorMessageCode"
+          >
+          </InputAuthBase>
+        </template>
+        <template #formfooter>
+          <ButtonAuth button-label="Verificar" :is-disabled="!enteredCode" :is-process-running="isVerificationProcessRunning"></ButtonAuth>
+        </template>
       </FormAuthBase>
 
       <section class="container-email-successfully-verification-message flex justify-center items-center" v-else>
@@ -109,7 +117,7 @@ section.section-parent-verify-email{
   flex-direction: column;
 
   .form-verify-email{
-    width: 30%;
+    width: 60%;
     margin-bottom: 18%;
 
     *{
@@ -138,7 +146,7 @@ section.section-parent-verify-email{
   p.title{
     font-size: 24px;
     width: 50%;
-    margin-bottom: 50px;
+    margin-bottom: 43px;
     color: $custom-full-white;
   }
 
