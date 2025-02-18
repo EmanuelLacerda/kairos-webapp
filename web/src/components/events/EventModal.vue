@@ -38,6 +38,7 @@ const emit = defineEmits([
 import { computed, ref, watch } from 'vue';
 
 import ErrorMessage from '../base/FormFieldErrorMessage.vue';
+import ButtonBase from '../base/ButtonBase.vue';
 
 import { useToast } from 'src/composables/UseToast';
 import { useDialog } from 'src/composables/UseDialog';
@@ -390,9 +391,7 @@ const isNowDateAfterTheFinalPeriod = computed(() => {
 const isAddAction = computed(() => {
   return prop.action === 'add';
 })
-const areAllFieldsFilledIn = computed(() => {
-  return enteredStartTime.value && enteredEndDate.value && enteredEndTime.value && enteredDescription.value;
-})
+const arrayOfFieldsValue = computed(() => [ enteredStartTime.value, enteredEndDate.value, enteredEndTime.value, enteredDescription.value ])
 const canItChangeAndRemoveTheEvent = computed(() => {
   return prop.action === 'edit' && nowDate.value < finalPeriod.value;
 })
@@ -543,42 +542,43 @@ const canItChangeAndRemoveTheEvent = computed(() => {
                         </q-input>
                     </q-card-section>
                     <q-card-section class="form-footer">
-                        <q-btn
-                            label="Agendar"
-                            class="btn-primary"
-                            type="submit"
-                            :disable="areAllFieldsFilledIn"
-                            :loading="isCreateEventRunning"
-                            v-if="isAddAction"
+                        <ButtonBase
+                          label="Agendar"
+                          class="btn-primary"
+                          type="submit"
+                          :allFieldsValue="arrayOfFieldsValue"
+                          :loading="isCreateEventRunning"
+                          v-if="isAddAction"
                         >
+                        </ButtonBase>
 
-                        </q-btn>
-                        <q-btn
-                            class="btn-primary"
-                            type="submit"
-                            :disable="areAllFieldsFilledIn"
-                            :loading="isEditEventRunning"
-                            v-if="canItChangeAndRemoveTheEvent"
+                        <ButtonBase
+                          class="btn-primary"
+                          type="submit"
+                          :allFieldsValue="arrayOfFieldsValue"
+                          :loading="isEditEventRunning"
+                          v-if="canItChangeAndRemoveTheEvent"
                         >
-                            <i class="bi bi-pencil"></i> <span>Editar</span>
-                        </q-btn>
-                        <q-btn
-                            class="btn-danger"
-                            type="button"
-                            :loading="isDeleteEventRunning"
-                            @click="removeEvent"
-                            v-if="canItChangeAndRemoveTheEvent"
-                        >
-                            <i class="bi bi-trash3"></i> <span>Remover</span>
-                        </q-btn>
-                        <q-btn
-                            label="Cancelar"
-                            class="btn-secondary"
-                            type="button"
-                            @click="closeEventModal"
-                        >
+                          <i class="bi bi-pencil"></i> <span>Editar</span>
+                        </ButtonBase>
 
-                        </q-btn>
+                        <ButtonBase
+                          class="btn-danger"
+                          type="button"
+                          :loading="isDeleteEventRunning"
+                          @click="removeEvent"
+                          v-if="canItChangeAndRemoveTheEvent"
+                        >
+                          <i class="bi bi-trash3"></i> <span>Remover</span>
+                        </ButtonBase>
+
+                        <ButtonBase
+                          label="Cancelar"
+                          class="btn-secondary"
+                          type="button"
+                          @click="closeEventModal"
+                        >
+                        </ButtonBase>
                     </q-card-section>
                 </q-form>
             </q-card-section>
