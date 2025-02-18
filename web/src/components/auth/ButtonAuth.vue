@@ -3,33 +3,17 @@ defineOptions({
   name: 'ButtonAuth'
 })
 
-defineProps({
-    buttonLabel: {
-        type: String,
-        required: true
-    },
-    isDisabled: {
-        type: Boolean,
-        default: false
-    },
-    isProcessRunning: {
-        type: Boolean,
-        default: false
-    }
-})
+
+import ButtonBase from '../base/ButtonBase.vue';
 </script>
 
 <template>
-    <q-btn
-        :label="buttonLabel"
-        type="submit"
-        class="bg-white"
-        :outline="false"
-        :disable="isDisabled"
-        :loading="isProcessRunning"
+    <ButtonBase
+      class="bg-white"
+      type="submit"
+      :outline="false"
     >
-
-    </q-btn>
+    </ButtonBase>
 </template>
 
 <style lang="scss">
