@@ -33,5 +33,9 @@ form.form-auth-base{
   width: 100%;
   min-width: 369px;
   height: 6%;
+
+  .form-body, .form-footer{
+    padding: 0;
+  }
 }
 </style>
