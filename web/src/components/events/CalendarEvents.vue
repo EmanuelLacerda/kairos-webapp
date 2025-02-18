@@ -12,12 +12,13 @@ import EventModal from './EventModal.vue';
 import eventsService from 'src/services/events';
 import {useAuthStore} from 'src/stores/auth';
 import { useDialog } from 'src/composables/UseDialog';
-import { ToastError, noStandardToastMixinInfo, positionToastError } from 'src/composables/UseToast';
+import { useToast } from 'src/composables/UseToast';
 
 
 const authStore = useAuthStore();
 const { get: getEvent, getUserEvents } = eventsService();
 const {notificationErrorDialog} = useDialog();
+const { ToastError, noStandardToastMixinInfo, positionToastError } = useToast();
 
 
 const eventId = ref("");
