@@ -96,9 +96,13 @@ async function submitForm(){
 <template>
     <section class="section-parent-form-login flex justify-center items-center">
         <FormAuthBase @submit-form="submitForm" class="form-login">
+          <template #formbody>
             <InputAuthEmail v-model="enteredEmail" :autofocus="true" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
             <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
+          </template>
+          <template #formfooter>
             <ButtonAuth button-label="Login" :is-disabled="!enteredEmail || !enteredPassword" :is-process-running="isLoginRequestRunning"></ButtonAuth>
+          </template>
         </FormAuthBase>
         <section class="container-create-account-redirect-link">
             <q-btn flat label="Não tenho conta" to="/auth/criar-conta/" />
@@ -108,13 +112,7 @@ async function submitForm(){
 
 <style lang="scss">
   section.section-parent-form-login{
-    width: 30%;
-
-    form.form-login{
-        label.q-field:first-child{
-            margin-bottom: 20px;
-        }
-    }
+    width: 40%;
 
     .container-create-account-redirect-link{
         width: 100%;
