@@ -77,7 +77,7 @@ const submitCodeForm = async () => {
           <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
         </template>
         <template #formfooter>
-          <ButtonAuth button-label="Continuar" :is-disabled="!enteredEmail"></ButtonAuth>
+          <ButtonAuth label="Continuar" :allFieldsValue="[ enteredEmail ]"></ButtonAuth>
         </template>
       </FormAuthBase>
 
@@ -94,7 +94,7 @@ const submitCodeForm = async () => {
           </InputAuthBase>
         </template>
         <template #formfooter>
-          <ButtonAuth button-label="Verificar" :is-disabled="!enteredCode" :is-process-running="isVerificationProcessRunning"></ButtonAuth>
+          <ButtonAuth label="Verificar" :allFieldsValue="[ enteredCode ]" :loading="isVerificationProcessRunning"></ButtonAuth>
         </template>
       </FormAuthBase>
 
