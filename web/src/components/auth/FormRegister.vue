@@ -116,12 +116,16 @@ async function submitForm(){
 
 <template>
     <section class="section-parent-form-register flex justify-center items-center">
-      <FormAuthBase @submit-form="submitForm" class="form-login" v-if="!accountCreateSuccessfully">
-        <InputAuthName v-model="enteredName" :error-message="errorMessageName" @remove-message-error="removeErrorMessageName"  :autofocus="true"></InputAuthName>
-        <InputAuthEmail v-model="enteredEmail" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
-        <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
-        <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
-        <ButtonAuth button-label="Criar conta" :is-disabled="!enteredName || !enteredEmail || !enteredPassword || !enteredConfirmPassword" :is-process-running="isRegisterProcessRunning"></ButtonAuth>
+      <FormAuthBase @submit-form="submitForm" class="form-register" v-if="!accountCreateSuccessfully">
+        <template #formbody>
+          <InputAuthName v-model="enteredName" :error-message="errorMessageName" @remove-message-error="removeErrorMessageName"  :autofocus="true"></InputAuthName>
+          <InputAuthEmail v-model="enteredEmail" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
+          <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
+          <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
+        </template>
+        <template #formfooter>
+          <ButtonAuth button-label="Criar conta" :is-disabled="!enteredName || !enteredEmail || !enteredPassword || !enteredConfirmPassword" :is-process-running="isRegisterProcessRunning"></ButtonAuth>
+        </template>
       </FormAuthBase>
       <section class="box-verify-email-message" v-else>
         <h1>Verifique sua caixa de mensagens</h1>
@@ -134,22 +138,6 @@ async function submitForm(){
 <style lang="scss">
   section.section-parent-form-register{
     width: 50%;
-
-    form.form-login{
-      label.q-field{
-        margin-bottom: 20px;
-      }
-
-      button.q-btn{
-        width: 100%;
-        height: 45px;
-        color: $custom-text-primary;
-        margin-top: 23px;
-        font-family: "Montserrat", serif;
-        font-weight: 600;
-        font-size: 20px;
-      }
-    }
   }
 
   .box-verify-email-message{
