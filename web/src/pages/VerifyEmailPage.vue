@@ -76,6 +76,7 @@ const submitCodeForm = async () => {
         <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
         <ButtonAuth button-label="Continuar" :is-disabled="!enteredEmail"></ButtonAuth>
       </FormAuthBase>
+
       <FormAuthBase v-else-if="!wasEmailVerified && wasEmailSubmit" class="form-verify-email" @submit-form="submitCodeForm">
         <InputAuthBase
           type="text"
@@ -88,6 +89,7 @@ const submitCodeForm = async () => {
         </InputAuthBase>
         <ButtonAuth button-label="Verificar" :is-disabled="!enteredCode" :is-process-running="isVerificationProcessRunning"></ButtonAuth>
       </FormAuthBase>
+
       <section class="container-email-successfully-verification-message flex justify-center items-center" v-else>
         <h1>Parabéns, seu e-mail foi verificado com sucesso!</h1>
         <p>Agora, você pode agendar quantos eventos quiser no nosso sistema!</p>
