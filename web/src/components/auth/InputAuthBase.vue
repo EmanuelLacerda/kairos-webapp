@@ -2,19 +2,19 @@
 defineOptions({
   name: "InputAuthBase",
 });
-
-defineProps({
+const prop = defineProps({
     autofocus: {
         type: Boolean,
         default: false
     },
     errorMessage: String
 })
-
 const emit = defineEmits([
   'removeMessageError'
 ])
 
+
+import { computed } from 'vue';
 
 import FormFieldErrorMessage from '../base/FormFieldErrorMessage.vue';
 
@@ -22,10 +22,15 @@ import FormFieldErrorMessage from '../base/FormFieldErrorMessage.vue';
 function removeMessageError(){
     emit('removeMessageError');
 }
+
+
+const inputClasses = computed(() => {
+  return { 'invalidInput': prop.errorMessage }
+})
 </script>
 
 <template>
-    <q-input :outlined="true" :autofocus="autofocus" :class="{invalidInput: errorMessage}" @focus="removeMessageError" v-bind="$attrs">
+    <q-input :outlined="true" :autofocus="autofocus" :class="inputClasses" @focus="removeMessageError" v-bind="$attrs">
         <slot></slot>
     </q-input>
     <FormFieldErrorMessage :error-message="errorMessage"></FormFieldErrorMessage>
