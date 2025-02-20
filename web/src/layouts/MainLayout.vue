@@ -43,7 +43,7 @@ function toggleLeftDrawer () {
           Kairos WebApp
         </q-toolbar-title>
 
-        <div class="welcome-message">Hi, {{ authStore.user.name }}</div>
+        <div class="welcome-message">Oi, {{ authStore.user.name }}</div>
         <ButtonLogout v-if="authStore.isAuthenticated"></ButtonLogout>
       </q-toolbar>
     </q-header>
