@@ -208,8 +208,7 @@ async function createEvent(){
     }
 }
 async function editEvent(){
-    // faltou adicionar "enteredStartDate.value" na condicional abaixo conforme a função acima. Antes de adicionar, é importante analisar e testar se é uma boa opção adicionar isto.
-    if(enteredDescription.value && enteredStartTime.value && enteredEndDate.value && enteredEndTime.value){
+    if(enteredDescription.value && enteredStartDate.value && enteredStartTime.value && enteredEndDate.value && enteredEndTime.value){
         isEditEventRunning.value = true;
 
         const userID = await authStore.getUserId();
