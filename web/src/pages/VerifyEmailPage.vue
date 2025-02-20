@@ -4,7 +4,7 @@ defineOptions({
 })
 
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
 import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
@@ -66,13 +66,18 @@ const submitCodeForm = async () => {
 
   isVerificationProcessRunning.value = false;
 }
+
+
+const title = computed(() => `Digite abaixo ${wasEmailSubmit.value ? "o código que você recebeu" : "o e-mail que você quer verificar"}`);
+
+const wasTheVerificationEmailProvided = computed(() => !wasEmailVerified.value && wasEmailSubmit.value);
 </script>
 
 <template>
   <q-page padding class="flex items-center justify-center">
     <section class="section-parent-verify-email flex items-center justify-center">
-      <p class="title" v-if="!wasEmailVerified">Digite abaixo {{ wasEmailSubmit ? "o código que você recebeu" : "o e-mail que você quer verificar" }}</p>
-      <FormAuthBase v-if="!wasEmailVerified && !wasEmailSubmit" class="form-verify-email  flex column no-wrap" @submit-form="submitEmailForm">
+      <p class="title" v-if="!wasEmailVerified">{{ title }}</p>
+      <FormAuthBase v-if="!wasTheVerificationEmailProvided" class="form-verify-email  flex column no-wrap" @submit-form="submitEmailForm">
         <template #formbody>
           <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
         </template>
@@ -81,7 +86,7 @@ const submitCodeForm = async () => {
         </template>
       </FormAuthBase>
 
-      <FormAuthBase v-else-if="!wasEmailVerified && wasEmailSubmit" class="form-verify-email" @submit-form="submitCodeForm">
+      <FormAuthBase v-else-if="wasTheVerificationEmailProvided" class="form-verify-email" @submit-form="submitCodeForm">
         <template #formbody>
           <InputAuthBase
             type="text"
