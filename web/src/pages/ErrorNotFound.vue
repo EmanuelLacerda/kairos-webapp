@@ -1,5 +1,5 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div class="not-found-page fullscreen text-white text-center q-pa-md flex flex-center">
     <div>
       <div style="font-size: 30vh">
         404
@@ -12,7 +12,6 @@
       <q-btn
         class="q-mt-xl"
         color="white"
-        text-color="blue"
         unelevated
         to="/"
         label="Voltar para home"
@@ -21,3 +20,13 @@
     </div>
   </div>
 </template>
+
+<style lang="scss">
+.not-found-page{
+  background-color: $custom-text-primary;
+
+  .q-btn{
+    color: $custom-text-primary !important;
+  }
+}
+</style>
