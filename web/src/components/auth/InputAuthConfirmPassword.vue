@@ -1,8 +1,6 @@
 <script setup>
-import InputAuthBase from './InputAuthBase.vue';
-
 defineOptions({
-  name: "InputAuthName",
+  name: "InputAuthConfirmPassword",
 });
 
 defineProps({
@@ -16,20 +14,23 @@ const emit = defineEmits([
   'removeMessageError'
 ])
 
-const removeMessageError = () => {
+
+import InputAuthBase from './InputAuthBase.vue';
+
+
+function removeMessageError(){
     emit('removeMessageError');
 }
 </script>
 
 <template>
     <InputAuthBase
-        type="text"
-        name="name"
-        placeholder="Nome"
-        max_length="255"
+        type="password"
+        name="password"
+        placeholder="Confirmar senha"
         :autofocus="autofocus"
         @remove-message-error="removeMessageError"
     >
-        <q-icon class="bi bi-person" size="25px"></q-icon>
+        <q-icon class="bi bi-shield-lock" size="20px"></q-icon>
     </InputAuthBase>
 </template>

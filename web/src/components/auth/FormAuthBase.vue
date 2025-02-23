@@ -19,7 +19,12 @@ function submitForm(){
     method="post"
     @submit.prevent="submitForm"
   >
-      <slot></slot>
+      <q-card-section class="form-body">
+        <slot name="formbody"></slot>
+      </q-card-section>
+      <q-card-section class="form-footer">
+        <slot name="formfooter"></slot>
+      </q-card-section>
   </q-form>
 </template>
 
@@ -28,5 +33,9 @@ form.form-auth-base{
   width: 100%;
   min-width: 369px;
   height: 6%;
+
+  .form-body, .form-footer{
+    padding: 0;
+  }
 }
 </style>

@@ -1,6 +1,4 @@
 <script setup>
-import InputAuthBase from './InputAuthBase.vue';
-
 defineOptions({
   name: "InputAuthEmail",
 });
@@ -8,7 +6,7 @@ defineOptions({
 defineProps({
     autofocus: {
         type: Boolean,
-        required: true
+        default: false
     },
 })
 
@@ -16,7 +14,11 @@ const emit = defineEmits([
   'removeMessageError'
 ])
 
-const removeMessageError = () => {
+
+import InputAuthBase from './InputAuthBase.vue';
+
+
+function removeMessageError(){
     emit('removeMessageError');
 }
 </script>

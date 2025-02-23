@@ -4,12 +4,11 @@ defineOptions({
 })
 defineModel()
 
-import { ref } from 'vue';
-import { useQuasar } from 'quasar'
+import { ref, computed } from 'vue';
 
-import FormAuthBase from 'src/components/form-auth/FormAuthBase.vue';
-import InputAuthEmail from 'src/components/form-auth/InputAuthEmail.vue';
-import InputAuthPassword from 'src/components/form-auth/InputAuthPassword.vue';
+import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
+import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
+import InputAuthPassword from 'src/components/auth/InputAuthPassword.vue';
 import InputAuthName from './InputAuthName.vue';
 import InputAuthConfirmPassword from './InputAuthConfirmPassword.vue';
 import ButtonAuth from './ButtonAuth.vue';
@@ -17,19 +16,13 @@ import RedirectButton from '../RedirectButton.vue';
 
 import { useAuthStore } from 'src/stores/auth';
 import authService from 'src/services/auth'
-
-const { validatePassword } = authService();
+import { useToast } from 'src/composables/UseToast';
 
 
 const authStore = useAuthStore()
+const { validatePassword } = authService();
+const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccessAuth, positionToastError } = useToast()
 
-const notifyWarningConfigObj = {
-  type: "warning",
-  timeout: "800",
-  closeBtn: true
-}
-
-const $q = useQuasar()
 
 const enteredName = ref('')
 const enteredEmail = ref('teste@gmail.com')
@@ -41,26 +34,32 @@ const errorMessageEmail = ref('')
 const errorMessagePassword = ref('')
 const errorMessageConfirmPassword = ref('')
 
-const removeErrorMessageName = () => {
+const isRegisterProcessRunning = ref(false)
+const accountCreateSuccessfully = ref(false);
+
+
+function removeErrorMessageName(){
   errorMessageName.value = "";
 }
 
-const removeErrorMessageEmail = () => {
+function removeErrorMessageEmail(){
     errorMessageEmail.value = "";
 }
 
-const removeErrorMessagePassword = () => {
+function removeErrorMessagePassword(){
     errorMessagePassword.value = "";
 }
 
-const removeErrorMessageConfirmPassword = () => {
+function removeErrorMessageConfirmPassword(){
   errorMessageConfirmPassword.value = "";
 }
 
-const accountCreateSuccessfully = ref(false);
-
-const submitForm = async () => {
+async function submitForm(){
   if(enteredName.value && enteredEmail.value && enteredPassword.value && enteredConfirmPassword.value){
+    isRegisterProcessRunning.value = true;
+
+    noStandardToastMixinInfo.title = "Criação de conta"
+
     const result = validatePassword(enteredPassword.value, enteredConfirmPassword.value);
 
     if(result.isPasswordInvalid){
@@ -77,19 +76,25 @@ const submitForm = async () => {
         "confirm_password": enteredConfirmPassword.value
       })
 
+
       if(resultRegister.wasRegisterSuccessfully){
-        $q.notify({
-          message: "Conta criada com sucesso",
-          type: "positive",
-          timeout: "500",
-          closeBtn: true
+        noStandardToastMixinInfo.text = "Conta criada com sucesso!"
+
+        ToastSuccess.fire({
+          ...noStandardToastMixinInfo,
+          position: positionToastSuccessAuth.value
         })
 
         accountCreateSuccessfully.value = true;
       }else{
         if(typeof resultRegister.error_message === "string"){
-            notifyWarningConfigObj.message = resultRegister.error_message;
-            $q.notify(notifyWarningConfigObj);
+            noStandardToastMixinInfo.text = resultRegister.error_message;
+
+            ToastError.fire({
+              ...noStandardToastMixinInfo,
+              position: positionToastError.value
+
+            });
         } else if(typeof resultRegister.error_message === "object"){
           if (resultRegister.error_message.name){
                 errorMessageName.value = resultRegister.error_message.name[0];
@@ -103,23 +108,31 @@ const submitForm = async () => {
         }
       }
     }
+
+    isRegisterProcessRunning.value = false;
   }
 }
+
+
+const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.value, enteredPassword.value, enteredConfirmPassword.value ])
 </script>
 
 <template>
     <section class="section-parent-form-register flex justify-center items-center">
-      <FormAuthBase @submit-form="submitForm" class="form-login" v-if="!accountCreateSuccessfully">
-        <InputAuthName v-model="enteredName" :error-message="errorMessageName" @remove-message-error="removeErrorMessageName"  :autofocus="true"></InputAuthName>
-        <InputAuthEmail v-model="enteredEmail" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
-        <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
-        <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
-        <ButtonAuth button-label="Criar conta" :is-disabled="!enteredName || !enteredEmail || !enteredPassword || enteredConfirmPassword"></ButtonAuth>
+      <FormAuthBase @submit-form="submitForm" class="form-register" v-if="!accountCreateSuccessfully">
+        <template #formbody>
+          <InputAuthName v-model="enteredName" :error-message="errorMessageName" @remove-message-error="removeErrorMessageName"  :autofocus="true"></InputAuthName>
+          <InputAuthEmail v-model="enteredEmail" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
+          <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
+          <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
+        </template>
+        <template #formfooter>
+          <ButtonAuth label="Criar conta" :loading="isRegisterProcessRunning" :allFieldsValue="arrayOfFieldsValue"></ButtonAuth>
+        </template>
       </FormAuthBase>
       <section class="box-verify-email-message" v-else>
         <h1>Verifique sua caixa de mensagens</h1>
         <p>Enviamos um código para <strong>{{enteredEmail}}</strong>. Clique no botão abaixo e insira esse código na página que será aberta para verificar seu e-mail.</p>
-        <!-- <q-btn label="Verificar e-mail" to="/auth/verificar-email/" size="20px" :rounded="true"></q-btn> -->
         <RedirectButton button-label="Verificar e-mail" redirect-link="/auth/verificar-email/"></RedirectButton>
       </section>
     </section>
@@ -128,22 +141,6 @@ const submitForm = async () => {
 <style lang="scss">
   section.section-parent-form-register{
     width: 50%;
-
-    form.form-login{
-      label.q-field{
-        margin-bottom: 20px;
-      }
-
-      button.q-btn{
-        width: 100%;
-        height: 45px;
-        color: $custom-blue-1;
-        margin-top: 23px;
-        font-family: "Montserrat", serif;
-        font-weight: 600;
-        font-size: 20px;
-      }
-    }
   }
 
   .box-verify-email-message{

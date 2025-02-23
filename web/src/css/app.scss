@@ -7,7 +7,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;1,600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&display=swap');
 
 *{
     font-family: "Montserrat", serif;
+}
+
+.swal2-container{
+    z-index: 99999;
+}
+
+.btn-primary{
+    background-color: $custom-bg-primary;
+    color: $custom-full-white;
+}
+
+.btn-secondary{
+    background-color: $custom-bg-secondary;
+    color: #333333;
+}
+
+.btn-danger{
+    background-color: $custom-bg-danger;
+    color: $custom-full-white;
+}
+
+.toast-title{
+    display: flex !important;
+    align-items: center;
+    height: 20px;
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+.toast-container{
+    margin: 0 1rem !important;
 }

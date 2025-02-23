@@ -3,7 +3,7 @@ defineOptions({
   name: 'RedirectButton'
 })
 
-const props = defineProps({
+defineProps({
     buttonLabel: {
         type: String,
         required: true
@@ -13,8 +13,6 @@ const props = defineProps({
         required: true
     }
 })
-
-console.log(props)
 </script>
 
 <template>

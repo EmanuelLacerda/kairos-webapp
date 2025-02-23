@@ -1,5 +1,33 @@
+<script setup>
+import { ref } from 'vue'
+
+import EssentialLink from 'components/EssentialLink.vue'
+import ButtonLogout from 'src/components/auth/ButtonLogout.vue';
+
+import { useAuthStore } from 'src/stores/auth';
+
+
+const authStore = useAuthStore()
+
+
+const linksList = [
+  {
+    title: 'Minha Agenda',
+    icon: 'bi bi-calendar-date',
+    route: { name: "home" },
+  }
+]
+
+const leftDrawerOpen = ref(false)
+
+
+function toggleLeftDrawer () {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+</script>
+
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr lFf" class="main-layout">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -12,11 +40,11 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Kairos WebApp
         </q-toolbar-title>
 
-        <q-btn @click="logout" v-if="authStore.isAuthenticated">Sair</q-btn>
-        <div>Quasar v{{ $q.version }}</div>
+        <div class="welcome-message">Oi, {{ authStore.user.name }}</div>
+        <ButtonLogout v-if="authStore.isAuthenticated"></ButtonLogout>
       </q-toolbar>
     </q-header>
 
@@ -26,12 +54,6 @@
       bordered
     >
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"
@@ -40,75 +62,27 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="page-background">
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-import { useAuthStore } from 'src/stores/auth';
-import { useRouter } from 'vue-router';
+<style lang="scss">
+  .main-layout{
+    .q-header{
+      background-color: $custom-blue-3;
 
-const router = useRouter()
-
-const authStore = useAuthStore()
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+      .welcome-message{
+        margin-right: 10px;
+      }
+    }
+    .q-drawer{
+      background-color: $custom-blue-3;
+      padding-top: 20px;
+    }
+    .q-page{
+      background-color: $custom-bg-page;
+    }
   }
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
-
-function logout(){
-  authStore.logout();
-  router.push("/auth/login/")
-}
-</script>
+</style>

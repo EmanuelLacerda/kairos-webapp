@@ -2,34 +2,45 @@
 defineOptions({
   name: "InputAuthBase",
 });
-
-defineProps({
+const prop = defineProps({
     autofocus: {
         type: Boolean,
         default: false
     },
     errorMessage: String
 })
-
 const emit = defineEmits([
   'removeMessageError'
 ])
 
-const removeMessageError = () => {
+
+import { computed } from 'vue';
+
+import FormFieldErrorMessage from '../base/FormFieldErrorMessage.vue';
+
+
+function removeMessageError(){
     emit('removeMessageError');
 }
+
+
+const inputClasses = computed(() => {
+  return { 'invalidInput': prop.errorMessage }
+})
 </script>
 
 <template>
-    <q-input :outlined="true" :autofocus="autofocus" :class="{invalidInput: errorMessage}" @focus="removeMessageError" v-bind="$attrs">
+    <q-input :outlined="true" :autofocus="autofocus" :class="inputClasses" @focus="removeMessageError" v-bind="$attrs">
         <slot></slot>
     </q-input>
-    <p class="error-text-message" v-if="errorMessage">{{errorMessage}}</p>
+    <FormFieldErrorMessage :error-message="errorMessage"></FormFieldErrorMessage>
 </template>
 
 <style lang="scss">
 form.form-auth-base{
     label.q-field{
+        margin-bottom: 20px;
+
         .q-field__control{
             height: 45px !important;
 
@@ -42,7 +53,7 @@ form.form-auth-base{
         }
 
         .q-field__control::before{
-            border-color: $custom-full-white !important;
+            border-color: $custom-full-white;
         }
 
         .q-field__native, .q-icon{
@@ -51,25 +62,6 @@ form.form-auth-base{
             font-weight: 300;
             font-size: 18px;
         }
-    }
-}
-
-form.form-auth-base{
-    .invalidInput{
-        .q-field__control::before{
-            border-color: $custom-border-color-error !important;
-        }
-
-        .q-icon, input{
-            color: $custom-text-color-error !important;
-        }
-    }
-
-    .error-text-message{
-        color: $custom-text-color-error;
-        margin-top: 12px;
-        font-weight: 600;
-        text-align: justify;
     }
 }
 </style>

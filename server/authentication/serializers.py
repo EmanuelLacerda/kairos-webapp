@@ -52,7 +52,7 @@ class UserVerifyEmailSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255)
-    password=serializers.CharField(min_length=8, write_only=True)
+    password=serializers.CharField(write_only=True)
     name = serializers.CharField(max_length=255, read_only=True)
     access_token = serializers.CharField(max_length=255, read_only=True)
     refresh_token = serializers.CharField(max_length=255, read_only=True)

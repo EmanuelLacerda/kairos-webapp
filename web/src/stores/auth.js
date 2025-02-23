@@ -1,58 +1,62 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { api } from 'src/boot/axios'
+import { ref, reactive } from 'vue'
+import { api, axios } from 'src/boot/axios'
+import { jwtDecode } from 'jwt-decode'
+import dayjs from 'dayjs'
 import { LocalStorage } from 'quasar'
 
 export const useAuthStore = defineStore('auth', () => {
-    const me = ref({})
-    const token = ref('')
+    const user = reactive({})
+    const access_token = ref('')
+    const refresh_token = ref('')
     const isAuthenticated = ref(false)
 
-    function setAccessToken(tokenValue){
-        token.value = tokenValue.access_token;
-        isAuthenticated.value = true;
+    function updateAccessToken(newAccessToken){
+        access_token.value = newAccessToken;
+        LocalStorage.set("access_token", newAccessToken);
 
-        LocalStorage.set("token", tokenValue);
-
-        api.defaults.headers.common.Authorization = `Bearer ${tokenValue.access_token}`;
-    }
-    function removeAccessToken(){
-        api.defaults.headers.common.Authorization = "";
-        token.value = '';
-        isAuthenticated.value = false;
-        LocalStorage.set("token", "")
-    }
-
-    async function login(userCredentials) {
-        const result = {}
-
-        try{
-            const response = await api.post('auth/login/', userCredentials);
-
-            if(response.statusText === 'OK'){
-                const { access_token, refresh_token } = response.data;
-
-                setAccessToken({access_token, refresh_token});
-
-                result.wasLoginSuccessfully = true;
-
-                return result
-            }
-        } catch (e){
-            result.wasLoginSuccessfully = false;
-
-            if(e.response.statusText === "Unauthorized"){
-                result.error_message = e.response.data.detail
-            } else{
-                result.error_message = e.response.data
-            }
-
-            return result
+        if(newAccessToken){
+            api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+        } else{
+            api.defaults.headers.common.Authorization = "";
         }
     }
+    function updateRefreshToken(newRefreshToken){
+        refresh_token.value = newRefreshToken;
+        LocalStorage.set("refresh_token", newRefreshToken);
+    }
+    function updateUserData(userData){
+        user.name = userData.name ? userData.name : "";
+        user.email = userData.email ? userData.email : "";
 
-    function logout(){
-        removeAccessToken();
+        LocalStorage.set("user", userData);
+    }
+
+    function setAuthenticatedStatus(userData, tokenValue){
+        updateAccessToken(tokenValue.access_token);
+        updateRefreshToken(tokenValue.refresh_token);
+        updateUserData(userData);
+
+        isAuthenticated.value = true;
+    }
+    function removeAuthenticatedStatus(){
+        updateAccessToken("");
+        updateRefreshToken("");
+        updateUserData({});
+
+        isAuthenticated.value = false;
+    }
+
+    async function init(){
+        const user = LocalStorage.getItem("user");
+        const access_token = LocalStorage.getItem("access_token");
+        const refresh_token = LocalStorage.getItem("refresh_token");
+
+        if(access_token){
+            setAuthenticatedStatus(user, {access_token, refresh_token})
+        } else{
+            removeAuthenticatedStatus();
+        }
     }
 
     async function register(userCredentials){
@@ -61,9 +65,11 @@ export const useAuthStore = defineStore('auth', () => {
         try{
             const response = await api.post('auth/register/', userCredentials);
 
-            result.wasRegisterSuccessfully = true;
+            if(response.statusText === "Created"){
+                result.wasRegisterSuccessfully = true;
 
-            console.log(response);
+                return result;
+            }
 
             return result;
         } catch (e){
@@ -77,7 +83,6 @@ export const useAuthStore = defineStore('auth', () => {
         }
         
     }
-
     async function verifyEmail(verificationCode) {
         const result = {}
 
@@ -110,16 +115,111 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    async function init(){
-        const access_token = LocalStorage.getItem("token");
+    async function login(userCredentials) {
+        const result = {}
 
-        if(access_token){
-            setAccessToken(access_token)
-        } else{
-            removeAccessToken();
+        try{
+            const response = await api.post('auth/login/', userCredentials);
+
+            if(response.statusText === 'OK'){
+                const { name, email, access_token, refresh_token } = response.data;
+
+                setAuthenticatedStatus({name, email},{access_token, refresh_token});
+
+                result.wasLoginSuccessfully = true;
+
+                return result
+            }
+        } catch (e){
+            result.wasLoginSuccessfully = false;
+            if(e.response.statusText === "Unauthorized"){
+                result.error_message = e.response.data.detail
+            } else{
+                result.error_message = e.response.data
+            }
+
+            return result
+        }
+    }
+    async function logout(){
+        const result = {};
+
+        try{
+            const response = await api.post('auth/logout/', {"refresh_token": refresh_token.value});
+            if(response.statusText === "OK"){
+                removeAuthenticatedStatus();
+
+                result.wasLogoutSuccessfully = true;
+
+                return result;
+            }
+
+            result.wasLogoutSuccessfully = false;
+            result.error_message = response;
+
+            return result;
+        } catch(e){
+            result.wasLogoutSuccessfully = false;
+            result.error_message = e.response;
+
+            return result;
         }
     }
 
+    async function checkIfUserAuthenticated() {
+        const access_token = LocalStorage.getItem('access_token')
+        const refresh_token = LocalStorage.getItem('refresh_token')
+      
+        if(access_token){
+          const user = jwtDecode(access_token)
+          const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+          
+          if(!isExpired){
+            return {"isUserAuthenticated": true};
+          } else{
+            try {
+                const response = await axios.post(`http://127.0.0.1:8000/api/v1/auth/token/refresh/`, {'refresh': refresh_token});
 
-    return {me, token, isAuthenticated, init, login, logout, register, verifyEmail}
+                if(response.statusText === "OK"){
+                    return {"isUserAuthenticated": true, "new_access_token": response.data.access};
+                } else{
+                    return {"isUserAuthenticated": false};
+                }
+            } catch (error) {
+                if(error.response.statusText === "Unauthorized"){
+                    return {"isUserAuthenticated": false};
+                }
+            }
+          }
+        } else if(refresh_token){
+            try {
+                const response = await axios.post(`http://127.0.0.1:8000/api/v1/auth/token/refresh/`, {'refresh': refresh_token});
+
+                if(response.statusText === "OK"){
+                    return {"isUserAuthenticated": true, "new_access_token": response.data.access};
+                } else{
+                    return {"isUserAuthenticated": false};
+                }
+            } catch (error) {
+                if(error.response.statusText === "Unauthorized"){
+                    return {"isUserAuthenticated": false};
+                }
+            }
+        } else{
+            return {"isUserAuthenticated": false};
+        }
+    }
+
+    async function getUserId(){
+        const access_token = LocalStorage.getItem('access_token')
+
+        if(access_token){
+            return jwtDecode(access_token).user_id;
+        }
+
+        return null;
+    }
+
+    
+    return {user, access_token, isAuthenticated, init, login, logout, register, verifyEmail, checkIfUserAuthenticated, getUserId, updateAccessToken, removeAuthenticatedStatus, setAuthenticatedStatus}
 })

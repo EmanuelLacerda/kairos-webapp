@@ -1,3 +1,5 @@
+from events.models import Event
+from events.serializers import EventSerializer
 from .models import OneTimePassword, User
 from .serializers import LoginSerializer, LogoutUserSerializer, PasswordResetRequestSerializer, SetNewPasswordSerializer, UserRegisterSerializer, UserVerifyEmailSerializer
 
@@ -9,6 +11,11 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
+from django.db.models import Q
+
+from dateutil import parser
+
 
 from .utils import send_code_to_user
 
@@ -115,4 +122,27 @@ class LogoutUserView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
+
+
+class ListUserEvents(GenericAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+    def get(self, request, userid):
+        events = self.get_queryset().filter(creator__id=userid)
+
+        if(events):
+            start_date = self.request.query_params.get('start')
+            end_date = self.request.query_params.get('end')
+
+            if start_date and end_date:
+                start = parser.parse(start_date)
+                end = parser.parse(end_date)
+                
+                events = events.filter(Q(start__range=(start, end)) | Q(end__range=(start,end)))
+
+            serializer = EventSerializer(events, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response({'error_message': 'Usuário não possuí eventos'}, status=status.HTTP_404_NOT_FOUND)

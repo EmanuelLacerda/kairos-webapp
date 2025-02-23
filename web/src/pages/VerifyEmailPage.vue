@@ -3,20 +3,22 @@ defineOptions({
   name: 'VerifyEmailPage'
 })
 
-import { ref } from 'vue';
-import { useQuasar } from 'quasar'
 
-import FormAuthBase from 'src/components/form-auth/FormAuthBase.vue';
-import InputAuthEmail from 'src/components/form-auth/InputAuthEmail.vue';
-import InputAuthBase from 'src/components/form-auth/InputAuthBase.vue';
-import ButtonAuth from 'src/components/form-auth/ButtonAuth.vue';
+import { ref, computed } from 'vue';
+
+import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
+import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
+import InputAuthBase from 'src/components/auth/InputAuthBase.vue';
+import ButtonAuth from 'src/components/auth/ButtonAuth.vue';
 import RedirectButton from 'src/components/RedirectButton.vue';
 
 import { useAuthStore } from 'src/stores/auth';
+import { useToast } from 'src/composables/UseToast';
+
 
 const authStore = useAuthStore()
+const { ToastSuccess, noStandardToastMixinInfo, positionToastSuccessAuth } = useToast()
 
-const $q = useQuasar()
 
 const enteredEmail = ref('');
 const enteredCode = ref('');
@@ -25,58 +27,82 @@ const wasEmailVerified = ref(false)
 
 const errorMessageCode = ref('')
 
+const isVerificationProcessRunning = ref(false)
+
+
 const removeErrorMessageCode = () => {
   errorMessageCode.value = "";
 }
 
-const submitFirstForm = () => {
+const submitEmailForm = () => {
   if(enteredEmail.value){
     wasEmailSubmit.value = true;
   }
 }
-
-const submitSecondForm = async () => {
+const submitCodeForm = async () => {
   if(enteredCode.value){
-    const resultEmailVerification = await authStore.verifyEmail({
+    isVerificationProcessRunning.value = true;
+
+    noStandardToastMixinInfo.title = "Verificação de e-mail";
+
+    const resultEmailVerification = await
+    authStore.verifyEmail({
       "code": enteredCode.value
     })
 
     if(resultEmailVerification.wasEmailVerify){
-        $q.notify({
-          message: "O e-mail foi verificado com sucesso",
-          type: "positive",
-          timeout: "500",
-          closeBtn: true
-        })
+      noStandardToastMixinInfo.text = "E-mail verificado com sucesso!"
 
-        wasEmailVerified.value = true;
-      }else{
-        errorMessageCode.value = resultEmailVerification.error_message;
-      }
+      ToastSuccess.fire({
+        ...noStandardToastMixinInfo,
+        position: positionToastSuccessAuth.value
+      })
+
+      wasEmailVerified.value = true;
+    }else{
+      errorMessageCode.value = resultEmailVerification.error_message;
+    }
   }
+
+  isVerificationProcessRunning.value = false;
 }
+
+
+const title = computed(() => `Digite abaixo ${wasEmailSubmit.value ? "o código que você recebeu" : "o e-mail que você quer verificar"}`);
+
+const wasTheVerificationEmailProvided = computed(() => !wasEmailVerified.value && wasEmailSubmit.value);
 </script>
 
 <template>
   <q-page padding class="flex items-center justify-center">
     <section class="section-parent-verify-email flex items-center justify-center">
-      <p class="title" v-if="!wasEmailVerified">Digite abaixo {{ wasEmailSubmit ? "o código que você recebeu" : "o e-mail que você quer verificar" }}</p>
-      <FormAuthBase v-if="!wasEmailVerified && !wasEmailSubmit" class="form-verify-email flex items-center justify-center" @submit-form="submitFirstForm">
-        <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
-        <ButtonAuth button-label="Continuar"></ButtonAuth>
+      <p class="title" v-if="!wasEmailVerified">{{ title }}</p>
+      <FormAuthBase v-if="!wasTheVerificationEmailProvided" class="form-verify-email  flex column no-wrap" @submit-form="submitEmailForm">
+        <template #formbody>
+          <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
+        </template>
+        <template #formfooter>
+          <ButtonAuth label="Continuar" :allFieldsValue="[ enteredEmail ]"></ButtonAuth>
+        </template>
       </FormAuthBase>
-      <FormAuthBase v-else-if="!wasEmailVerified && wasEmailSubmit" class="form-verify-email" @submit-form="submitSecondForm">
-        <InputAuthBase
-          type="text"
-          name="code"
-          placeholder="Código de verificação"
-          v-model="enteredCode"
-          :error-message="errorMessageCode"
-          @remove-message-error="removeErrorMessageCode"
-        >
-        </InputAuthBase>
-        <ButtonAuth button-label="Verificar"></ButtonAuth>
+
+      <FormAuthBase v-else-if="wasTheVerificationEmailProvided" class="form-verify-email" @submit-form="submitCodeForm">
+        <template #formbody>
+          <InputAuthBase
+            type="text"
+            name="code"
+            placeholder="Código de verificação"
+            v-model="enteredCode"
+            :error-message="errorMessageCode"
+            @remove-message-error="removeErrorMessageCode"
+          >
+          </InputAuthBase>
+        </template>
+        <template #formfooter>
+          <ButtonAuth label="Verificar" :allFieldsValue="[ enteredCode ]" :loading="isVerificationProcessRunning"></ButtonAuth>
+        </template>
       </FormAuthBase>
+
       <section class="container-email-successfully-verification-message flex justify-center items-center" v-else>
         <h1>Parabéns, seu e-mail foi verificado com sucesso!</h1>
         <p>Agora, você pode agendar quantos eventos quiser no nosso sistema!</p>
@@ -96,7 +122,7 @@ section.section-parent-verify-email{
   flex-direction: column;
 
   .form-verify-email{
-    width: 30%;
+    width: 60%;
     margin-bottom: 18%;
 
     *{
@@ -108,7 +134,7 @@ section.section-parent-verify-email{
     }
 
     .error-text-message{
-      color: $custom-text-color-error-2;
+      color: $custom-text-danger-2;
     }
 
     .invalidInput{
@@ -117,7 +143,7 @@ section.section-parent-verify-email{
       }
 
       .q-icon, input{
-          color: $custom-text-color-error-2 !important;
+          color: $custom-text-danger-2 !important;
       }
   }
   }
@@ -125,13 +151,13 @@ section.section-parent-verify-email{
   p.title{
     font-size: 24px;
     width: 50%;
-    margin-bottom: 50px;
+    margin-bottom: 43px;
     color: $custom-full-white;
   }
 
   .container-email-successfully-verification-message{
     h1{
-      color: #388E3C;
+      color: $custom-green-3;
       font-size: 30px;
       font-weight: 600;
       text-align: center;
