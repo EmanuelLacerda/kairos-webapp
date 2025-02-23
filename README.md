@@ -138,6 +138,21 @@ quasar dev #este segundo comando só funcionará se tiver o Quasar instalado glo
 
 *Obs.: Para o projeto funcionar corretamente, api e frontend devem estar em execução ao mesmo tempo.
 
+<h2 id="feature-list">⚙️ Funcionalidades</h2>
+
+**Funcionalidades de autenticação:**
+- Cadastro de usuário.
+- Verificação de e-mail de usuário.
+- Login.
+- Logout.
+
+**Funcionalidades de gerenciamento de eventos:**
+- Adição de eventos com duração de 1 dia ou mais e ligados ao usuário que os criou.
+- Listagem de eventos em calendário.
+- Edição de eventos.
+- Remoção de eventos.
+
+
 <h2 id="projec-actors">👷 Autores</h2>
 
 * Emanuel Lacerda - Desenvolvedor - [@EmanuelLacerda](https://github.com/EmanuelLacerda/)
