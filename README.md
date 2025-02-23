@@ -6,6 +6,12 @@
   <img src="https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray"></img>
   <img src="https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white"></img>
 </p>
+
+Web app para agendamento de eventos pessoais.
+
+
+<img src="https://github.com/user-attachments/assets/9815f7a5-83a6-47f1-b7c6-2bb2599a2152" />
+
 <h2 id="tech">📦 Tecnologias usadas:</h2>
 
 - [Django(Backend)](https://www.djangoproject.com/)
