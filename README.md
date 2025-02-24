@@ -152,6 +152,118 @@ quasar dev #este segundo comando só funcionará se tiver o Quasar instalado glo
 - Edição de eventos.
 - Remoção de eventos.
 
+<h2 id="api-endpoints">⚙️ API Endpoints</h2>
+
+A API provém os seguintes endpoints:
+
+| rota               | descrição                                          
+|----------------------|-----------------------------------------------------
+| <kbd>GET /events</kbd>     | Pega a lista de todos os eventos. [Ver detalhes](#get-all-events)
+| <kbd>GET /events/{eventUUID}/</kbd>     | Pega um evento específico por UUID. [Ver detalhes](#get-specific-event)
+| <kbd>POST /events</kbd>     | Registra um novo evento [Ver detalhes](#post-event)
+| <kbd>PUT /events/{eventUUID}/</kbd>     | Edita os dados de um evento específico por UUID
+| <kbd>PATCH /events/{eventUUID}/</kbd>     | Edita os dados de um evento específico por UUID
+| <kbd>DELETE /events/{eventUUID}/</kbd>     | Remove um evento específico por UUID
+| <kbd>GET /users/{userId}/eventUUID/</kbd>     | Pega todos os eventos de um usuário específico por UUID. [Ver detalhes](#get-user-all-events)
+
+
+<h3 id="get-all-events">GET /events</h3>
+
+<h4>RESPONSE:</h4>
+
+```
+[
+    {
+        id: 'f75b6d05-439c-4af1-a2d9-8f7eb6efe19b',
+        created_at: '2025-02-17T13:44:37.436230Z',
+        updated_at: '2025-02-23T20:19:03.735480Z',
+        active: true,
+        description: 'Reunião de planejamento do projeto X',
+        start: '2025-03-01T10:00:00Z',
+        end: '2025-03-01T12:00:00Z',
+        creator: 1,
+        participants: []
+    },
+    {
+        id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+        created_at: '2025-02-20T09:00:00.000000Z',
+        updated_at: '2025-02-22T15:30:00.000000Z',
+        active: true,
+        description: 'Aniversário da equipe',
+        start: '2025-03-15T14:00:00Z',
+        end: '2025-03-15T17:00:00Z',
+        creator: 4,
+        participants: []
+    }
+]
+```
+
+<h3 id="get-specific-event">GET /events/a1b2c3d4-e5f6-7890-1234-567890abcdef/</h3>
+
+<h4>RESPONSE:</h4>
+
+```
+{
+    id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+    created_at: '2025-02-20T09:00:00.000000Z',
+    updated_at: '2025-02-22T15:30:00.000000Z',
+    active: true,
+    description: 'Aniversário da equipe',
+    start: '2025-03-15T14:00:00Z',
+    end: '2025-03-15T17:00:00Z',
+    creator: 4,
+    participants: []
+}
+```
+
+<h3 id="post-event">POST /events</h3>
+
+<h4>REQUEST:</h4>
+
+```
+{
+  description: 'Consulta médica de rotina',
+  start: '2025-03-20T11:00:00Z',
+  end: '2025-03-20T12:00:00Z',
+  creator: 6
+}
+```
+
+<h4>RESPONSE:</h4>
+
+```
+{
+  id: '123e4567-e89b-12d3-a456-426614174000',
+  created_at: '2025-02-23T20:30:00.000000Z',
+  updated_at: '2025-02-23T20:30:00.000000Z',
+  active: true,
+  description: 'Consulta médica de rotina',
+  start: '2025-03-20T11:00:00Z',
+  end: '2025-03-20T12:00:00Z',
+  creator: 6,
+  participants: []
+}
+```
+
+<h3 id="get-user-all-events">GET /users/6/events/</h3>
+
+<h4>RESPONSE:</h4>
+
+```
+[
+  {
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    created_at: '2025-03-05T08:30:00.000000Z',
+    updated_at: '2025-03-05T09:15:00.000000Z',
+    active: true,
+    description: 'Consulta médica de rotina',
+    start: '2025-03-20T11:00:00Z',
+    end: '2025-03-20T12:00:00Z',
+    creator: 6,
+    participants: []
+  }
+]
+```
 
 <h2 id="projec-actors">👷 Autores</h2>
 
