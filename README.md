@@ -158,6 +158,12 @@ A API provém os seguintes endpoints:
 
 | rota               | descrição                                          
 |----------------------|-----------------------------------------------------
+| <kbd>POST /auth/register</kbd>     | Registra um novo usuário [Ver detalhes](#post-user)
+| <kbd>POST /auth/verify-email</kbd>     | Verifica o e-mail de um usuário [Ver detalhes](#verify-email-user)
+| <kbd>POST /auth/login</kbd>     | Retorna o access e o refresh token de um usuário [Ver detalhes](#login-user)
+| <kbd>POST /auth/logout</kbd>     | Adiciona o refresh token de um usuário na blacklist [Ver detalhes](#logout-user)
+| <kbd>GET /auth/profile</kbd>     | Verifica a validade do access token de um usuário [Ver detalhes](#check-the-validity-access-token)
+| <kbd>POST /auth/token/refresh</kbd>     | Gera um novo refresh token para um usuário [Ver detalhes](#refresh-token)
 | <kbd>GET /events</kbd>     | Pega a lista de todos os eventos. [Ver detalhes](#get-all-events)
 | <kbd>GET /events/{eventUUID}/</kbd>     | Pega um evento específico por UUID. [Ver detalhes](#get-specific-event)
 | <kbd>POST /events</kbd>     | Registra um novo evento [Ver detalhes](#post-event)
