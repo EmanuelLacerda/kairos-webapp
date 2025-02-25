@@ -173,6 +173,119 @@ A API provém os seguintes endpoints:
 | <kbd>GET /users/{userId}/eventUUID/</kbd>     | Pega todos os eventos de um usuário específico por UUID. [Ver detalhes](#get-user-all-events)
 
 
+<h3 id="post-user">POST /auth/register</h3>
+
+<h4>REQUEST:</h4>
+
+```
+{
+  name: 'Emanuel de Souza Lacerda',
+  email: 'emanuellacerda@gmail.com',
+  password: 'te@12klLA',
+  confirm_password: 'te@12klLA'
+}
+```
+
+<h4>RESPONSE:</h4>
+
+```
+{
+ 
+}
+```
+
+<h3 id="verify-email-user">POST /auth/verify-email</h3>
+
+<h4>REQUEST:</h4>
+
+```
+{
+  code: '238657'
+}
+```
+
+<h4>RESPONSE:</h4>
+
+```
+{
+ 
+}
+```
+
+<h3 id="login-user">POST /auth/login</h3>
+
+<h4>REQUEST:</h4>
+
+```
+{
+  email: 'emanuellacerda@gmail.com',
+  password: 'te@12klLA'
+}
+```
+
+<h4>RESPONSE:</h4>
+
+```
+{
+ 
+}
+```
+
+<h3 id="logout-user">POST /auth/logout</h3>
+
+<h4>REQUEST:</h4>
+
+```
+{
+  refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwicm9sZSI6InVzZXIiLCJleHAiOjE2ODg4ODg4ODh9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+}
+```
+
+<h4>RESPONSE:</h4>
+
+```
+{
+ 
+}
+```
+
+<h3 id="check-the-validity-access-token">POST /auth/profile</h3>
+
+<h4>REQUEST:</h4>
+
+```
+{
+  
+}
+```
+
+<h4>RESPONSE:</h4>
+
+```
+{
+ 
+}
+```
+
+<h3 id="refresh-token">POST /auth/token/refresh</h3>
+
+<h4>REQUEST:</h4>
+
+```
+{
+  refresh: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwicm9sZSI6InVzZXIiLCJleHAiOjE2ODg4ODg4ODh9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+}
+```
+
+<h4>RESPONSE:</h4>
+
+```
+{
+ 
+}
+```
+
+
 <h3 id="get-all-events">GET /events</h3>
 
 <h4>RESPONSE:</h4>
