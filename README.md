@@ -190,7 +190,8 @@ A API provém os seguintes endpoints:
 
 ```
 {
- 
+  name: 'Emanuel de Souza Lacerda',
+  email: 'emanuellacerda@gmail.com'
 }
 ```
 
@@ -208,7 +209,7 @@ A API provém os seguintes endpoints:
 
 ```
 {
- 
+ message: "O e-mail foi verificado com sucesso"
 }
 ```
 
