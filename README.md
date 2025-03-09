@@ -228,7 +228,10 @@ A API provém os seguintes endpoints:
 
 ```
 {
- 
+  name: 'Emanuel de Souza Lacerda',
+  email: 'emanuellacerda@gmail.com',
+  access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTQ5NjUxLCJpYXQiOjE3NDE1NDkwNTEsImp0aSI6IjViYTg3MzZkMDQ4ZTQ5YTk4ZGI3ZWJhNmFmYjA0YjlkIiwidXNlcl9pZCI6OH0.T69yVAqEFlAEcj8ODabqjheaYn7jEBMQZagat6EU0aI',
+refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0MTYzNTQ1MSwiaWF0IjoxNzQxNTQ5MDUxLCJqdGkiOiJmNWE3ZTJiMzcyNTQ0ZmViYjIwZTE4OTdiYjVkZDcxMyIsInVzZXJfaWQiOjh9.FX2a-g85tgb4iL9A-ISRe10RxG34za0QxmJslcnVgjk'
 }
 ```
 
@@ -239,14 +242,6 @@ A API provém os seguintes endpoints:
 ```
 {
   refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwicm9sZSI6InVzZXIiLCJleHAiOjE2ODg4ODg4ODh9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-}
-```
-
-<h4>RESPONSE:</h4>
-
-```
-{
- 
 }
 ```
 
