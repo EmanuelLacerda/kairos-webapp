@@ -163,7 +163,7 @@ A API provém os seguintes endpoints:
 | <kbd>POST /auth/login</kbd>     | Retorna o access e o refresh token de um usuário [Ver detalhes](#login-user)
 | <kbd>POST /auth/logout</kbd>     | Adiciona o refresh token de um usuário na blacklist [Ver detalhes](#logout-user)
 | <kbd>GET /auth/profile</kbd>     | Verifica a validade do access token de um usuário [Ver detalhes](#check-the-validity-access-token)
-| <kbd>POST /auth/token/refresh</kbd>     | Gera um novo refresh token para um usuário [Ver detalhes](#refresh-token)
+| <kbd>POST /auth/token/refresh</kbd>     | Gera um novo access token para um usuário [Ver detalhes](#refresh-token)
 | <kbd>GET /events</kbd>     | Pega a lista de todos os eventos. [Ver detalhes](#get-all-events)
 | <kbd>GET /events/{eventUUID}/</kbd>     | Pega um evento específico por UUID. [Ver detalhes](#get-specific-event)
 | <kbd>POST /events</kbd>     | Registra um novo evento [Ver detalhes](#post-event)
@@ -250,8 +250,8 @@ refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmV
 <h4>REQUEST:</h4>
 
 ```
-{
-  
+headers: {
+  'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTQ5NjUxLCJpYXQiOjE3NDE1NDkwNTEsImp0aSI6IjViYTg3MzZkMDQ4ZTQ5YTk4ZGI3ZWJhNmFmYjA0YjlkIiwidXNlcl9pZCI6OH0.T69yVAqEFlAEcj8ODabqjheaYn7jEBMQZagat6EU0aI'
 }
 ```
 
@@ -259,7 +259,7 @@ refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmV
 
 ```
 {
- 
+    message: 'Access token válido'
 }
 ```
 
@@ -277,7 +277,7 @@ refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmV
 
 ```
 {
- 
+    access: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTU1Nzk1LCJpYXQiOjE3NDE1NTQyMDEsImp0aSI6IjQxZjlhMDgzZDc3NTQ1Nzc5MzVlYjU1ZDdkMmIxYWUzIiwidXNlcl9pZCI6MX0.LVBBXKoWAc2zj8mB68lMK1-X9fc4BULajVg1AL29Cyw'
 }
 ```
 
