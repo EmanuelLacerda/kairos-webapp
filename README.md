@@ -165,7 +165,7 @@ A API provém os seguintes endpoints:
 | <kbd>GET /auth/profile/</kbd>     | Verifica a validade do access token de um usuário [Ver detalhes](#check-the-validity-access-token)
 | <kbd>POST /auth/token/refresh/</kbd>     | Gera um novo access token para um usuário [Ver detalhes](#refresh-token)
 | <kbd>POST /auth/password-reset/</kbd>     | Solicita mudança de senha [Ver detalhes](#refresh-token)
-| <kbd>GET /auth/password-reset-confirm/{uidb64}/{passwordResetToken}/</kbd> | Verifica se o token de mudança de senha é válido [Ver detalhes][#password-reset-confirm]
+| <kbd>GET /auth/password-reset-confirm/{uidb64}/{passwordResetToken}/</kbd> | Verifica se o token de mudança de senha é válido [Ver detalhes](#password-reset-confirm)
 | <kbd>PATCH /auth/set-new-password/</kbd> | Muda a senha [Ver detalhes](#set-new-password)
 | <kbd>GET /events</kbd>     | Pega a lista de todos os eventos. [Ver detalhes](#get-all-events)
 | <kbd>GET /events/{eventUUID}/</kbd>     | Pega um evento específico por UUID. [Ver detalhes](#get-specific-event)
