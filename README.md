@@ -1,5 +1,15 @@
 <h1 align="center" style="font-weight: bold;">Kairos WebApp 💻</h1>
 <p align="center">
+ <a href="#tech">Tecnologias usadas</a> • 
+ <a href="#intro">Introdução</a> • 
+  <a href="#feature-list">Funcionalidades</a> •
+ <a href="#api-endpoints">API Endpoints</a> •
+ <a href="#projec-actors">Autores</a> • 
+ <a href="#licenca">Licença</a> • 
+ <a href="#credit">Créditos</a> • 
+ <a href="#contact">Contato</a>
+</p>
+<p align="center">
   <img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D">
   <img src="https://img.shields.io/badge/Quasar-16B7FB?style=for-the-badge&logo=quasar&logoColor=black">
   <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white">
@@ -441,7 +451,7 @@ headers: {
 <h2 id="licenca">📄 Licença</h2>
 Esse projeto está sob a licença MIT - acesse os detalhes <a href="https://github.com/EmanuelLacerda/kairos-webapp/blob/main/LICENSE">LICENSE.md</a>.
 
-<h2>Créditos:</h2>
+<h2 id="credit">Créditos:</h2>
 O layout das telas de login, criar conta e similares foram baseadas <a href="https://www.figma.com/community/file/872144934711314532">neste design de tela de login</a> publicado no FIGMA pelo usuário <a href="https://www.figma.com/@gorechajay">Ajay Gorecha(@gorechajay)</a>
 
 <h2 id="contact">✉️ Contato</h2>
@@ -449,4 +459,3 @@ Se tiver alguma dúvida, quiser fazer sugestões, elogios, etc., se sinta livre 
 
 - [in/emanuel-de-souza-lacerda](https://www.linkedin.com/in/emanuel-de-souza-lacerda/)
 - emanuelsouzalacerda@gmail.com
-
