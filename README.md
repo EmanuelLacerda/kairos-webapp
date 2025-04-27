@@ -41,6 +41,21 @@ Agora, você sabe o básico sobre este app. Quer conhecer mais sobre ele? Só le
 - [Axios(Integração de APIs)](https://axios-http.com/docs/intro)
 - [Bootstrap Icons](https://icons.getbootstrap.com/)
 
+<h2 id="feature-list">⚙️ Funcionalidades</h2>
+
+**Funcionalidades de autenticação:**
+- **Criação de de conta:** Processo intuitivo com verificação de e-mail no final para garantir que o novo usuário realmente tem acesso ao e-mail informado.
+- **Login:** O usuário acessa o sistema por meio de e-mail e senha válidos e tem sua sessão mantida por meio de JWT.
+- **Logout:** O usuário pode deslogar manualmente a qualquer momento, bem como ser deslogado automaticamente quando o refresh token não for mais válido.
+
+**Funcionalidades de gerenciamento de eventos:**
+- **Criação de Eventos:** Adição fácil de novos compromissos e atividades com duração variada (um ou múltiplos dias).
+- **Visualização em Calendário:** Acompanhamento dos eventos de maneira clara e organizada utilizando a biblioteca FullCalendar.
+- **Edição de Eventos:** Edição simples e rápida dos eventos, com restrições inteligentes para garantir a consistência dos dados:
+    - Não é possível alterar o período de início de um evento após seu início.
+    - Eventos já finalizados não podem ser editados.
+- **Remoção de Eventos:** Possibilidade de excluir qualquer evento ainda não finalizado.
+
 <h2 id="intro">🔥 Introdução:</h2>
 
 <h3>⚙️ Pré-requisitos:</h3>
@@ -154,20 +169,6 @@ quasar dev #este segundo comando só funcionará se tiver o Quasar instalado glo
 ```
 
 *Obs.: Para o projeto funcionar corretamente, api e frontend devem estar em execução ao mesmo tempo.
-
-<h2 id="feature-list">⚙️ Funcionalidades</h2>
-
-**Funcionalidades de autenticação:**
-- Cadastro de usuário.
-- Verificação de e-mail de usuário.
-- Login.
-- Logout.
-
-**Funcionalidades de gerenciamento de eventos:**
-- Adição de eventos com duração de 1 dia ou mais e ligados ao usuário que os criou.
-- Listagem de eventos em calendário.
-- Edição de eventos.
-- Remoção de eventos.
 
 <h2 id="api-endpoints">⚙️ API Endpoints</h2>
 
