@@ -31,15 +31,26 @@ Agora, você sabe o básico sobre este app. Quer conhecer mais sobre ele? Só le
 
 <h2 id="tech">📦 Tecnologias usadas:</h2>
 
-- [Django(Backend)](https://www.djangoproject.com/)
-- [Django REST Framework(API)](https://www.django-rest-framework.org/)
-- [Vue 3(Composition API com script setup)](https://vuejs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Quasar 2(Framework para construção de aplicações Vue.js)](https://quasar.dev/)
-- [Pinia(Gerenciamento de estado)](https://pinia.vuejs.org/)
-- [Vue-Router(Gerenciamento de rotas)](https://router.vuejs.org/)
-- [Axios(Integração de APIs)](https://axios-http.com/docs/intro)
-- [Bootstrap Icons](https://icons.getbootstrap.com/)
+<h3>Frontend:</h3>
+
+- **Base:** HTML5, CSS3, JavaScript (ES6+)
+- **Reatividade:** [Vue 3(Composition API com script setup)](https://vuejs.org/) e [Quasar 2](https://quasar.dev/)
+- **Gerenciamento de estado:** [Pinia](https://pinia.vuejs.org/)
+- **Gerenciamento de rotas:** [Vue-Router](https://router.vuejs.org/)
+- **Calendário:** [FullCalendar](https://fullcalendar.io/)
+- **CSS:** Tailwind CSS
+- **Requisição HTTP:** Axios
+- **Demais tecnologias:** jwt-decode, [Bootstrap Icons](https://icons.getbootstrap.com/) e SweetAlert2
+
+<h3>Backend:</h3>
+
+- **Lógica do servidor:** [Django](https://www.djangoproject.com/)
+- **API:** [Django REST Framework(API)](https://www.django-rest-framework.org/)
+- **Gerenciamento de sessão:** Simple JWT
+
+<h3>Controle de Versão:</h3>
+
+- Git com Conventional Commits e seguindo Git-Flow
 
 <h2 id="feature-list">⚙️ Funcionalidades</h2>
 
