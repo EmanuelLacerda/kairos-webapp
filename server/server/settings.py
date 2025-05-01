@@ -1,11 +1,11 @@
 import os
 from pathlib import Path
-from dotenv import read_dotenv
+from dotenv import load_dotenv
 from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-read_dotenv(os.path.join(BASE_DIR, '.env'))
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
