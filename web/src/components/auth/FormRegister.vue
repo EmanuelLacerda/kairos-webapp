@@ -176,6 +176,7 @@ const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.valu
 
       text-align: center;
       font-size: 19px;
+      word-wrap: break-word;
     }
   }
 </style>
