@@ -165,7 +165,7 @@ python3 manage.py migrate
 
 **3° Execute a api:**
 ```bash
-python3 manage.py 
+python3 manage.py runserver
 ```
 
 **4° Acesse o diretório web:**
