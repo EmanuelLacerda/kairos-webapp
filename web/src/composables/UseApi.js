@@ -8,7 +8,7 @@ export default function useApi (url) {
         const response = await api.get(`${url}${id}/`);
         return response;
       }
-      
+
       const response = await api.get(url);
       return response
     } catch (error) {
@@ -22,7 +22,7 @@ export default function useApi (url) {
       return response
     } catch (error) {
       return error.response
-    }       
+    }
   }
 
   const putEvent = async (id, form) => {
@@ -58,7 +58,7 @@ export default function useApi (url) {
         return await api.get(`auth/user/${userId}/events/?start=${startDate}&end=${endDate}`);
       }
 
-      return await api.get(`auth/user/${userId}/events/`);      
+      return await api.get(`auth/user/${userId}/events/`);
     } catch (error) {
       return error.response;
     }
