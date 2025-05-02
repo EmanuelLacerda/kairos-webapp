@@ -114,7 +114,7 @@ const wasTheVerificationEmailProvided = computed(() => !wasEmailVerified.value &
 
 <style lang="scss">
 section.section-parent-verify-email{
-  width: 40%;
+  width: 100%;
   height: 500px;
   background-color: $custom-bg-orange-1;
   border-radius: 12px;
@@ -123,7 +123,8 @@ section.section-parent-verify-email{
 
   .form-verify-email{
     width: 60%;
-    margin-bottom: 18%;
+    min-width: 300px;
+    margin-bottom: 0;
 
     *{
       margin: 0;
@@ -150,9 +151,10 @@ section.section-parent-verify-email{
 
   p.title{
     font-size: 24px;
-    width: 50%;
+    width: 90%;
     margin-bottom: 43px;
     color: $custom-full-white;
+    text-align: center;
   }
 
   .container-email-successfully-verification-message{
@@ -171,6 +173,22 @@ section.section-parent-verify-email{
       margin-top: 28px;
       margin-bottom: 28px;
       text-align: center;
+    }
+  }
+}
+
+@media (min-width: 375px) {
+  section.section-parent-verify-email{
+      .form-verify-email{
+        min-width: 350px;
+    }
+  }
+}
+
+@media (min-width: 400px) {
+  section.section-parent-verify-email{
+      .form-verify-email{
+        min-width: 380px;
     }
   }
 }
