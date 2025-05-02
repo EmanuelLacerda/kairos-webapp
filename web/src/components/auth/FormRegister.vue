@@ -146,7 +146,7 @@ const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.valu
   .box-verify-email-message{
     background-color: $custom-bg-white;
     width: 100%;
-    min-width: 420px;
+    min-width: 330px;
     height: 100%;
 
     display: flex;
@@ -154,7 +154,7 @@ const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.valu
     align-items: center;
     justify-content: start;
 
-    padding: 60px 40px;
+    padding: 60px 20px;
 
     border-radius: 20px;
 
@@ -172,11 +172,18 @@ const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.valu
     }
 
     p{
-      width:60%;
+      width: 100%;
 
-      text-align: center;
+      text-align: justify;
       font-size: 19px;
       word-wrap: break-word;
     }
   }
+
+@media (min-width: 400px) {
+  .box-verify-email-message{
+    width: 80%;
+    min-width: 400px;
+  }
+}
 </style>
