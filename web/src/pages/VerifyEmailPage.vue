@@ -70,14 +70,16 @@ const submitCodeForm = async () => {
 
 const title = computed(() => `Digite abaixo ${wasEmailSubmit.value ? "o código que você recebeu" : "o e-mail que você quer verificar"}`);
 
-const wasTheVerificationEmailProvided = computed(() => !wasEmailVerified.value && wasEmailSubmit.value);
+const emailWasNotProvided = computed(() => !wasEmailVerified.value && !wasEmailSubmit.value);
+
+const emailWasNotVerified = computed(() => !wasEmailVerified.value && wasEmailSubmit.value);
 </script>
 
 <template>
   <q-page padding class="flex items-center justify-center">
     <section class="section-parent-verify-email flex items-center justify-center">
       <p class="title" v-if="!wasEmailVerified">{{ title }}</p>
-      <FormAuthBase v-if="!wasTheVerificationEmailProvided" class="form-verify-email  flex column no-wrap" @submit-form="submitEmailForm">
+      <FormAuthBase v-if="emailWasNotProvided" class="form-verify-email  flex column no-wrap" @submit-form="submitEmailForm">
         <template #formbody>
           <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
         </template>
@@ -86,7 +88,7 @@ const wasTheVerificationEmailProvided = computed(() => !wasEmailVerified.value &
         </template>
       </FormAuthBase>
 
-      <FormAuthBase v-else-if="wasTheVerificationEmailProvided" class="form-verify-email" @submit-form="submitCodeForm">
+      <FormAuthBase v-else-if="emailWasNotVerified" class="form-verify-email" @submit-form="submitCodeForm">
         <template #formbody>
           <InputAuthBase
             type="text"
