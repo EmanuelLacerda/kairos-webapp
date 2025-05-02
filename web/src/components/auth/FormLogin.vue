@@ -114,17 +114,17 @@ const arrayOfFieldsValue = computed(() => [ enteredEmail.value, enteredPassword.
 
 <style lang="scss">
   section.section-parent-form-login{
-    width: 40%;
 
     .container-create-account-redirect-link{
         width: 100%;
-        margin-top: 10px;
+        margin-top: 30px;
 
         display: flex;
         justify-items: start;
 
         .q-btn{
             color: $custom_full_white;
+            width: 100%;
         }
 
         .q-btn:hover{
