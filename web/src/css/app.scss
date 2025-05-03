@@ -43,3 +43,14 @@
 .toast-container{
     margin: 0 1rem !important;
 }
+
+
+.not-on-mobile{
+    display: none;
+}
+
+@media (min-width: 680px) {
+    .not-on-mobile{
+        display: block;
+    }
+}
