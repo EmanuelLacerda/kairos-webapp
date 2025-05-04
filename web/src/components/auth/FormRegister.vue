@@ -139,51 +139,65 @@ const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.valu
 </template>
 
 <style lang="scss">
-  section.section-parent-form-register{
-    width: 50%;
+section.section-parent-form-register{
+  width: 50%;
+}
+
+.box-verify-email-message{
+  background-color: $custom-bg-white;
+  width: 100%;
+  min-width: 330px;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+
+  padding: 60px 20px;
+
+  border-radius: 20px;
+
+  *{
+    margin: 0;
   }
 
-  .box-verify-email-message{
-    background-color: $custom-bg-white;
+  h1{
+    font-size: 32px;
+    font-weight: 700;
+    color: $custom-orange-1;
+    line-height: 38px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  p{
     width: 100%;
-    min-width: 330px;
-    height: 100%;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: start;
-
-    padding: 60px 20px;
-
-    border-radius: 20px;
-
-    *{
-      margin: 0;
-    }
-
-    h1{
-      font-size: 32px;
-      font-weight: 700;
-      color: $custom-orange-1;
-      line-height: 38px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    p{
-      width: 100%;
-
-      text-align: justify;
-      font-size: 19px;
-      word-wrap: break-word;
-    }
+    text-align: justify;
+    font-size: 19px;
+    word-wrap: break-word;
   }
+}
 
 @media (min-width: 400px) {
   .box-verify-email-message{
     width: 80%;
     min-width: 400px;
+  }
+}
+
+@media (min-width: 768px) {
+  section.section-parent-form-register{
+    width: 75%;
+  }
+
+  .box-verify-email-message{
+    width: 90%;
+
+    .q-btn.redirect-button{
+      width: 100%;
+    }
   }
 }
 </style>
