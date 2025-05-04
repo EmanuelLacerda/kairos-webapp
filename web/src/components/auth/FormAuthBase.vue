@@ -32,7 +32,7 @@ function submitForm(){
 form.form-auth-base{
   width: 100%;
   min-width: 320px;
-  height: 6%;
+  height: 30%;
 
   .form-body, .form-footer{
     padding: 0;
