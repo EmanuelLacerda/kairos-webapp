@@ -50,4 +50,10 @@ form.form-auth-base{
     min-width: 405px;
   }
 }
+
+@media (min-width: 768px) {
+  form.form-auth-base{
+    width: 100%;
+  }
+}
 </style>
