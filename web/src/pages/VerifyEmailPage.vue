@@ -194,4 +194,14 @@ section.section-parent-verify-email{
     }
   }
 }
+
+@media (min-width: 768px) {
+  section.section-parent-verify-email{
+    width: 75%;
+
+    .form-verify-email{
+        width: 80%;
+    }
+  }
+}
 </style>
