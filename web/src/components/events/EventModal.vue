@@ -719,4 +719,30 @@ const canItChangeAndRemoveTheEvent = computed(() => {
     }
   }
 }
+
+@media (min-width: 768px) {
+  .form-footer{
+    .q-btn{
+        height: 3.7rem !important;
+    }
+
+    #btn-edit, #btn-remove{
+      width: 48% !important;
+    }
+  }
+
+  .event-modal.q-dialog{
+    .q-card{
+        .modal-header{
+            h1{
+                font-size: 2.2rem;
+            }
+
+            .close-modal{
+              font-size: 3.6rem;
+            }
+        }
+    }
+  }
+}
 </style>
