@@ -118,6 +118,7 @@ const emailWasNotVerified = computed(() => !wasEmailVerified.value && wasEmailSu
 section.section-parent-verify-email{
   width: 100%;
   height: 500px;
+  max-width: 800px;
   background-color: $custom-bg-orange-1;
   border-radius: 12px;
 
