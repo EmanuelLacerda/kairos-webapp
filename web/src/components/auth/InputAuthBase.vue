@@ -64,4 +64,14 @@ form.form-auth-base{
         }
     }
 }
+
+@media (min-width: 1280px) {
+  form.form-auth-base{
+    label.q-field{
+        .q-field__control{
+            height: 55px !important;
+        }
+      }
+    }
+}
 </style>
