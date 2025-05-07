@@ -113,23 +113,30 @@ const arrayOfFieldsValue = computed(() => [ enteredEmail.value, enteredPassword.
 </template>
 
 <style lang="scss">
-  section.section-parent-form-login{
+section.section-parent-form-login{
+  max-width: 800px;
 
-    .container-create-account-redirect-link{
-        width: 100%;
-        margin-top: 30px;
+  .container-create-account-redirect-link{
+      width: 100%;
+      margin-top: 30px;
 
-        display: flex;
-        justify-items: start;
+      display: flex;
+      justify-items: start;
 
-        .q-btn{
-            color: $custom_full_white;
-            width: 100%;
-        }
+      .q-btn{
+          color: $custom_full_white;
+          width: 100%;
+      }
 
-        .q-btn:hover{
-            background-color: $custom-bg-redirect-button;
-        }
-    }
+      .q-btn:hover{
+          background-color: $custom-bg-redirect-button;
+      }
   }
+}
+
+@media (min-width: 768px) {
+  section.section-parent-form-login {
+      width: 75%;
+  }
+}
 </style>
