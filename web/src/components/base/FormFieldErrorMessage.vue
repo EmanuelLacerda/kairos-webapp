@@ -38,6 +38,13 @@ form{
       font-size: 1.1rem;
     }
   }
+}
 
+@media (min-width: 1280px) {
+  form{
+    .error-text-message{
+      font-size: 1.2rem;
+    }
+  }
 }
 </style>
