@@ -141,6 +141,7 @@ const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.valu
 <style lang="scss">
 section.section-parent-form-register{
   width: 50%;
+  max-width: 800px;
 }
 
 .box-verify-email-message{
