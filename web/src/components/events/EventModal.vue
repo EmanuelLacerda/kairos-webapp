@@ -588,6 +588,10 @@ const canItChangeAndRemoveTheEvent = computed(() => {
 </template>
 
 <style lang="scss">
+.swal2-container{
+  z-index: 99999999999999999;
+}
+
 .event-modal.q-dialog{
     .q-dialog__inner{
       padding: 10px;
@@ -745,4 +749,22 @@ const canItChangeAndRemoveTheEvent = computed(() => {
     }
   }
 }
+
+@media (min-width: 1024px) {
+  .event-modal.q-dialog {
+    .q-card{
+      .modal-header{
+        h1{
+          font-size: 1.6rem;
+        }
+
+        .close-modal{
+          font-size: 3rem;
+        }
+      }
+    }
+  }
+}
+
+
 </style>
