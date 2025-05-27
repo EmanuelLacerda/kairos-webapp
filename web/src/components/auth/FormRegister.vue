@@ -25,7 +25,7 @@ const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccess
 
 
 const enteredName = ref('')
-const enteredEmail = ref('teste@gmail.com')
+const enteredEmail = ref('')
 const enteredPassword = ref('')
 const enteredConfirmPassword = ref('')
 
@@ -140,7 +140,6 @@ const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.valu
 
 <style lang="scss">
 section.section-parent-form-register{
-  width: 50%;
   max-width: 800px;
 }
 
