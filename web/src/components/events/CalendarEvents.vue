@@ -281,7 +281,7 @@ function returnWeekdayAndDateForm(date) {
             <p>Carregando seus eventos</p>
             <q-spinner
                 color="primary"
-                size="6em"
+                size="3rem"
                 :thickness="10"
             />
         </section>
@@ -485,7 +485,7 @@ function returnWeekdayAndDateForm(date) {
 
 .loading-events-indication{
     p{
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 }
 
