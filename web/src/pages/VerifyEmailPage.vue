@@ -68,7 +68,7 @@ const submitCodeForm = async () => {
 }
 
 
-const title = computed(() => `Digite abaixo ${wasEmailSubmit.value ? "o código que você recebeu" : "o e-mail que você quer verificar"}`);
+const title = computed(() => `Digite abaixo ${wasEmailSubmit.value ? "o código que você recebeu:" : "o e-mail que você quer verificar:"}`);
 
 const emailWasNotProvided = computed(() => !wasEmailVerified.value && !wasEmailSubmit.value);
 
@@ -119,7 +119,6 @@ section.section-parent-verify-email{
   width: 100%;
   height: 500px;
   max-width: 800px;
-  background-color: $custom-bg-orange-1;
   border-radius: 12px;
 
   flex-direction: column;
@@ -161,21 +160,31 @@ section.section-parent-verify-email{
   }
 
   .container-email-successfully-verification-message{
+    background-color: #fff;
+    padding: 60px 20px;
+    border-radius: 20px;
+
     h1{
       color: $custom-green-3;
       font-size: 30px;
       font-weight: 600;
       text-align: center;
-      margin: 0 20px;
+      margin: 0;
       line-height: 30px;
+      width: 100%;
     }
 
     p{
       font-size: 17px;
-      margin: 0 30px;
       margin-top: 28px;
-      margin-bottom: 28px;
+      margin-bottom: 0;
       text-align: center;
+      width: 100%;
+    }
+
+    .redirect-button{
+      margin-top: 60px;
+      width: 90%;
     }
   }
 }
