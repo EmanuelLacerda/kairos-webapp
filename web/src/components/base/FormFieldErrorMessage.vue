@@ -35,15 +35,15 @@ form{
 @media (min-width: 768px) {
   form{
     .error-text-message{
-      font-size: 1.1rem;
+      font-size: 0.9rem;
     }
   }
 }
 
-@media (min-width: 1280px) {
-  form{
+@media (min-width: 920px) {
+ form{
     .error-text-message{
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
   }
 }
