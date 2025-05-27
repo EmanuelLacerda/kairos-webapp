@@ -126,6 +126,10 @@ section.section-parent-form-login{
       .q-btn{
           color: $custom_full_white;
           width: 100%;
+
+          span.block{
+            font-size: 0.875rem;
+          }
       }
 
       .q-btn:hover{
@@ -137,6 +141,14 @@ section.section-parent-form-login{
 @media (min-width: 768px) {
   section.section-parent-form-login {
       width: 75%;
+
+      .container-create-account-redirect-link{
+        .q-btn{
+          span.block{
+            font-size: 1rem;
+          }
+        }
+      }
   }
 }
 </style>
