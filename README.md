@@ -1,8 +1,9 @@
 <h1 align="center" style="font-weight: bold;">Kairos WebApp 💻</h1>
 <p align="center">
  <a href="#tech">Tecnologias usadas</a> • 
- <a href="#intro">Introdução</a> • 
-  <a href="#feature-list">Funcionalidades</a> •
+ <a href="#feature-list">Funcionalidades</a> •
+ <a href="#demonstration">Demonstrações</a> •
+ <a href="#instalation-guide">Guia de instalação</a> • 
  <a href="#api-endpoints">API Endpoints</a> •
  <a href="#projec-actors">Autores</a> • 
  <a href="#licenca">Licença</a> • 
@@ -67,7 +68,9 @@ Agora, você sabe o básico sobre este app. Quer conhecer mais sobre ele? Só le
     - Eventos já finalizados não podem ser editados.
 - **Remoção de Eventos:** Possibilidade de excluir qualquer evento ainda não finalizado.
 
-<h2 id="intro">🔥 Introdução:</h2>
+<h2 id="demonstration">⚙️ Demonstrações</h2>
+
+<h2 id="instalation-guide">🔥 Guia de instalação:</h2>
 
 <h3>⚙️ Pré-requisitos:</h3>
 
