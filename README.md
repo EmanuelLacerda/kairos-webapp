@@ -70,6 +70,40 @@ Agora, você sabe o básico sobre este app. Quer conhecer mais sobre ele? Só le
 
 <h2 id="demonstration">⚙️ Demonstrações</h2>
 
+<h3>Autenticação:</h3>
+
+<h4>Criação de conta:</h4>
+
+https://github.com/user-attachments/assets/ad14d643-28b1-4594-9eb5-e8a577e6f0a0
+
+<h4>Verificação de e-mail:</h4>
+
+O código que o usuário passa para verificar seu e-mail é um OTP enviado para o respectivo e-mail após a conta ser criada com sucesso.
+
+No momento, não tem diferença no funcionamento do sistema se o usuário tem ou não o e-mail verificado. Mas, o objetivo é que em futuras versões um usuário sem o e-mail verificado consiga fazer login e ver o calendário, porém, não consiga agendar nenhum evento.
+
+https://github.com/user-attachments/assets/549f9091-3321-40a2-8429-a2d4a71ba66c
+
+
+<h4>Login:</h4>
+
+Conforme demonstra o vídeo abaixo, o login é feito a partir do e-mail e senha do usuário. Quando o login é efetuado com sucesso, a requisição de login, dentre outras informações, retorna os tokens JWT(access token e refresh token).
+
+O access token é utilizado para manter a sessão do usuário ativa durante um período curto. O access token de duração curta foi escolhido para evitar que, em caso de descoberta do access token por outra pessoa, consiga evitar outra pessoa possa fazer requisições com o access token roubado por muito tempo.
+
+Esta abordagem de segurança exige o usuário fazer o login muito frenquentemente. Para evitar este efeito colateral, é utilizado o refresh token para criar um novo access token sempre que a validade do atual acabar. Como o refresh token tem um tempo grande de validade, demora muito tempo até o usuário precisar fazer o login novamente.
+
+Em futuras versões, será aplicada a estratégia de Refresh Token Rotation para tornar o gerenciamento de sessão ainda mais seguro.
+
+https://github.com/user-attachments/assets/c48733c4-9816-4c32-b6ca-5689bcf22284
+
+<h4>Logout:</h4>
+
+Conforme demonstrado no vídeo abaixo, se o usuário estiver deslogado, ele é redirecionado para tela de login sempre que tentar acessar a home.
+
+https://github.com/user-attachments/assets/66934918-e36f-4f44-b00a-50bbde5545e7
+
+
 <h2 id="instalation-guide">🔥 Guia de instalação:</h2>
 
 <h3>⚙️ Pré-requisitos:</h3>
