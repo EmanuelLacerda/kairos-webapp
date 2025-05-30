@@ -68,16 +68,18 @@ const submitCodeForm = async () => {
 }
 
 
-const title = computed(() => `Digite abaixo ${wasEmailSubmit.value ? "o código que você recebeu" : "o e-mail que você quer verificar"}`);
+const title = computed(() => `Digite abaixo ${wasEmailSubmit.value ? "o código que você recebeu:" : "o e-mail que você quer verificar:"}`);
 
-const wasTheVerificationEmailProvided = computed(() => !wasEmailVerified.value && wasEmailSubmit.value);
+const emailWasNotProvided = computed(() => !wasEmailVerified.value && !wasEmailSubmit.value);
+
+const emailWasNotVerified = computed(() => !wasEmailVerified.value && wasEmailSubmit.value);
 </script>
 
 <template>
   <q-page padding class="flex items-center justify-center">
     <section class="section-parent-verify-email flex items-center justify-center">
       <p class="title" v-if="!wasEmailVerified">{{ title }}</p>
-      <FormAuthBase v-if="!wasTheVerificationEmailProvided" class="form-verify-email  flex column no-wrap" @submit-form="submitEmailForm">
+      <FormAuthBase v-if="emailWasNotProvided" class="form-verify-email  flex column no-wrap" @submit-form="submitEmailForm">
         <template #formbody>
           <InputAuthEmail v-model="enteredEmail" :autofocus="true"></InputAuthEmail>
         </template>
@@ -86,7 +88,7 @@ const wasTheVerificationEmailProvided = computed(() => !wasEmailVerified.value &
         </template>
       </FormAuthBase>
 
-      <FormAuthBase v-else-if="wasTheVerificationEmailProvided" class="form-verify-email" @submit-form="submitCodeForm">
+      <FormAuthBase v-else-if="emailWasNotVerified" class="form-verify-email" @submit-form="submitCodeForm">
         <template #formbody>
           <InputAuthBase
             type="text"
@@ -114,16 +116,17 @@ const wasTheVerificationEmailProvided = computed(() => !wasEmailVerified.value &
 
 <style lang="scss">
 section.section-parent-verify-email{
-  width: 40%;
+  width: 100%;
   height: 500px;
-  background-color: $custom-bg-orange-1;
+  max-width: 800px;
   border-radius: 12px;
 
   flex-direction: column;
 
   .form-verify-email{
     width: 60%;
-    margin-bottom: 18%;
+    min-width: 300px;
+    margin-bottom: 0;
 
     *{
       margin: 0;
@@ -150,27 +153,64 @@ section.section-parent-verify-email{
 
   p.title{
     font-size: 24px;
-    width: 50%;
+    width: 90%;
     margin-bottom: 43px;
     color: $custom-full-white;
+    text-align: center;
   }
 
   .container-email-successfully-verification-message{
+    background-color: #fff;
+    padding: 60px 20px;
+    border-radius: 20px;
+
     h1{
       color: $custom-green-3;
       font-size: 30px;
       font-weight: 600;
       text-align: center;
-      margin: 0 20px;
+      margin: 0;
       line-height: 30px;
+      width: 100%;
     }
 
     p{
       font-size: 17px;
-      margin: 0 30px;
       margin-top: 28px;
-      margin-bottom: 28px;
+      margin-bottom: 0;
       text-align: center;
+      width: 100%;
+    }
+
+    .redirect-button{
+      margin-top: 60px;
+      width: 90%;
+    }
+  }
+}
+
+@media (min-width: 375px) {
+  section.section-parent-verify-email{
+      .form-verify-email{
+        min-width: 350px;
+    }
+  }
+}
+
+@media (min-width: 400px) {
+  section.section-parent-verify-email{
+      .form-verify-email{
+        min-width: 380px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  section.section-parent-verify-email{
+    width: 75%;
+
+    .form-verify-email{
+        width: 80%;
     }
   }
 }

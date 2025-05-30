@@ -31,4 +31,20 @@ form{
         text-align: justify;
     }
 }
+
+@media (min-width: 768px) {
+  form{
+    .error-text-message{
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media (min-width: 920px) {
+ form{
+    .error-text-message{
+      font-size: 1rem;
+    }
+  }
+}
 </style>

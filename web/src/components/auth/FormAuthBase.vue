@@ -31,11 +31,29 @@ function submitForm(){
 <style lang="scss">
 form.form-auth-base{
   width: 100%;
-  min-width: 369px;
-  height: 6%;
+  min-width: 320px;
+  height: 30%;
 
   .form-body, .form-footer{
     padding: 0;
+  }
+}
+
+@media (min-width: 360px) {
+  form.form-auth-base{
+    min-width: 340px;
+  }
+}
+
+@media (min-width: 430px) {
+  form.form-auth-base{
+    min-width: 405px;
+  }
+}
+
+@media (min-width: 768px) {
+  form.form-auth-base{
+    width: 100%;
   }
 }
 </style>

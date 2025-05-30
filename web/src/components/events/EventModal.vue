@@ -416,7 +416,7 @@ const canItChangeAndRemoveTheEvent = computed(() => {
                 >
                     <q-card-section class="form-body">
                         <q-card-section class="datetime-field flex column">
-                            <section class="flex no-wrap">
+                            <section class="flex wrap">
                                 <q-input
                                     label="Data Inicial:"
                                     name="start-date"
@@ -472,7 +472,7 @@ const canItChangeAndRemoveTheEvent = computed(() => {
                         </q-card-section>
 
                         <q-card-section class="datetime-field flex column">
-                            <section class="flex no-wrap">
+                            <section class="flex wrap">
                                 <q-input
                                     label="Data Final:"
                                     name="end-date"
@@ -553,6 +553,7 @@ const canItChangeAndRemoveTheEvent = computed(() => {
 
                         <ButtonBase
                           class="btn-primary"
+                          id="btn-edit"
                           type="submit"
                           :allFieldsValue="arrayOfFieldsValue"
                           :loading="isEditEventRunning"
@@ -563,6 +564,7 @@ const canItChangeAndRemoveTheEvent = computed(() => {
 
                         <ButtonBase
                           class="btn-danger"
+                          id="btn-remove"
                           type="button"
                           :loading="isDeleteEventRunning"
                           @click="removeEvent"
@@ -586,95 +588,183 @@ const canItChangeAndRemoveTheEvent = computed(() => {
 </template>
 
 <style lang="scss">
-    .event-modal.q-dialog{
-        .q-card{
-            width: 100%;
-            background-color: rgba(44,62,80,0.7);
+.swal2-container{
+  z-index: 99999999999999999;
+}
 
-            .q-card__section{
-                gap: 16px;
+.event-modal.q-dialog{
+    .q-dialog__inner{
+      padding: 10px;
+    }
+
+    .q-card{
+        width: 100%;
+        background-color: rgba(44,62,80,0.7);
+
+        .q-card__section{
+            gap: 16px;
+        }
+
+        .modal-header{
+            margin: 0 32px;
+            padding: 0;
+
+            h1{
+                font-size: 1.6rem;
+                color: $custom-full-white;
+                font-weight: 400;
             }
 
-            .modal-header{
-                margin: 0 32px;
-                padding: 0;
-
-                h1{
-                    font-size: 1.8rem;
-                    color: $custom-full-white;
-                    font-weight: 400;
-                }
-
-                .close-modal{
-                    background: transparent;
-                    color: $custom-full-white;
-                    font-size: 2.8rem;
-                    border: none;
-                    margin: 0;
-                }
+            .close-modal{
+                background: transparent;
+                color: $custom-full-white;
+                font-size: 2.8rem;
+                border: none;
+                margin: 0;
             }
+        }
 
-            .modal-body{
-                padding: 0 16px;
+        .modal-body{
+            padding: 0 16px;
 
-                .form-event{
-                    .q-card__section{
-                        padding: 0 16px;
-                    }
+            .form-event{
+                .q-card__section{
+                    padding: 0 16px;
+                }
 
-                    .form-body{
-                        .q-field__inner{
-                            .q-field__control-container{
-                                background-color: $custom-full-white;
+                .form-body{
+                    .q-field__inner{
+                        .q-field__control-container{
+                            background-color: $custom-full-white;
 
-                                input,textarea{
-                                    background-color: $custom-full-white;
-                                }
-                            }
-                            .q-field__append{
-                                background-color: $custom-full-white;
-                                color: $custom-full-black;
-                            }
-                            .q-field__control{
+                            input,textarea{
                                 background-color: $custom-full-white;
                             }
                         }
-
-                        .datetime-field{
-                            padding: 0;
-                            gap: 0;
-
-                            label{
-                                width: 50%;
-                                padding-bottom: 0;
-                            }
-                            label:first-child{
-                                margin-right: 16px;
-                            }
+                        .q-field__append{
+                            background-color: $custom-full-white;
+                            color: $custom-full-black;
+                        }
+                        .q-field__control{
+                            background-color: $custom-full-white;
                         }
                     }
 
-                    .form-footer{
-                        display: flex;
-                        justify-content: center;
-                        padding: 40px 16px 0;
-                        margin-bottom: 40px;
+                    .datetime-field{
+                        padding: 0;
+                        gap: 0;
 
-                        .q-btn{
-                            .q-btn__content{
-                                font-weight: 600;
-                                font-size: 16px;
+                        section{
+                          gap: 12px;
 
-                                display: flex;
-                                flex-direction: row;
-                                gap: 8px;
-                                justify-content: center;
-                                align-items: center;
+                          label{
+                            width: 100%;
+                            padding-bottom: 0;
+                          }
+                          label:first-child{
+                              //margin-right: 16px;
+                          }
                         }
+                    }
+                }
+
+                .form-footer{
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    padding: 40px 16px 0;
+                    margin-bottom: 40px;
+
+                    .q-btn{
+                        width: 100%;
+                        height: 2.5rem;
+
+                        .q-btn__content{
+                            font-weight: 600;
+                            font-size: 16px;
+
+                            display: flex;
+                            flex-direction: row;
+                            gap: 8px;
+                            justify-content: center;
+                            align-items: center;
                         }
+                    }
+
+                    #btn-edit, #btn-remove{
+                      width: 46%;
+
+                      span.q-btn__content{
+                        span{
+                          display: none;
+                        }
+                      }
                     }
                 }
             }
         }
     }
+}
+
+@media (min-width: 400px) {
+  .form-footer{
+    .q-btn{
+        height: 2.75rem !important;
+    }
+  }
+}
+
+@media (min-width: 510px) {
+  #btn-edit, #btn-remove{
+    span.q-btn__content{
+      span{
+        display: inline !important;
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .form-footer{
+    .q-btn{
+        height: 3.7rem !important;
+    }
+
+    #btn-edit, #btn-remove{
+      width: 48% !important;
+    }
+  }
+
+  .event-modal.q-dialog{
+    .q-card{
+        .modal-header{
+            h1{
+                font-size: 2.2rem;
+            }
+
+            .close-modal{
+              font-size: 3.6rem;
+            }
+        }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .event-modal.q-dialog {
+    .q-card{
+      .modal-header{
+        h1{
+          font-size: 1.6rem;
+        }
+
+        .close-modal{
+          font-size: 3rem;
+        }
+      }
+    }
+  }
+}
+
+
 </style>

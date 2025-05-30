@@ -25,7 +25,7 @@ const { ToastSuccess, ToastError, noStandardToastMixinInfo, positionToastSuccess
 
 
 const enteredName = ref('')
-const enteredEmail = ref('teste@gmail.com')
+const enteredEmail = ref('')
 const enteredPassword = ref('')
 const enteredConfirmPassword = ref('')
 
@@ -139,43 +139,65 @@ const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.valu
 </template>
 
 <style lang="scss">
+section.section-parent-form-register{
+  max-width: 800px;
+}
+
+.box-verify-email-message{
+  background-color: $custom-bg-white;
+  width: 100%;
+  min-width: 330px;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+
+  padding: 60px 20px;
+
+  border-radius: 20px;
+
+  *{
+    margin: 0;
+  }
+
+  h1{
+    font-size: 32px;
+    font-weight: 700;
+    color: $custom-orange-1;
+    line-height: 38px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  p{
+    width: 100%;
+
+    text-align: justify;
+    font-size: 19px;
+    word-wrap: break-word;
+  }
+}
+
+@media (min-width: 400px) {
+  .box-verify-email-message{
+    width: 80%;
+    min-width: 400px;
+  }
+}
+
+@media (min-width: 768px) {
   section.section-parent-form-register{
-    width: 50%;
+    width: 75%;
   }
 
   .box-verify-email-message{
-    background-color: $custom-bg-white;
-    width: 100%;
-    min-width: 420px;
-    height: 100%;
+    width: 90%;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: start;
-
-    padding: 60px 40px;
-
-    border-radius: 20px;
-
-    *{
-      margin: 0;
-    }
-
-    h1{
-      font-size: 32px;
-      font-weight: 700;
-      color: $custom-orange-1;
-      line-height: 38px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    p{
-      width:60%;
-
-      text-align: center;
-      font-size: 19px;
+    .q-btn.redirect-button{
+      width: 100%;
     }
   }
+}
 </style>
