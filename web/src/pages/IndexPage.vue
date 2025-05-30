@@ -10,7 +10,7 @@ import CalendarEvents from 'src/components/events/CalendarEvents.vue';
 <template>
   <q-page padding>
     <section class="flex justify-center">
-      <h1 style="margin-top: 30px; font-weight: 600; color: #333; font-size: 2.5rem;">Minha Agenda</h1>
+      <h1 style="margin-top: 30px; margin-bottom: 0px; font-weight: 600; color: #333; font-size: 2.5rem;">Minha Agenda</h1>
     </section>
     <CalendarEvents></CalendarEvents>
   </q-page>
