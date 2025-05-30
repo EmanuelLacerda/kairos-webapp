@@ -285,7 +285,7 @@ function returnWeekdayAndDateForm(date) {
                 :thickness="10"
             />
         </section>
-        <FullCalendarComponent :options="calendarOptions" :key="calendarKey" />
+        <FullCalendarComponent :options="calendarOptions" :key="calendarKey" style="margin-top: 30px;" />
         <EventModal :show-modal="showModal" :start-date="startData" :action="currentEventModalAction" :event-id="eventId" :event-data="eventData" @close-event-modal="closeEventModal" @force-calendar-rerender="forceCalendarRerender"></EventModal>
       </section>
 </template>
@@ -523,6 +523,28 @@ function returnWeekdayAndDateForm(date) {
       .fc-view{
           padding: 40px 61px;
       }
+
+      .fc-scrollgrid{
+        tbody[role=rowgroup]{
+          tr[role=presentation]{
+            td[role=presentation]{
+              .fc-daygrid-event-harness{
+                .fc-event{
+                  margin-right: 0px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      /*
+      .fc .fc-view-harness .fc-scrollgrid tbody[role=rowgroup] tr[role=presentation] td[role=presentation] .fc-daygrid-event-harness .fc-event
+    Specificity: (0,8,3)
+    {
+        // margin-right: 70%;
+    }
+      */
 
       tbody[role="presentation"]{
         display: table-row-group;
