@@ -103,6 +103,31 @@ Conforme demonstrado no vídeo abaixo, se o usuário estiver deslogado, ele é r
 
 https://github.com/user-attachments/assets/66934918-e36f-4f44-b00a-50bbde5545e7
 
+<h3>Gerenciamento de eventos:</h3>
+
+<h4>Criação e visualização de evento:</h4>
+
+Conforme demonstrado no vídeo abaixo, a criação começa clicando na célula do calendário que é respectiva ao dia inicial do evento, podendo o evento durar tanto 1 dia quanto múltiplos dias(o vídeo abaixo só mostra o caso em que o evento dura múltiplos dias). Além disto, os eventos são associados ao id do usuário que os criou. Em futuras versões, será possível convidar outros usuários para participar do evento.
+
+Também conforme mostrado no vídeo abaixo, quando o evento é criado, um "link" para o respectivo evento aparece no calendário conforme a duração dele e a abertura dele é feita clicando nesse "link".
+
+Falando mais sobre a visualização, vale destacar como o carregamento dos eventos no calendário ocorre. Um primeiro filtro para o carregamento é os eventos serem do usuário logado, o que é indispensável para manter a privacidade da lista de eventos de cada usuário. O segundo filtro é o período de tempo da view do calendário para o qual os eventos serão carregados. Por exemplo, os eventos da view semanal só irá crregar os eventos que a duração incluí os dias da respectiva semana. Este segundo filtro tem como objetivo otimizar o tamanho das requisições, pois será muito pesado ter que carregar todos os eventos do usuário sempre que ele mudar de view. Principalmente, no caso de usuários com muito eventos.
+
+
+https://github.com/user-attachments/assets/f85914e4-41ee-4dd4-8620-3654a3c281c4
+
+<h4>Edição de evento:</h4>
+
+
+https://github.com/user-attachments/assets/cd5ef441-3062-467c-85fd-6d133a97d33b
+
+<h4>Exclusão de evento:</h4>
+
+https://github.com/user-attachments/assets/7802e5e0-652f-494c-8a32-5b00cf538b45
+
+<h4>Lógica de Gerenciamento de Eventos:</h4>
+
+
 
 <h2 id="instalation-guide">🔥 Guia de instalação:</h2>
 
