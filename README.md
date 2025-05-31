@@ -118,7 +118,6 @@ https://github.com/user-attachments/assets/f85914e4-41ee-4dd4-8620-3654a3c281c4
 
 <h4>Edição de evento:</h4>
 
-
 https://github.com/user-attachments/assets/cd5ef441-3062-467c-85fd-6d133a97d33b
 
 <h4>Exclusão de evento:</h4>
@@ -127,7 +126,27 @@ https://github.com/user-attachments/assets/7802e5e0-652f-494c-8a32-5b00cf538b45
 
 <h4>Lógica de Gerenciamento de Eventos:</h4>
 
+O objetivo do Kairos é ser um software de agendamento de eventos pessoais. Considerando isto, as seguintes regras são necessárias:
+- Eventos não podem ser agendados para uma data anterior a atual.
+- O período inicial não pode ser posterior ao período final.
 
+Elas são aplicadas tanto nas requisições de criação e edição de eventos quanto no frontend referente a estas operações.
+
+Além disto, as requisições de criação e edição de eventos quanto o respectivo frontend foram desenvolvidos para não permitir que eventos sejam definidos para períodos que entram em conflito com outros eventos. Isto incluí não permitir que eventos sejam definidos para o exato mesmo período de outros, nem permitir que eventos sejam definidos para um período que tem intersecção com o período de outros eventos. Isto foi criado para evitar conflitos na agenda dos usuários.
+
+Existe a possibilidade de que um usuário precise/queira realizar outros eventos entre o período de algum evento. Por exemplo, ficará 4 dias em um Congresso e precisa fazer uma reunião entre este período. As regras atuais do Kairos não permitiriam haver esses dois eventos na agenda do usuário. Então, em versões futuras, será adicionada a opção do usuário informar se ele permite intersecções de período com o respectivo evento.
+
+Finalizando, o Kairos possuí regras relacionadas a até quando eventos podem ser editados e removidos:
+- Enquanto um evento não começou(ou seja, a data atual é anterior a data de início dele), todos os dados dele podem ser alterados.
+- Quando o evento começa, a data de início não pode ser mais alterada e todos os outros dados podem ser alterados.
+- Quando o evento termina, nenhum dado dele pode ser mais alterado.
+- Eventos já finalizados não podem ser removidos.
+
+No caso, estas alterações e remoção não podem ocorrer pelo aplicativo web, mas, pela tela de administração continuam podendo ser alterados e removidos.
+
+Por um lado, não existir estas limitações pode ser útil em contextos, por exemplo, que a data de início de eventos mudam de última hora frequentemente. Por outro lado, a falta destas limitações torna o histórico de eventos facilmente manipuláveis, o que será uma brecha grave de seguranças em cenários com a necessidade de histórico preciso de eventos. Portanto, este projeto foi desenvolvido justamente para usuários que que valorizam a segurança e a rastreabilidade de seus eventos.
+
+Esta é toda a lógica de gerenciamento de eventos neste app. Agora, você pode testar o Kairos para ver esta lógica na prática. Inclusive, abaixo segue o tutorial de como executar ele.
 
 <h2 id="instalation-guide">🔥 Guia de instalação:</h2>
 
