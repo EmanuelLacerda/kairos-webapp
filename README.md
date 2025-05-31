@@ -20,11 +20,13 @@
 
 <h2>Gerenciamento Seguro de Eventos Pessoais</h2>
 
-O Kairos é um aplicativo web de gerenciamento de eventos pessoais que prioriza a integridade e a segurança dos dados. Ele possuí um sistema que minimiza a possibilidade de alterações indevidas em eventos. Vamos entender melhor isto?
+O Kairos é uma aplicação full-stack robusta para gerenciamento de eventos pessoais, construída com foco em segurança e integridade de dados. Ele possuí um sistema que minimiza a possibilidade de alterações indevidas em eventos. Vamos entender melhor isto?
 
 Enquanto um evento não começou(ou seja, a data atual é anterior a data de início dele), todos os dados dele podem ser alterados. Quando o evento começa, a data de início não pode ser mais alterada e todos os outros dados podem ser alterados. Quando o evento termina, nenhum dado dele pode ser mais alterado. Além disto, eventos já finalizados não podem ser removidos. No caso, estas alterações e remoção não podem ocorrer pelo aplicativo web, mas, pela tela de administração continuam podendo ser alterados e removidos.
 
 Por um lado, não existir estas limitações pode ser útil em contextos, por exemplo, que a data de início de eventos mudam de última hora frequentemente. Por outro lado, a falta destas limitações torna o histórico de eventos facilmente manipuláveis, o que será uma brecha grave de seguranças em cenários com a necessidade de histórico preciso de eventos. Portanto, este projeto foi desenvolvido justamente para usuários que que valorizam a segurança e a rastreabilidade de seus eventos.
+
+Para finalizar, quero destacar que este projeto foi desenvolvido para demonstrar minha proeficiência em desenvolvimento full-stack, desde a arquitetura de banco de dados, lógica de backend, design de API, até a implementação do frontend responsivo e interativo.
 
 Agora, você sabe o básico sobre este app. Quer conhecer mais sobre ele? Só ler o restante abaixo.
 
