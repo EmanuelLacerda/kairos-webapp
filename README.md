@@ -55,7 +55,7 @@ Agora, você sabe o básico sobre este app. Quer conhecer mais sobre ele? Só le
 
 - Git com Conventional Commits e seguindo Git-Flow
 
-<h2 id="feature-list">⚙️ Funcionalidades</h2>
+<h2 id="feature-list">⚙️ Funcionalidades:</h2>
 
 **Funcionalidades de autenticação:**
 - **Criação de de conta:** Processo intuitivo com verificação de e-mail no final para garantir que o novo usuário realmente tem acesso ao e-mail informado.
@@ -70,7 +70,7 @@ Agora, você sabe o básico sobre este app. Quer conhecer mais sobre ele? Só le
     - Eventos já finalizados não podem ser editados.
 - **Remoção de Eventos:** Possibilidade de excluir qualquer evento ainda não finalizado.
 
-<h2 id="demonstration">⚙️ Demonstrações</h2>
+<h2 id="demonstration">▶️ Demonstrações:</h2>
 
 <h3>Autenticação:</h3>
 
@@ -150,7 +150,7 @@ Por um lado, não existir estas limitações pode ser útil em contextos, por ex
 
 Esta é toda a lógica de gerenciamento de eventos neste app. Agora, você pode testar o Kairos para ver esta lógica na prática. Inclusive, abaixo segue o tutorial de como executar ele.
 
-<h2 id="instalation-guide">🔥 Guia de instalação:</h2>
+<h2 id="instalation-guide">🛠️ Guia de instalação:</h2>
 
 <h3>⚙️ Pré-requisitos:</h3>
 
@@ -264,7 +264,7 @@ quasar dev #este segundo comando só funcionará se tiver o Quasar instalado glo
 
 *Obs.: Para o projeto funcionar corretamente, api e frontend devem estar em execução ao mesmo tempo.
 
-<h2 id="api-endpoints">⚙️ API Endpoints</h2>
+<h2 id="api-endpoints">🔗 API Endpoints:</h2>
 
 A API provém os seguintes endpoints:
 
@@ -546,17 +546,17 @@ headers: {
 ]
 ```
 
-<h2 id="projec-actors">👷 Autores</h2>
+<h2 id="projec-actors">🧑‍💻 Autores:</h2>
 
 * Emanuel Lacerda - Desenvolvedor - [@EmanuelLacerda](https://github.com/EmanuelLacerda/)
 
-<h2 id="licenca">📄 Licença</h2>
+<h2 id="licenca">📄 Licença:</h2>
 Esse projeto está sob a licença MIT - acesse os detalhes <a href="https://github.com/EmanuelLacerda/kairos-webapp/blob/main/LICENSE">LICENSE.md</a>.
 
-<h2 id="credit">Créditos:</h2>
+<h2 id="credit">🙏 Créditos:</h2>
 O layout das telas de login, criar conta e similares foram baseadas <a href="https://www.figma.com/community/file/872144934711314532">neste design de tela de login</a> publicado no FIGMA pelo usuário <a href="https://www.figma.com/@gorechajay">Ajay Gorecha(@gorechajay)</a>
 
-<h2 id="contact">✉️ Contato</h2>
+<h2 id="contact">✉️ Contato:</h2>
 Se tiver alguma dúvida, quiser fazer sugestões, elogios, etc., se sinta livre para entrar em contato comigo por meio de um dos contatos abaixo:
 
 - [in/emanuel-de-souza-lacerda](https://www.linkedin.com/in/emanuel-de-souza-lacerda/)
