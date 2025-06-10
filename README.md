@@ -82,7 +82,7 @@ https://github.com/user-attachments/assets/ad14d643-28b1-4594-9eb5-e8a577e6f0a0
 
 O código que o usuário passa para verificar seu e-mail é um OTP enviado para o respectivo e-mail após a conta ser criada com sucesso.
 
-No momento, não tem diferença no funcionamento do sistema se o usuário tem ou não o e-mail verificado. Mas, o objetivo é que em futuras versões um usuário sem o e-mail verificado consiga fazer login e ver o calendário, porém, não consiga agendar nenhum evento.
+No momento, não existe restrição nos endpoints de gerenciamento de eventos para usuários sem e-mail verificado. Devido a isto, os usuários sem e-mail verificado não pode fazer login. O objetivo é que em futuras versões um usuário sem o e-mail verificado consiga fazer login e ver o calendário, porém, não consiga agendar nenhum evento.
 
 https://github.com/user-attachments/assets/549f9091-3321-40a2-8429-a2d4a71ba66c
 
