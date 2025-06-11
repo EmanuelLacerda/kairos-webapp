@@ -546,6 +546,14 @@ headers: {
 ]
 ```
 
+<h2 id="future-features">Funcionalidades futuras:</h2>
+
+Ao longo do conteúdo acima, falo as funcionalidades/melhorias futuras. Abaixo segue a lista completa e organizada, com o link do respectivo issue em cada funcionalidade:
+- [ ] Restrição de criação, edição e remoção de eventos a somente usuários com e-mail verificado - [Issue #3](https://github.com/EmanuelLacerda/kairos-webapp/issues/3);
+- [ ] Estratégia de Refresh Token Rotation no gerenciamento de sessão com JWT - [Issue #8](https://github.com/EmanuelLacerda/kairos-webapp/issues/8);
+- [ ] Convidar outros usuários para participar dos eventos criados pelo usuário - [Issue #9](https://github.com/EmanuelLacerda/kairos-webapp/issues/9).
+- [ ] Definir que um evento pode ter intersecção de período com outros eventos - [Issue #10](https://github.com/EmanuelLacerda/kairos-webapp/issues/10).
+
 <h2 id="projec-actors">🧑‍💻 Autores:</h2>
 
 * Emanuel Lacerda - Desenvolvedor - [@EmanuelLacerda](https://github.com/EmanuelLacerda/)
