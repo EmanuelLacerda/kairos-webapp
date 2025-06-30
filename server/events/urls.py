@@ -6,3 +6,5 @@ router.register('events', EventViewSet)
 
 urlpatterns = [
 ]
+
+urlpatterns += router.urls
