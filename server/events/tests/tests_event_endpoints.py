@@ -1,10 +1,15 @@
 from django.urls import reverse
-from events.models import Event
 from authentication.models import User
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-class EventAPITestCase(APITestCase):
+from events.models import Event
+
+class RestrictingAccessAndManipulationToResourcesByAccessTokenTestCase(APITestCase):
+    """
+    The user cannot nether access, nor create/edit/delete any event without pass their current access token.  
+    """
+
     def setUp(self):
         self.user = User.objects.create_user(name='user1', email="teste@teste9038.com.br", password='test')
         self.event = Event.objects.create(
