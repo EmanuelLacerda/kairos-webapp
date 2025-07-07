@@ -10,7 +10,7 @@ urlpatterns = [
     path('verify-email/', VerifyUserEmailView.as_view(), name='verify'),
 
     # login and logout endpoints
-    path('login/', LoginUserView.as_view(), name='login'),
+    path('login/', LoginUserView.as_view(), name='auth-login'),
     path('logout/', LogoutUserView.as_view(), name='logout'),
 
     # check valid of access token endpoint and refresh token endpoint
