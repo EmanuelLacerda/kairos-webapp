@@ -13,6 +13,14 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes=[IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_authenticated:
+            return Event.objects.filter(creator=user)
+
+        return Event.objects.none()
+
     def destroy(self, request, pk=None):
         try:
             event = self.get_queryset().get(id=pk)
