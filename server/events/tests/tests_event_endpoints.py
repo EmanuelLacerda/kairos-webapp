@@ -102,16 +102,25 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
 
         self.general_header = {'Authorization': f'Bearer {self.access_token}'}
     
+    def test_if_creator_is_an_readonly_attribute(self):
+        url = reverse("event-list")
+
+        response = self.client.get(url, headers=self.general_header)
+        event = response.data[0]
+
+        with self.assertRaisesMessage(KeyError, "creator"):
+            event["creator"]
+    
     def test_get_all_the_user_events(self):
+        user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
+        all_the_user_events = Event.objects.filter(creator__id=user_id)
+
         url = reverse("event-list")
 
         response = self.client.get(url, headers=self.general_header)
 
-        user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-
-        any(event["id"] != user_id  for event in response.data)
-
-        self.assertFalse(any(event["id"] != user_id  for event in response.data))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(all_the_user_events), len(response.data))
     
     def test_get_event_of_the_user(self):
         user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
@@ -130,6 +139,42 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
 
         response = self.client.get(url, headers=self.general_header)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_create_event_without_passing_user_id(self):
+        data = {
+            "description": "Criando evento sem passar id do usuário",
+            "start": "2026-08-14T20:30:00Z",
+            "end": "2026-08-14T22:30:00Z"
+        }
+        url = reverse("event-list")
+
+        response = self.client.post(url, json.dumps(data), content_type='application/json', headers=self.general_header)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+ 
+    def test_create_event_passing_user_id(self):
+        data = {
+            "description": "Criando evento passando id do usuário",
+            "start": "2026-08-14 22:40",
+            "end": "2026-08-14 23:00"
+        }
+        url = reverse("event-list")
+
+        response = self.client.post(url, json.dumps(data), content_type='application/json', headers=self.general_header)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    
+    def test_create_event_passing_another_user_id(self):
+        data = {
+            "description": "Criando evento passando id de outro usuário",
+            "start": "2026-08-15 22:40",
+            "end": "2026-08-15 23:00"
+        }
+        url = reverse("event-list")
+
+        response = self.client.post(url, json.dumps(data), content_type='application/json', headers=self.general_header)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_event_of_the_user(self):
         user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]

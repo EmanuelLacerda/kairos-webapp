@@ -8,7 +8,17 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = [
+            "id",
+            "description",
+            "start",
+            "end"
+        ]
+        read_only_fields = ["creator"]
+    
+    def create(self, validated_data):
+        validated_data["creator"] = self.context['request'].user
+        return super().create(validated_data)
     
     def validate(self, data):
         instance = self.instance
@@ -46,7 +56,7 @@ class EventSerializer(serializers.ModelSerializer):
             # Situação 01: O período inicial do evento que será agendado está entre o período inicial e o período final de algum dos eventos já agendados. Para esta situação, independe qual o período final.
 
             currentUserEvents = Event.objects.filter(
-                creator__id=data["creator"].id
+                creator__id=self.context['request'].user.id
             )
 
             events = currentUserEvents.filter(
