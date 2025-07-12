@@ -20,8 +20,8 @@ class RestrictingAccessAndManipulationToResourcesByAccessTokenTestCase(APITestCa
         self.event = Event.objects.create(
             creator=self.user,
             description="Realizando teste automatizado",
-            start="2025-06-30 20:30",
-            end="2025-06-30 22:30"
+            start="2025-06-30T20:30:00Z",
+            end="2025-06-30T22:30:00Z"
         )
     
     def test_get_all_events_without_JWT_token(self):
@@ -42,8 +42,8 @@ class RestrictingAccessAndManipulationToResourcesByAccessTokenTestCase(APITestCa
         data = {
             "creator": self.user,
             "description": "Realizando teste automatizado",
-            "start": "2025-06-30 20:38",
-            "end": "2025-06-30 22:38"
+            "start": "2025-06-30T20:38:00Z",
+            "end": "2025-06-30T22:38:00Z"
         }
         response = self.client.post(url, data, content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -90,14 +90,14 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         self.event_user_1 = Event.objects.create(
             creator=self.user_1,
             description="Realizando teste automatizado",
-            start="2025-08-12 20:30",
-            end="2025-08-12 22:30"
+            start="2025-08-12T20:30:00Z",
+            end="2025-08-12T22:30:00Z"
         )
         self.event_user_2 = Event.objects.create(
             creator=self.user_2,
             description="Realizando teste automatizado",
-            start="2025-08-14 20:30",
-            end="2025-08-14 22:30"
+            start="2025-08-14T20:30:00Z",
+            end="2025-08-14T22:30:00Z"
         )
 
         self.general_header = {'Authorization': f'Bearer {self.access_token}'}
@@ -155,8 +155,8 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
     def test_create_event_passing_user_id(self):
         data = {
             "description": "Criando evento passando id do usuário",
-            "start": "2026-08-14 22:40",
-            "end": "2026-08-14 23:00"
+            "start": "2026-08-14T22:40:00Z",
+            "end": "2026-08-14T23:00:00Z"
         }
         url = reverse("event-list")
 
@@ -167,8 +167,8 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
     def test_create_event_passing_another_user_id(self):
         data = {
             "description": "Criando evento passando id de outro usuário",
-            "start": "2026-08-15 22:40",
-            "end": "2026-08-15 23:00"
+            "start": "2026-08-15T22:40:00Z",
+            "end": "2026-08-15T23:00:00Z"
         }
         url = reverse("event-list")
 
