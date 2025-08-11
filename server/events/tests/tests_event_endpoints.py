@@ -86,6 +86,7 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
 
         response = self.client.post(url, json.dumps(data), content_type='application/json')
         self.access_token = response.data["access_token"]
+        self.user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
 
         self.event_user_1 = Event.objects.create(
             creator=self.user_1,
@@ -112,8 +113,7 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
             event["creator"]
     
     def test_get_all_the_user_events(self):
-        user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-        all_the_user_events = Event.objects.filter(creator__id=user_id)
+        all_the_user_events = Event.objects.filter(creator__id=self.user_id)
 
         url = reverse("event-list")
 
@@ -123,8 +123,7 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         self.assertEqual(len(all_the_user_events), len(response.data))
     
     def test_get_event_of_the_user(self):
-        user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-        event_id = Event.objects.filter(creator__id=user_id)[0].id
+        event_id = Event.objects.filter(creator__id=self.user_id)[0].id
 
         url = reverse("event-detail", kwargs={"pk": event_id})
 
@@ -132,8 +131,7 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     def test_get_event_of_another_user(self):
-        user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-        event_id = Event.objects.exclude(creator__id=user_id)[0].id
+        event_id = Event.objects.exclude(creator__id=self.user_id)[0].id
 
         url = reverse("event-detail", kwargs={"pk": event_id})
 
@@ -177,8 +175,7 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_event_of_the_user(self):
-        user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-        event = Event.objects.filter(creator__id=user_id)[0]
+        event = Event.objects.filter(creator__id=self.user_id)[0]
 
         data = {
             "creator": event.creator.id,
@@ -193,8 +190,7 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     def test_update_event_of_another_user(self):
-        user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-        event = Event.objects.exclude(creator__id=user_id)[0]
+        event = Event.objects.exclude(creator__id=self.user_id)[0]
 
         url = reverse("event-detail", kwargs={"pk": event.id})
 
@@ -208,8 +204,7 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
     
     def test_delete_event_of_the_user(self):
-        user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-        event = Event.objects.filter(creator__id=user_id)[0]
+        event = Event.objects.filter(creator__id=self.user_id)[0]
 
         url = reverse("event-detail", kwargs={"pk": event.id})
 
@@ -217,8 +212,7 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
     
     def test_delete_event_of_another_user(self):
-        user_id = jwt.decode(self.access_token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
-        event = Event.objects.exclude(creator__id=user_id)[0]
+        event = Event.objects.exclude(creator__id=self.user_id)[0]
 
         url = reverse("event-detail", kwargs={"pk": event.id})
 
