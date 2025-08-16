@@ -153,7 +153,6 @@ async function createEvent(){
             })
         } else{
             const eventData = {
-                'creator': userID,
                 'description': enteredDescription.value,
                 'start': `${enteredStartDate.value.replaceAll("/","-")}T${enteredStartTime.value}:00Z`,
                 'end': `${enteredEndDate.value.replaceAll("/","-")}T${enteredEndTime.value}:00Z`
@@ -237,7 +236,6 @@ async function editEvent(){
 
                 if (result.isConfirmed) {
                     const eventData = {
-                        'creator': userID,
                         'description': enteredDescription.value,
                         'start': `${enteredStartDate.value.replaceAll("/","-")}T${enteredStartTime.value}:00Z`,
                         'end': `${enteredEndDate.value.replaceAll("/","-")}T${enteredEndTime.value}:00Z`
