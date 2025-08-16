@@ -152,6 +152,7 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
  
     def test_create_event_passing_user_id(self):
         data = {
+            "creator": self.user_id,
             "description": "Criando evento passando id do usuário",
             "start": "2026-08-14T22:40:00Z",
             "end": "2026-08-14T23:00:00Z"
@@ -163,7 +164,16 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
     def test_create_event_passing_another_user_id(self):
+        """
+        Regardless of whether the user ID is passed or not, and whether the ID of the authenticated user or another user is passed, the event created must belong to the authenticated user.
+
+        This test verifies that the API works this way when the other user's ID is passed.
+        """
+
+        another_user_id = User.objects.exclude(id=self.user_id)[0].id
+
         data = {
+            "creator": another_user_id,
             "description": "Criando evento passando id de outro usuário",
             "start": "2026-08-15T22:40:00Z",
             "end": "2026-08-15T23:00:00Z"
@@ -173,6 +183,8 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         response = self.client.post(url, json.dumps(data), content_type='application/json', headers=self.general_header)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Event.objects.get(id=response.data["id"]).creator.id, self.user_id)
+
 
     def test_update_event_of_the_user(self):
         event = Event.objects.filter(creator__id=self.user_id)[0]
@@ -202,6 +214,30 @@ class RestrictingAccessAndManipulationToOnlyTheAuthenticatedUserResourcesTestCas
         }
         response = self.client.patch(url, json.dumps(data), content_type='application/json', headers=self.general_header)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_update_the_creator_id_of_a_event_of_the_user(self):
+        """
+        Users can not change the creator id of their events to ensure they can not pass their event to another.
+
+        This test verifies that the API works this way.
+        """
+
+        another_user_id = User.objects.exclude(id=self.user_id)[0].id
+
+        event = Event.objects.filter(creator__id=self.user_id)[0]
+
+        data = {
+            "creator": another_user_id,
+            "description": "Testando edição de eventos passando Access Token",
+            "start": event.start.isoformat(),
+            "end": event.end.isoformat()
+        }
+        url = reverse("event-detail", kwargs={"pk": event.id})
+
+        response = self.client.patch(url, json.dumps(data), content_type='application/json', headers=self.general_header)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Event.objects.get(id=response.data["id"]).creator.id, self.user_id)
     
     def test_delete_event_of_the_user(self):
         event = Event.objects.filter(creator__id=self.user_id)[0]
