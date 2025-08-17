@@ -31,7 +31,15 @@ const inputClasses = computed(() => {
 
 <template>
     <q-input :outlined="true" :autofocus="autofocus" :class="inputClasses" @focus="removeMessageError" v-bind="$attrs">
-        <slot></slot>
+        <template v-slot:prepend v-if="$slots.prepend">
+          <slot name="prepend" />
+        </template>
+        <template v-slot:append v-if="$slots.append">
+          <slot name="append"/>
+        </template>
+        <div v-if="$slots.default">
+          <slot name="default"/>
+        </div>
     </q-input>
     <FormFieldErrorMessage :error-message="errorMessage"></FormFieldErrorMessage>
 </template>
