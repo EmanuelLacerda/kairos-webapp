@@ -100,7 +100,7 @@ const arrayOfFieldsValue = computed(() => [ enteredEmail.value, enteredPassword.
         <FormAuthBase @submit-form="submitForm" class="form-login">
           <template #formbody>
             <InputAuthEmail v-model="enteredEmail" :autofocus="true" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
-            <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
+            <InputAuthPassword placeholder="Senha" v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
           </template>
           <template #formfooter>
             <ButtonAuth label="Login" :allFieldsValue="arrayOfFieldsValue" :loading="isLoginRequestRunning"></ButtonAuth>

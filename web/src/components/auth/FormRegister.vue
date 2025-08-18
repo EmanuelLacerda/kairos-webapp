@@ -10,7 +10,6 @@ import FormAuthBase from 'src/components/auth/FormAuthBase.vue';
 import InputAuthEmail from 'src/components/auth/InputAuthEmail.vue';
 import InputAuthPassword from 'src/components/auth/InputAuthPassword.vue';
 import InputAuthName from './InputAuthName.vue';
-import InputAuthConfirmPassword from './InputAuthConfirmPassword.vue';
 import ButtonAuth from './ButtonAuth.vue';
 import RedirectButton from '../RedirectButton.vue';
 
@@ -123,8 +122,8 @@ const arrayOfFieldsValue = computed(() => [ enteredName.value, enteredEmail.valu
         <template #formbody>
           <InputAuthName v-model="enteredName" :error-message="errorMessageName" @remove-message-error="removeErrorMessageName"  :autofocus="true"></InputAuthName>
           <InputAuthEmail v-model="enteredEmail" :error-message="errorMessageEmail" @remove-message-error="removeErrorMessageEmail"></InputAuthEmail>
-          <InputAuthPassword v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
-          <InputAuthConfirmPassword v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthConfirmPassword>
+          <InputAuthPassword placeholder="Senha" v-model="enteredPassword" :error-message="errorMessagePassword" @remove-message-error="removeErrorMessagePassword"></InputAuthPassword>
+          <InputAuthPassword placeholder="Confirmar senha" v-model="enteredConfirmPassword" :error-message="errorMessageConfirmPassword" @remove-message-error="removeErrorMessageConfirmPassword" class="mb-0"></InputAuthPassword>
         </template>
         <template #formfooter>
           <ButtonAuth label="Criar conta" :loading="isRegisterProcessRunning" :allFieldsValue="arrayOfFieldsValue"></ButtonAuth>
