@@ -52,11 +52,26 @@ form.form-auth-base{
         .q-field__control{
             height: 45px !important;
 
+            .q-field__prepend, .q-field__append{
+              height: 45px !important;
+
+              .q-icon{
+                font-size: 25px !important;
+              }
+            }
+
+            .q-field__prepend{
+              padding-right: 15px;
+            }
+
+            .q-field__control-container, .q-field__prepend, .q-field__append{
+              display: flex;
+              flex-direction: row-reverse;
+              align-items: center;
+            }
+
             .q-field__control-container{
-            display: flex;
-            flex-direction: row-reverse;
-            align-items: center;
-            gap: 15px;
+              gap: 15px;
             }
         }
 
