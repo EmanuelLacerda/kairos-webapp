@@ -13,7 +13,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D">
   <img src="https://img.shields.io/badge/Quasar-16B7FB?style=for-the-badge&logo=quasar&logoColor=black">
-  <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white">
+  <img src="https://img.shields.io/badge/Sass-CC6699?style=flat-square&logo=Sass&logoColor=white">
   <img src="https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray"></img>
   <img src="https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white"></img>
 </p>
@@ -41,7 +41,7 @@ Agora, você sabe o básico sobre este app. Quer conhecer mais sobre ele? Só le
 - **Gerenciamento de estado:** [Pinia](https://pinia.vuejs.org/)
 - **Gerenciamento de rotas:** [Vue-Router](https://router.vuejs.org/)
 - **Calendário:** [FullCalendar](https://fullcalendar.io/)
-- **CSS:** Tailwind CSS
+- **CSS:** Sass
 - **Requisição HTTP:** Axios
 - **Demais tecnologias:** jwt-decode, [Bootstrap Icons](https://icons.getbootstrap.com/) e SweetAlert2
 
