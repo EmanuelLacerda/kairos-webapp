@@ -71,8 +71,6 @@ class LoginSerializer(serializers.ModelSerializer):
 
         if not user:
             raise AuthenticationFailed('Usuário ou senha inválidos!')
-        if not user.have_email_verified:
-            raise AuthenticationFailed("O e-mail não é verificado!")
         
         user_tokens=user.tokens()
 
