@@ -4,6 +4,7 @@ from .serializers import EventSerializer
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from authentication.global_custom_permissions import IsVerified
 
 from datetime import datetime, timedelta
 
@@ -11,7 +12,7 @@ from datetime import datetime, timedelta
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    permission_classes=[IsAuthenticated]
+    permission_classes=[IsAuthenticated, IsVerified]
 
     def get_queryset(self):
         user = self.request.user
